@@ -10,3 +10,11 @@ fun HomeScreen(
 ) {
     Text("BusAlert Wear OS")
 }
+
+@Composable
+fun ListeningScreen(
+    currentText: String,
+    onCancel: () -> Unit
+) {
+    Text("Escuchando...")
+}
