@@ -1,0 +1,16 @@
+[
+  {
+    "code": "E1",
+    "name": "E1 — Dolores / Udenar",
+    "type": "estrategica",
+    "description": "Ruta estratégica que conecta el sector de Dolores (corregimiento periurbano al sur-oriente) con la Universidad de Nariño (Torobajo) pasando por el centro de la ciudad de Pasto.",
+    "origin": "Dolores / Vía La Laguna",
+    "destination": "Udenar — Facultad de Veterinaria",
+    "active": true,
+    "source": "ruti_setp",
+    "verified": true,
+    "data_quality": "partial",
+    "notes": "Paradas e IDs verificados mediante Ruti SETP. Horarios y coordenadas pendientes de verificación oficial.",
+    "last_verified_at": "2026-10-07"
+  }
+]
