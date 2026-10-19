@@ -1,0 +1,24 @@
+[
+  {
+    "route_code": "E1",
+    "direction_key": "E1_D1",
+    "name": "Udenar → Dolores",
+    "origin": "Udenar - Facultad de Veterinaria",
+    "destination": "Vía La Laguna",
+    "description": "Sentido desde la Universidad de Nariño (Torobajo) hasta el sector de Dolores / Vía La Laguna, pasando por el centro de Pasto.",
+    "stop_count": 37,
+    "verified": true,
+    "source": "ruti_setp"
+  },
+  {
+    "route_code": "E1",
+    "direction_key": "E1_D2",
+    "name": "Dolores → Udenar",
+    "origin": "Vía La Laguna",
+    "destination": "Udenar - Facultad de Veterinaria",
+    "description": "Sentido desde el sector de Dolores / Vía La Laguna hasta la Universidad de Nariño (Torobajo), pasando por el centro de Pasto.",
+    "stop_count": 50,
+    "verified": true,
+    "source": "ruti_setp"
+  }
+]
