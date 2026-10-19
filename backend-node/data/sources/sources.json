@@ -1,0 +1,29 @@
+[
+  {
+    "id": "ruti_setp",
+    "name": "Ruti SETP — Avante",
+    "url": "https://web.avante.gov.co/rutas/",
+    "source_type": "official_app",
+    "last_checked": "2026-10-07",
+    "reliability": "high",
+    "notes": "Aplicación oficial del Sistema Estratégico de Transporte Público de Pasto, operada por Avante SETP. Los IDs de paradas (ej: 1265, 3915) son los códigos internos del sistema Ruti."
+  },
+  {
+    "id": "avante_gov",
+    "name": "Avante SETP — Sitio Oficial",
+    "url": "https://avante.gov.co",
+    "source_type": "official_website",
+    "last_checked": "2026-10-07",
+    "reliability": "high",
+    "notes": "Sitio oficial de la entidad gestora del SETP de Pasto. La sección /rutas/ requiere JavaScript para renderizar contenido."
+  },
+  {
+    "id": "busalert_user_data",
+    "name": "Datos verificados por el equipo BusAlert",
+    "url": null,
+    "source_type": "verified_user_input",
+    "last_checked": "2026-10-07",
+    "reliability": "high",
+    "notes": "Datos de paradas e IDs ingresados manualmente por el equipo del proyecto, extraídos directamente de la app Ruti SETP."
+  }
+]
