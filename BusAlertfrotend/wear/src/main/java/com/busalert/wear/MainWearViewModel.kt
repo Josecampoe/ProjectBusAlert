@@ -14,6 +14,13 @@ sealed class UiState {
 }
 
 class MainWearViewModel : ViewModel() {
+    fun startListening() {
+        _uiState.value = UiState.Listening
+    }
+    fun stopListening() {
+        _uiState.value = UiState.Idle
+    }
+
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState
 }
