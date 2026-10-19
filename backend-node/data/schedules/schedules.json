@@ -1,0 +1,35 @@
+[
+  {
+    "route_code": "E1",
+    "day_type": "LV",
+    "day_type_label": "Lunes a Viernes",
+    "start_time": null,
+    "end_time": null,
+    "frequency_minutes": null,
+    "source": "ruti_setp",
+    "verified": false,
+    "notes": "Horario pendiente de verificación oficial. El sistema Ruti SETP publica horarios en su app pero no los expone en una API pública accesible."
+  },
+  {
+    "route_code": "E1",
+    "day_type": "LS",
+    "day_type_label": "Lunes a Sábado",
+    "start_time": null,
+    "end_time": null,
+    "frequency_minutes": null,
+    "source": "ruti_setp",
+    "verified": false,
+    "notes": "Pendiente de verificación oficial."
+  },
+  {
+    "route_code": "E1",
+    "day_type": "DF",
+    "day_type_label": "Domingos y Festivos",
+    "start_time": null,
+    "end_time": null,
+    "frequency_minutes": null,
+    "source": "ruti_setp",
+    "verified": false,
+    "notes": "Pendiente de verificación oficial."
+  }
+]
