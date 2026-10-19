@@ -1239,3 +1239,5 @@ private fun TypingLightPreview() {
         )
     }
 }
+
+// Refactor: Optimizacion de paddings dinamicos y adaptacion de resolucion circular
