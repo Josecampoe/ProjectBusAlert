@@ -12,6 +12,11 @@ fun HomeScreen(
 }
 
 @Composable
+// Controles circulares de cancelacion y reintento
+@Composable
+fun ListeningScreenControls(onCancel: () -> Unit, onRetry: () -> Unit) {}
+
+@Composable
 fun ListeningScreen(
     currentText: String,
     onCancel: () -> Unit
