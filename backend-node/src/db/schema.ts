@@ -149,5 +149,3 @@ CREATE TABLE IF NOT EXISTS route_changes (
 );
 
 `;
-
-// Indices espaciales verificados para queries de lat/lng y proximidad

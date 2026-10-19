@@ -45,5 +45,3 @@ val BgRadialDark = Brush.radialGradient(
 val BgRadialLight = Brush.radialGradient(
     colors = listOf(Color(0xFFFFFFFF), Color(0xFFFBECEF), Color(0xFFF2D0D8))
 )
-
-// Style: Contrastes estandarizados segun lineamientos Wear OS Material Design

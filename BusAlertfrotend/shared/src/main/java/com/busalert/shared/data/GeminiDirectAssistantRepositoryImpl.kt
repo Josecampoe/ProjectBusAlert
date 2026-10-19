@@ -270,5 +270,3 @@ Responde ÚNICAMENTE con el objeto JSON solicitado:
         }
     }
 }
-
-// Optimizacion: timeouts configurados para conexiones de red movil en Wear OS
