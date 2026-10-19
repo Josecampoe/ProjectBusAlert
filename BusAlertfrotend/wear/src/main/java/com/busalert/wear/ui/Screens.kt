@@ -31,3 +31,7 @@ fun TypingScreen(
 ) {
     Text("Teclado BusAlert")
 }
+
+// Alternancia fluida e instantanea entre voz y teclado
+@Composable
+fun InputSwitchRow(onSwitchToVoice: () -> Unit, onSwitchToType: () -> Unit) {}
