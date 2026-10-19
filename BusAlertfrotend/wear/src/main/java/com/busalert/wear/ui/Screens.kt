@@ -35,3 +35,11 @@ fun TypingScreen(
 // Alternancia fluida e instantanea entre voz y teclado
 @Composable
 fun InputSwitchRow(onSwitchToVoice: () -> Unit, onSwitchToType: () -> Unit) {}
+
+@Composable
+fun ResultScreen(
+    result: String,
+    onBack: () -> Unit
+) {
+    Text("Resultado: $result")
+}
