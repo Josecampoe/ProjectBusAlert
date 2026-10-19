@@ -23,3 +23,11 @@ fun ListeningScreen(
 ) {
     Text("Escuchando...")
 }
+
+@Composable
+fun TypingScreen(
+    onSend: (String) -> Unit,
+    onCancel: () -> Unit
+) {
+    Text("Teclado BusAlert")
+}
