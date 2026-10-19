@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.gradle/
+
+# Build outputs
+dist/
+build/
+*/build/
+*/*/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.iml
+
+# IDE & OS
+.idea/
+.DS_Store
+*.swp
+*.bak
+local.properties
+
+# Environment and Secrets
+.env
+.env.local
+.env.*.local
+
+# Databases & Runtime
+*.db
+*.db-shm
+*.db-wal
+*.log
