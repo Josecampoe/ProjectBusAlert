@@ -14,59 +14,59 @@ const CONTRACTS_DIR = path.join(__dirname, '..', '..', 'contracts', 'voice');
 const UPDATE = process.env.UPDATE_CONTRACTS === '1';
 
 function checkContract(name: string, actual: unknown): void {
-    const file = path.join(CONTRACTS_DIR, `${name}.json`);
-    if (UPDATE) {
-        fs.mkdirSync(CONTRACTS_DIR, { recursive: true });
-        fs.writeFileSync(file, `${JSON.stringify(actual, null, 2)}\n`);
-    }
-    expect(actual).toEqual(JSON.parse(fs.readFileSync(file, 'utf-8')));
+  const file = path.join(CONTRACTS_DIR, `${name}.json`);
+  if (UPDATE) {
+    fs.mkdirSync(CONTRACTS_DIR, { recursive: true });
+    fs.writeFileSync(file, `${JSON.stringify(actual, null, 2)}\n`);
+  }
+  expect(actual).toEqual(JSON.parse(fs.readFileSync(file, 'utf-8')));
 }
 
 const auth = { 'X-API-Key': TEST_API_KEY };
 const aiAnswer = JSON.stringify({
-    chosenOptionIndex: 0,
-    spokenText: 'Toma la FX1 en Udenar Torobajo y bájate en Parque Bolívar.',
-    displayTitle: 'FX1',
-    displaySubtitle: 'Udenar Torobajo',
+  chosenOptionIndex: 0,
+  spokenText: 'Toma la FX1 en Udenar Torobajo y bájate en Parque Bolívar.',
+  displayTitle: 'FX1',
+  displaySubtitle: 'Udenar Torobajo',
 });
 
 describe('contratos de POST /api/voice', () => {
-    it('ok_ai', async () => {
-        const { app } = createTestContext({ ai: new FakeAiClient(() => aiAnswer) });
-        const res = await request(app)
-            .post('/api/voice')
-            .set(auth)
-            .send({ voiceText: 'parque bolivar', currentLocationName: 'udenar', language: 'es' });
-        checkContract('ok_ai', res.body);
-    });
+  it('ok_ai', async () => {
+    const { app } = createTestContext({ ai: new FakeAiClient(() => aiAnswer) });
+    const res = await request(app)
+      .post('/api/voice')
+      .set(auth)
+      .send({ voiceText: 'parque bolivar', currentLocationName: 'udenar', language: 'es' });
+    checkContract('ok_ai', res.body);
+  });
 
-    it('ok_planner', async () => {
-        const { app } = createTestContext();
-        const res = await request(app)
-            .post('/api/voice')
-            .set(auth)
-            .send({ voiceText: 'parque bolivar', currentLocationName: 'udenar' });
-        checkContract('ok_planner', res.body);
-    });
+  it('ok_planner', async () => {
+    const { app } = createTestContext();
+    const res = await request(app)
+      .post('/api/voice')
+      .set(auth)
+      .send({ voiceText: 'parque bolivar', currentLocationName: 'udenar' });
+    checkContract('ok_planner', res.body);
+  });
 
-    it('no_route', async () => {
-        const { app } = createTestContext();
-        const res = await request(app)
-            .post('/api/voice')
-            .set(auth)
-            .send({ voiceText: 'udenar', currentLocationName: 'parque nariño' });
-        checkContract('no_route', res.body);
-    });
+  it('no_route', async () => {
+    const { app } = createTestContext();
+    const res = await request(app)
+      .post('/api/voice')
+      .set(auth)
+      .send({ voiceText: 'udenar', currentLocationName: 'parque nariño' });
+    checkContract('no_route', res.body);
+  });
 
-    it('error_unauthorized', async () => {
-        const { app } = createTestContext();
-        const res = await request(app).post('/api/voice').send({});
-        checkContract('error_unauthorized', { status: res.status, body: res.body });
-    });
+  it('error_unauthorized', async () => {
+    const { app } = createTestContext();
+    const res = await request(app).post('/api/voice').send({});
+    checkContract('error_unauthorized', { status: res.status, body: res.body });
+  });
 
-    it('error_validation', async () => {
-        const { app } = createTestContext();
-        const res = await request(app).post('/api/voice').set(auth).send({ voiceText: '' });
-        checkContract('error_validation', { status: res.status, body: res.body });
-    });
+  it('error_validation', async () => {
+    const { app } = createTestContext();
+    const res = await request(app).post('/api/voice').set(auth).send({ voiceText: '' });
+    checkContract('error_validation', { status: res.status, body: res.body });
+  });
 });

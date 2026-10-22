@@ -16,40 +16,40 @@ import { createTransitRouter } from './routes/transitRoutes';
 import type { AssistantService } from './services/assistantService';
 
 export interface AppDependencies {
-    config: AppConfig;
-    logger: Logger;
-    repo: TransitRepository;
-    assistant: AssistantService;
+  config: AppConfig;
+  logger: Logger;
+  repo: TransitRepository;
+  assistant: AssistantService;
 }
 
 export function createApp({ config, logger, repo, assistant }: AppDependencies): Express {
-    const app = express();
-    const schemas = buildSchemas(config);
+  const app = express();
+  const schemas = buildSchemas(config);
 
-    app.disable('x-powered-by');
-    app.set('trust proxy', config.server.trustProxy);
-    app.use(helmet());
-    app.use(
-        cors({
-            // Sin orígenes configurados no se habilita CORS (el reloj no lo necesita).
-            origin: config.server.corsOrigins.length > 0 ? config.server.corsOrigins : false,
-        }),
-    );
-    app.use(express.json({ limit: config.server.bodyLimit }));
+  app.disable('x-powered-by');
+  app.set('trust proxy', config.server.trustProxy);
+  app.use(helmet());
+  app.use(
+    cors({
+      // Sin orígenes configurados no se habilita CORS (el reloj no lo necesita).
+      origin: config.server.corsOrigins.length > 0 ? config.server.corsOrigins : false,
+    }),
+  );
+  app.use(express.json({ limit: config.server.bodyLimit }));
 
-    // Pública: comprobación de vida para el balanceador / despliegue.
-    app.get('/health', (_req, res) => {
-        res.json({ status: 'ok', aiEnabled: assistant.aiEnabled });
-    });
+  // Pública: comprobación de vida para el balanceador / despliegue.
+  app.get('/health', (_req, res) => {
+    res.json({ status: 'ok', aiEnabled: assistant.aiEnabled });
+  });
 
-    const api = express.Router();
-    api.use(createRateLimiter(config.security.rateLimitWindowMs, config.security.rateLimitMax));
-    api.use(requireApiKey(config.security.apiKeys));
-    api.use(createTransitRouter(repo, schemas, config));
-    api.use(createAssistantRouter(assistant, schemas));
-    app.use('/api', api);
+  const api = express.Router();
+  api.use(createRateLimiter(config.security.rateLimitWindowMs, config.security.rateLimitMax));
+  api.use(requireApiKey(config.security.apiKeys));
+  api.use(createTransitRouter(repo, schemas, config));
+  api.use(createAssistantRouter(assistant, schemas));
+  app.use('/api', api);
 
-    app.use(notFoundHandler);
-    app.use(createErrorHandler(logger));
-    return app;
+  app.use(notFoundHandler);
+  app.use(createErrorHandler(logger));
+  return app;
 }

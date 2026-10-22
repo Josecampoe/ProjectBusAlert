@@ -56,3 +56,19 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 
 ## D-016 · Nueva ruta por defecto de la BD (`data/db/busalert.sqlite`)
 - **Motivo:** el archivo anterior `data/busalert.db` tiene el esquema viejo, sin restricciones `UNIQUE`, y no se puede migrar con seguridad. No se borró: queda en disco (está ignorado por git) y la BD nueva se crea en otra ruta.
+
+## D-017 · ESLint 10 (flat config, `strictTypeChecked`) + Prettier
+- **Motivo:** el `.eslintrc.json` anterior no tenía ESLint instalado. Ahora `npm run lint` usa typescript-eslint con reglas estrictas basadas en tipos, y Prettier respeta el `.prettierrc` que ya existía (2 espacios, ancho 100).
+
+## D-018 · Eliminado `BusAlertFrontend/setup.ps1`
+- **Motivo:** era un script de andamiaje inicial que **sobrescribía** `build.gradle.kts`, los manifiestos y los `MainActivity.kt` con esqueletos vacíos. Ejecutarlo hoy destruiría el proyecto. Queda en el historial de git.
+
+## D-019 · Pruebas de UI con Robolectric (JVM)
+- **Alternativas:** pruebas instrumentadas en emulador.
+- **Motivo:** corren en la CI sin emulador y en segundos. Las instrumentadas se pueden sumar después si hace falta probar hardware (micrófono, GPS).
+
+## D-020 · Android Lint como compuerta (`warningsAsErrors`)
+- **Motivo:** se corrigieron todos los avisos (ícono, backup, `taskAffinity`, plurales, división de idiomas en el bundle). Solo se desactiva `GradleDependency`, porque las versiones nuevas de AndroidX exigen la actualización de toolchain descartada en D-002.
+
+## D-021 · `.gitattributes` con `eol=lf`
+- **Motivo:** el repositorio mezclaba CRLF y LF y `gradlew` no tenía permiso de ejecución, así que fallaría en la CI de Linux. Se normalizó y se marcó `gradlew` como ejecutable.

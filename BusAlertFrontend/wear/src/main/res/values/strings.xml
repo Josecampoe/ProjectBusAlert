@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Español (idioma por defecto). -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="es">
     <string name="app_name">BusAlert</string>
 
     <!-- Resultado (cuando el backend no trae texto redactado por la IA) -->
@@ -9,6 +9,7 @@
     <string name="result_alight_at">Baja en %1$s</string>
     <plurals name="result_stops_count">
         <item quantity="one">%1$d parada</item>
+        <item quantity="many">%1$d paradas</item>
         <item quantity="other">%1$d paradas</item>
     </plurals>
     <string name="result_spoken_template">Toma la ruta %1$s. Súbete en %2$s y bájate en %3$s.</string>

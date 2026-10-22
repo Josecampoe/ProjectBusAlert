@@ -11,27 +11,31 @@ import { AssistantService } from './services/assistantService';
 import { MemoryCache } from './services/cacheService';
 
 export interface Container {
-    db: Db;
-    repo: TransitRepository;
-    assistant: AssistantService;
+  db: Db;
+  repo: TransitRepository;
+  assistant: AssistantService;
 }
 
-export function buildContainer(config: AppConfig, logger: Logger, aiOverride?: AiClient | null): Container {
-    const db = openDatabase(config.data.dbPath);
-    const repo = new TransitRepository(db, new MemoryCache(config.data.cacheTtlSeconds));
-    const ai =
-        aiOverride !== undefined
-            ? aiOverride
-            : config.ai.apiKey
-              ? new GeminiClient(
-                    {
-                        apiKey: config.ai.apiKey,
-                        models: [config.ai.primaryModel, config.ai.fallbackModel],
-                        timeoutMs: config.ai.timeoutMs,
-                        temperature: config.ai.temperature,
-                    },
-                    logger,
-                )
-              : null;
-    return { db, repo, assistant: new AssistantService(repo, ai, config, logger) };
+export function buildContainer(
+  config: AppConfig,
+  logger: Logger,
+  aiOverride?: AiClient | null,
+): Container {
+  const db = openDatabase(config.data.dbPath);
+  const repo = new TransitRepository(db, new MemoryCache(config.data.cacheTtlSeconds));
+  const ai =
+    aiOverride !== undefined
+      ? aiOverride
+      : config.ai.apiKey
+        ? new GeminiClient(
+            {
+              apiKey: config.ai.apiKey,
+              models: [config.ai.primaryModel, config.ai.fallbackModel],
+              timeoutMs: config.ai.timeoutMs,
+              temperature: config.ai.temperature,
+            },
+            logger,
+          )
+        : null;
+  return { db, repo, assistant: new AssistantService(repo, ai, config, logger) };
 }
