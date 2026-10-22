@@ -9,7 +9,7 @@ El usuario habla al reloj ("¿Cómo llego a la Universidad Cooperativa desde Tor
 Proyecto Android multi-módulo:
 
 ```
-BusAlertfrotend/
+BusAlertFrontend/
 ├── shared/     # Modelos de dominio, repositorios, API Retrofit
 ├── wear/       # App principal para Wear OS (Jetpack Compose)
 └── mobile/     # Companion app para teléfono Android
