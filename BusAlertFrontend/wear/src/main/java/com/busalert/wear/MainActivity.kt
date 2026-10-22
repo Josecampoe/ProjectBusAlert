@@ -25,7 +25,12 @@ import com.busalert.wear.theme.AppStrings
 import com.busalert.wear.theme.BusAlertTheme
 import com.busalert.wear.ui.ErrorScreen
 import com.busalert.wear.ui.HomeScreen
+import com.busalert.wear.location.FusedLocationSource
+import com.busalert.wear.location.LocationDefaults
+import com.busalert.wear.location.hasLocationPermission
 import com.busalert.wear.ui.ListeningScreen
+import com.busalert.wear.ui.LocatingScreen
+import com.busalert.wear.ui.LocationRationaleScreen
 import com.busalert.wear.ui.NoResultScreen
 import com.busalert.wear.ui.ProcessingScreen
 import com.busalert.wear.ui.ProvideAppLanguage
@@ -37,7 +42,10 @@ import com.busalert.wear.voice.VoiceSpeaker
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainWearViewModel by viewModels {
-        MainWearViewModel.Factory((application as BusAlertWearApp).dependencies.tripAssistantRepository)
+        MainWearViewModel.Factory(
+            repository = (application as BusAlertWearApp).dependencies.tripAssistantRepository,
+            locationSource = FusedLocationSource(applicationContext),
+        )
     }
     private lateinit var voiceSpeaker: VoiceSpeaker
     private var voiceManager: VoiceRecognitionManager? = null
@@ -57,6 +65,7 @@ class MainActivity : ComponentActivity() {
             val strings = remember(isEnglish) { AppStrings(isEnglish) }
 
             var partialVoiceText by remember { mutableStateOf("") }
+            var showLocationRationale by remember { mutableStateOf(false) }
             var voiceStatusMessage by remember { mutableStateOf<String?>(null) }
 
             LaunchedEffect(isEnglish) { voiceSpeaker.setLanguage(isEnglish) }
@@ -95,6 +104,19 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+                    // Permiso de ubicación: con o sin él se inicia la consulta (sin él se pide el lugar por voz).
+                    val locationLauncher = rememberLauncherForActivityResult(
+                        ActivityResultContracts.RequestMultiplePermissions(),
+                    ) { viewModel.startQuery() }
+                    val startQuery = {
+                        when {
+                            hasLocationPermission() -> viewModel.startQuery()
+                            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) ->
+                                showLocationRationale = true
+                            else -> locationLauncher.launch(LocationDefaults.PERMISSIONS)
+                        }
+                    }
+
                     SpeakResult(plan, voiceSpeaker)
 
                     LaunchedEffect(appState) {
@@ -116,14 +138,27 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    when (appState) {
+                    if (showLocationRationale) {
+                        LocationRationaleScreen(
+                            onContinue = {
+                                showLocationRationale = false
+                                locationLauncher.launch(LocationDefaults.PERMISSIONS)
+                            },
+                            onNotNow = {
+                                showLocationRationale = false
+                                viewModel.startQuery()
+                            },
+                        )
+                    } else when (appState) {
                         AppState.IDLE -> HomeScreen(
                             isDark = isDarkMode,
                             isEnglish = isEnglish,
                             onToggleDark = viewModel::toggleDarkMode,
                             onToggleLanguage = viewModel::toggleLanguage,
-                            onMicClick = viewModel::startQuery,
+                            onMicClick = startQuery,
                         )
+
+                        AppState.LOCATING -> LocatingScreen(onUseVoice = viewModel::useSpokenLocation)
 
                         AppState.ASKING_LOCATION, AppState.ASKING_DESTINATION -> ListeningScreen(
                             prompt = if (appState == AppState.ASKING_DESTINATION) {
@@ -155,7 +190,7 @@ class MainActivity : ComponentActivity() {
                         AppState.RESULT -> plan?.let { ResultScreen(plan = it, onDismiss = viewModel::resetToIdle) }
 
                         AppState.NO_RESULT -> plan?.let {
-                            NoResultScreen(status = it.status, onNewQuery = viewModel::startQuery)
+                            NoResultScreen(status = it.status, onNewQuery = startQuery)
                         }
 
                         AppState.ERROR -> ErrorScreen(
@@ -199,8 +234,25 @@ class MainActivity : ComponentActivity() {
 /** Lee en voz alta el resultado: texto de la IA o, si no hay, una frase armada con recursos. */
 @Composable
 private fun SpeakResult(plan: TripPlan?, speaker: VoiceSpeaker) {
-    val leg = plan?.recommended?.firstLeg
-    val spoken = plan?.message?.spokenText
-        ?: leg?.let { stringResource(R.string.result_spoken_template, it.routeCode, it.board.name, it.alight.name) }
+    val legs = plan?.recommended?.legs.orEmpty()
+    val first = legs.firstOrNull()
+    val second = legs.getOrNull(1)
+    val spoken = plan?.message?.spokenText ?: when {
+        first == null -> null
+        second == null -> stringResource(
+            R.string.result_spoken_template,
+            first.routeCode,
+            first.board.name,
+            first.alight.name,
+        )
+        else -> stringResource(
+            R.string.result_spoken_transfer_template,
+            first.routeCode,
+            first.board.name,
+            first.alight.name,
+            second.routeCode,
+            second.alight.name,
+        )
+    }
     LaunchedEffect(spoken) { spoken?.let(speaker::speak) }
 }

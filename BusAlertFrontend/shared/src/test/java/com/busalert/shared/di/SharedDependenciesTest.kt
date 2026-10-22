@@ -8,6 +8,7 @@ import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.domain.ErrorCode
 import com.busalert.shared.domain.Outcome
 import com.busalert.shared.domain.TripPlan
+import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripQuery
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -35,7 +36,7 @@ class SharedDependenciesTest {
 
     @Test
     fun `sin URL o sin clave responde CONFIGURATION en vez de fallar`() = runTest {
-        val query = TripQuery("Terminal", "Centro", AppLanguage.SPANISH)
+        val query = TripQuery("Terminal", TripOrigin.Named("Centro"), AppLanguage.SPANISH)
         for (config in listOf(configured.copy(backendBaseUrl = ""), configured.copy(apiKey = ""))) {
             val repo = SharedDependencies(config).tripAssistantRepository
             assertEquals(UnconfiguredTripAssistantRepository, repo)
@@ -45,7 +46,7 @@ class SharedDependenciesTest {
 
     @Test
     fun `la demo marca todo como datos de demostración`() = runTest {
-        val plan = DemoTripAssistantRepository().planTrip(TripQuery("Terminal", "Centro", AppLanguage.SPANISH))
+        val plan = DemoTripAssistantRepository().planTrip(TripQuery("Terminal", TripOrigin.Named("Centro"), AppLanguage.SPANISH))
         val value = (plan as Outcome.Success<TripPlan>).value
         assertTrue(value.isDemoData)
         assertTrue(value.recommended!!.isDemo)

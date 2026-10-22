@@ -1,5 +1,6 @@
 package com.busalert.wear.ui
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -8,12 +9,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.busalert.shared.domain.AnswerSource
 import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.domain.ErrorCode
-import com.busalert.shared.domain.StopRef
-import com.busalert.shared.domain.TripLeg
 import com.busalert.shared.domain.TripMessage
-import com.busalert.shared.domain.TripOption
-import com.busalert.shared.domain.TripPlan
 import com.busalert.shared.domain.TripStatus
+import com.busalert.wear.TestData
 import com.busalert.wear.theme.BusAlertTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -26,7 +24,7 @@ class ScreensUiTest {
     @get:Rule
     val compose = createComposeRule()
 
-    private fun setScreen(language: AppLanguage = AppLanguage.SPANISH, content: @androidx.compose.runtime.Composable () -> Unit) {
+    private fun setScreen(language: AppLanguage = AppLanguage.SPANISH, content: @Composable () -> Unit) {
         compose.setContent {
             ProvideAppLanguage(language) {
                 BusAlertTheme(isDark = true) { content() }
@@ -36,15 +34,16 @@ class ScreensUiTest {
 
     @Test
     fun resultado_sin_texto_de_ia_se_arma_con_recursos() {
-        setScreen { ResultScreen(plan = plannerPlan, onDismiss = {}) }
+        setScreen { ResultScreen(plan = TestData.okPlan, onDismiss = {}) }
         compose.onNodeWithText("Sube en Udenar Torobajo").assertIsDisplayed()
         compose.onNodeWithText("Baja en Parque Bolívar • 2 paradas").assertIsDisplayed()
+        compose.onNodeWithText("≈ 12 min (estimado)").assertIsDisplayed()
         compose.onNodeWithText("Datos de demostración").assertIsDisplayed()
     }
 
     @Test
     fun resultado_usa_el_texto_de_la_ia_cuando_existe() {
-        val plan = plannerPlan.copy(
+        val plan = TestData.okPlan.copy(
             source = AnswerSource.AI,
             message = TripMessage("Toma la FX1.", "Ruta FX1 al centro", "Parada Udenar"),
             isDemoData = false,
@@ -56,9 +55,18 @@ class ScreensUiTest {
     }
 
     @Test
+    fun resultado_con_transbordo_y_gps() {
+        setScreen { ResultScreen(plan = TestData.transferPlan, onDismiss = {}) }
+        compose.onNodeWithText("Transbordo en Parque Nariño").assertIsDisplayed()
+        compose.onNodeWithText("Parada a 40 m").assertIsDisplayed()
+        compose.onNodeWithText("≈ 21 min (estimado)").assertIsDisplayed()
+    }
+
+    @Test
     fun resultado_en_ingles() {
-        setScreen(AppLanguage.ENGLISH) { ResultScreen(plan = plannerPlan, onDismiss = {}) }
+        setScreen(AppLanguage.ENGLISH) { ResultScreen(plan = TestData.okPlan, onDismiss = {}) }
         compose.onNodeWithText("Board at Udenar Torobajo").assertIsDisplayed()
+        compose.onNodeWithText("≈ 12 min (estimate)").assertIsDisplayed()
         compose.onNodeWithText("Demo data").assertIsDisplayed()
     }
 
@@ -83,34 +91,29 @@ class ScreensUiTest {
     @Test
     fun sin_resultados_explica_el_motivo() {
         var newQuery = 0
-        setScreen { NoResultScreen(status = TripStatus.DESTINATION_NOT_FOUND, onNewQuery = { newQuery++ }) }
-        compose.onNodeWithText("No reconozco ese destino. Prueba con el nombre de una parada.").assertIsDisplayed()
+        setScreen { NoResultScreen(status = TripStatus.NO_NEARBY_STOPS, onNewQuery = { newQuery++ }) }
+        compose.onNodeWithText("No hay paradas registradas cerca de ti. Di o escribe dónde estás.").assertIsDisplayed()
         compose.onNodeWithText("Nueva consulta").performClick()
         assertEquals(1, newQuery)
     }
 
-    private companion object {
-        val plannerPlan = TripPlan(
-            status = TripStatus.OK,
-            source = AnswerSource.PLANNER,
-            message = null,
-            recommended = TripOption(
-                legs = listOf(
-                    TripLeg(
-                        routeCode = "FX1",
-                        routeName = "FX1",
-                        directionName = "Udenar → Centro",
-                        board = StopRef(1, "T01", "Udenar Torobajo", null, null),
-                        alight = StopRef(3, "T03", "Parque Bolívar", null, null),
-                        stopsCount = 2,
-                    ),
-                ),
-                transfers = 0,
-                totalStops = 2,
-                isDemo = true,
-            ),
-            alternatives = emptyList(),
-            isDemoData = true,
-        )
+    @Test
+    fun ubicando_permite_cambiar_a_voz() {
+        var voice = 0
+        setScreen { LocatingScreen(onUseVoice = { voice++ }) }
+        compose.onNodeWithText("Buscando tu ubicación…").assertIsDisplayed()
+        compose.onNodeWithText("Decir dónde estoy").performClick()
+        assertEquals(1, voice)
+    }
+
+    @Test
+    fun explicacion_del_permiso_de_ubicacion() {
+        var continued = 0
+        var declined = 0
+        setScreen { LocationRationaleScreen(onContinue = { continued++ }, onNotNow = { declined++ }) }
+        compose.onNodeWithText("Continuar").performClick()
+        compose.onNodeWithText("Ahora no").performClick()
+        assertEquals(1, continued)
+        assertEquals(1, declined)
     }
 }

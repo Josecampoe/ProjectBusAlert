@@ -8,7 +8,9 @@ import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.domain.ErrorCode
 import com.busalert.shared.domain.Outcome
 import com.busalert.shared.domain.TripPlan
+import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripQuery
+import com.busalert.shared.domain.GeoPoint
 import com.busalert.shared.domain.TripStatus
 import com.google.gson.JsonParser
 import kotlinx.coroutines.test.runTest
@@ -25,7 +27,11 @@ import org.junit.Test
 class RemoteTripAssistantRepositoryTest {
 
     private lateinit var server: MockWebServer
-    private val query = TripQuery(destination = "Parque Bolívar", origin = "Udenar", language = AppLanguage.ENGLISH)
+    private val query = TripQuery(
+        destination = "Parque Bolívar",
+        origin = TripOrigin.Named("Udenar"),
+        language = AppLanguage.ENGLISH,
+    )
 
     @Before
     fun setUp() {
@@ -93,6 +99,31 @@ class RemoteTripAssistantRepositoryTest {
         assertEquals(TripStatus.NO_ROUTE, plan.status)
         assertNull(plan.recommended)
         assertNull(plan.message)
+    }
+
+    @Test
+    fun `con GPS envía coordenadas en lugar del nombre`() = runTest {
+        enqueueJson(200, contract("ok_gps.json"))
+        val located = query.copy(origin = TripOrigin.Located(GeoPoint(1.2143, -77.2787)))
+        val plan = (repository().planTrip(located) as Outcome.Success<TripPlan>).value
+
+        val body = JsonParser.parseString(server.takeRequest().body.readUtf8()).asJsonObject
+        assertEquals(1.2143, body["latitude"].asDouble, 0.0)
+        assertEquals(-77.2787, body["longitude"].asDouble, 0.0)
+        assertTrue(!body.has("currentLocationName"))
+        assertEquals("Parque Nariño", plan.recommended?.firstLeg?.board?.name)
+        assertEquals(40, plan.nearestStopDistanceMeters)
+    }
+
+    @Test
+    fun `entiende transbordos y estimaciones`() = runTest {
+        enqueueJson(200, contract("ok_transfer.json"))
+        val option = (repository().planTrip(query) as Outcome.Success<TripPlan>).value.recommended!!
+        assertEquals(1, option.transfers)
+        assertEquals(listOf("FX1", "FX2"), option.legs.map { it.routeCode })
+        assertEquals("Parque Nariño", option.transferSteps.single().to.name)
+        assertEquals(option.legs.sumOf { it.estimate!!.totalMinutes }, option.estimatedMinutes)
+        assertEquals("#1565C0", option.firstLeg.routeColor)
     }
 
     @Test

@@ -72,3 +72,20 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 
 ## D-021 · `.gitattributes` con `eol=lf`
 - **Motivo:** el repositorio mezclaba CRLF y LF y `gradlew` no tenía permiso de ejecución, así que fallaría en la CI de Linux. Se normalizó y se marcó `gradlew` como ejecutable.
+
+## D-022 · Datos de demostración separados y marcados (`data/sample/`)
+- **Motivo:** las paradas reales no tienen coordenadas, así que la búsqueda por GPS no se podía probar con datos reales. Se creó un set ficticio (rutas `DEMO-*`, paradas "Demo …", coordenadas aproximadas) con la fuente `demo_sample`. La API lo marca con `isDemo`/`isDemoData` y el reloj muestra "Datos de demostración". Se carga aparte con `npm run seed:sample`.
+
+## D-023 · Estimación de tiempos determinista detrás de `ArrivalTimeProvider`
+- **Alternativas:** dejar que la IA "adivine" (era lo anterior); no dar tiempos.
+- **Motivo:** viaje = distancia (Haversine entre paradas) / `ETA_AVERAGE_BUS_SPEED_KMH`, o paradas × `PLANNER_MINUTES_PER_STOP` si faltan coordenadas. Espera = frecuencia / 2 si la ruta tiene frecuencia para el tipo de día actual (zona horaria `TRANSIT_TIMEZONE`). Todo va con `isEstimate: true`. Para conectar tiempo real basta otra implementación de la interfaz.
+- **Limitación:** no se distinguen festivos (los domingos usan `DF`). Ver PENDIENTES.
+
+## D-024 · Un transbordo como máximo, también a pie
+- **Motivo:** cubre la mayoría de viajes urbanos sin disparar el costo de búsqueda. El transbordo puede ser en la misma parada o caminando hasta `PLANNER_TRANSFER_WALK_RADIUS_M` (requiere coordenadas). Las alternativas se ordenan por minutos estimados + `PLANNER_TRANSFER_PENALTY_MIN` por transbordo.
+
+## D-025 · Origen por GPS con prioridad y privacidad
+- **Motivo:** si llegan `latitude/longitude`, mandan sobre el texto. El origen pasa a ser las paradas dentro de `NEARBY_DEFAULT_RADIUS_M`. **Las coordenadas del usuario no se envían a la IA**: solo el nombre de la parada más cercana.
+
+## D-026 · Flujo de permiso de ubicación en el reloj
+- **Motivo:** al iniciar una consulta, si no hay permiso se muestra primero una explicación (cuando Android lo sugiere) y luego el diálogo del sistema. Se conceda o no, la consulta sigue: sin permiso o sin señal en `LocationDefaults.TIMEOUT_MS`, se pide el lugar por voz o teclado. Mientras busca el GPS, el usuario puede elegir "Decir dónde estoy".

@@ -1,0 +1,117 @@
+{
+  "source": "planner",
+  "message": null,
+  "recommended": {
+    "legs": [
+      {
+        "routeCode": "FX1",
+        "routeName": "FX1 — Udenar / Centro",
+        "routeColor": "#1565C0",
+        "directionKey": "FX1_D1",
+        "directionName": "Udenar → Centro",
+        "board": {
+          "id": 1,
+          "externalId": "T01",
+          "name": "Udenar Torobajo",
+          "latitude": 1.2335,
+          "longitude": -77.2925
+        },
+        "alight": {
+          "id": 4,
+          "externalId": "T04",
+          "name": "Parque Nariño",
+          "latitude": 1.214,
+          "longitude": -77.2785
+        },
+        "stopsCount": 3,
+        "estimate": {
+          "rideMinutes": 10,
+          "waitMinutes": 5,
+          "totalMinutes": 15,
+          "basis": "distance",
+          "headwaySource": "schedule",
+          "withinServiceHours": true,
+          "isEstimate": true
+        }
+      },
+      {
+        "routeCode": "FX2",
+        "routeName": "FX2 — Centro / Terminal",
+        "routeColor": null,
+        "directionKey": "FX2_D1",
+        "directionName": "Centro → Terminal",
+        "board": {
+          "id": 4,
+          "externalId": "T04",
+          "name": "Parque Nariño",
+          "latitude": 1.214,
+          "longitude": -77.2785
+        },
+        "alight": {
+          "id": 6,
+          "externalId": "T06",
+          "name": "Terminal de Transportes",
+          "latitude": 1.205,
+          "longitude": -77.27
+        },
+        "stopsCount": 2,
+        "estimate": {
+          "rideMinutes": 5,
+          "waitMinutes": null,
+          "totalMinutes": 5,
+          "basis": "distance",
+          "headwaySource": "none",
+          "withinServiceHours": null,
+          "isEstimate": true
+        }
+      }
+    ],
+    "transfers": 1,
+    "transferSteps": [
+      {
+        "from": {
+          "id": 4,
+          "externalId": "T04",
+          "name": "Parque Nariño",
+          "latitude": 1.214,
+          "longitude": -77.2785
+        },
+        "to": {
+          "id": 4,
+          "externalId": "T04",
+          "name": "Parque Nariño",
+          "latitude": 1.214,
+          "longitude": -77.2785
+        },
+        "walkMeters": 0,
+        "walkMinutes": 0
+      }
+    ],
+    "totalStops": 5,
+    "estimatedMinutes": 20,
+    "isEstimate": true,
+    "isDemo": true
+  },
+  "alternatives": [],
+  "originCandidates": [
+    {
+      "id": 1,
+      "externalId": "T01",
+      "name": "Udenar Torobajo",
+      "latitude": 1.2335,
+      "longitude": -77.2925,
+      "distanceMeters": null
+    }
+  ],
+  "destinationCandidates": [
+    {
+      "id": 6,
+      "externalId": "T06",
+      "name": "Terminal de Transportes",
+      "latitude": 1.205,
+      "longitude": -77.27
+    }
+  ],
+  "isDemoData": true,
+  "status": "ok"
+}

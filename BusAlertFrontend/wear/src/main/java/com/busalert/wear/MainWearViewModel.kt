@@ -8,8 +8,10 @@ import com.busalert.shared.domain.ErrorCode
 import com.busalert.shared.domain.Outcome
 import com.busalert.shared.domain.TripAssistantRepository
 import com.busalert.shared.domain.TripPlan
+import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripQuery
 import com.busalert.shared.domain.TripStatus
+import com.busalert.wear.location.LocationSource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,12 +21,15 @@ import kotlinx.coroutines.launch
 /**
  * Pantallas/estados del flujo del reloj:
  *
- * IDLE → ASKING_LOCATION (voz) ⇄ TYPING_LOCATION (teclado)
+ * IDLE → LOCATING (GPS) ──────────────────────────────┐ (ubicación obtenida)
+ *      → ASKING_LOCATION (voz) ⇄ TYPING_LOCATION (teclado) │ (sin permiso/GPS)
+ *                                                          ▼
  *      → ASKING_DESTINATION (voz) ⇄ TYPING_DESTINATION (teclado)
  *      → PROCESSING → RESULT | NO_RESULT | ERROR
  */
 enum class AppState {
     IDLE,
+    LOCATING,
     ASKING_LOCATION,
     ASKING_DESTINATION,
     TYPING_LOCATION,
@@ -37,6 +42,7 @@ enum class AppState {
 
 class MainWearViewModel(
     private val repository: TripAssistantRepository,
+    private val locationSource: LocationSource,
 ) : ViewModel() {
 
     private val _appState = MutableStateFlow(AppState.IDLE)
@@ -51,8 +57,9 @@ class MainWearViewModel(
     private val _typedText = MutableStateFlow("")
     val typedText: StateFlow<String> = _typedText.asStateFlow()
 
-    private val _capturedLocation = MutableStateFlow<String?>(null)
-    val capturedLocation: StateFlow<String?> = _capturedLocation.asStateFlow()
+    /** Origen elegido: ubicación GPS o lugar dicho/escrito. */
+    private val _origin = MutableStateFlow<TripOrigin?>(null)
+    val origin: StateFlow<TripOrigin?> = _origin.asStateFlow()
 
     private val _isDarkMode = MutableStateFlow(true)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
@@ -76,22 +83,44 @@ class MainWearViewModel(
 
     // ── Flujo de consulta ─────────────────────────────────────────────────
 
+    /**
+     * Inicia una consulta: primero intenta el GPS; si no hay permiso, señal o
+     * respuesta a tiempo, pide el lugar por voz (y teclado como alternativa).
+     */
     fun startQuery() {
+        cancelRequest()
         clearQuery()
+        _appState.value = AppState.LOCATING
+        requestJob = viewModelScope.launch {
+            val point = locationSource.currentLocation()
+            if (_appState.value != AppState.LOCATING) return@launch
+            if (point != null) {
+                _origin.value = TripOrigin.Located(point)
+                _appState.value = AppState.ASKING_DESTINATION
+            } else {
+                _appState.value = AppState.ASKING_LOCATION
+            }
+        }
+    }
+
+    /** El usuario prefiere decir dónde está en lugar de usar el GPS. */
+    fun useSpokenLocation() {
+        cancelRequest()
+        _origin.value = null
         _appState.value = AppState.ASKING_LOCATION
     }
 
     fun onLocationReceived(location: String) {
         val text = location.trim()
         if (text.isEmpty()) return
-        _capturedLocation.value = text
+        _origin.value = TripOrigin.Named(text)
         _typedText.value = ""
         _appState.value = AppState.ASKING_DESTINATION
     }
 
     fun onDestinationReceived(destination: String) {
         val text = destination.trim()
-        val origin = _capturedLocation.value
+        val origin = _origin.value
         if (text.isEmpty()) return
         if (origin == null) {
             // No debería ocurrir: sin origen se vuelve a preguntar en vez de suponer uno.
@@ -110,8 +139,7 @@ class MainWearViewModel(
 
     /** Cancela lo que esté en curso y vuelve al inicio. */
     fun resetToIdle() {
-        requestJob?.cancel()
-        requestJob = null
+        cancelRequest()
         clearQuery()
         lastQuery = null
         _appState.value = AppState.IDLE
@@ -122,7 +150,7 @@ class MainWearViewModel(
         _error.value = null
         _plan.value = null
         _appState.value = AppState.PROCESSING
-        requestJob?.cancel()
+        cancelRequest()
         requestJob = viewModelScope.launch {
             when (val outcome = repository.planTrip(query)) {
                 is Outcome.Success -> {
@@ -137,8 +165,13 @@ class MainWearViewModel(
         }
     }
 
+    private fun cancelRequest() {
+        requestJob?.cancel()
+        requestJob = null
+    }
+
     private fun clearQuery() {
-        _capturedLocation.value = null
+        _origin.value = null
         _plan.value = null
         _error.value = null
         _typedText.value = ""
@@ -170,11 +203,14 @@ class MainWearViewModel(
 
     fun submitTypedDestination() = onDestinationReceived(_typedText.value)
 
-    class Factory(private val repository: TripAssistantRepository) : ViewModelProvider.Factory {
+    class Factory(
+        private val repository: TripAssistantRepository,
+        private val locationSource: LocationSource,
+    ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             require(modelClass.isAssignableFrom(MainWearViewModel::class.java)) { "ViewModel desconocido: $modelClass" }
-            return MainWearViewModel(repository) as T
+            return MainWearViewModel(repository, locationSource) as T
         }
     }
 }

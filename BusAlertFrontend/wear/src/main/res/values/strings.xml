@@ -15,12 +15,27 @@
     <string name="result_spoken_template">Toma la ruta %1$s. Súbete en %2$s y bájate en %3$s.</string>
     <string name="result_demo_badge">Datos de demostración</string>
 
+    <string name="result_spoken_transfer_template">Toma la ruta %1$s en %2$s y bájate en %3$s. Luego toma la ruta %4$s hasta %5$s.</string>
+    <string name="result_estimate">≈ %1$d min (estimado)</string>
+    <string name="result_transfer_at">Transbordo en %1$s</string>
+    <string name="result_walk_transfer">Camina %1$d m hasta %2$s</string>
+    <string name="result_nearest_stop">Parada a %1$d m</string>
+
+    <!-- Ubicación -->
+    <string name="locating_title">Buscando tu ubicación…</string>
+    <string name="action_say_location">Decir dónde estoy</string>
+    <string name="location_rationale_title">Tu ubicación</string>
+    <string name="location_rationale_body">BusAlert usa tu ubicación para encontrar la parada más cercana. Si prefieres, puedes decir dónde estás.</string>
+    <string name="action_continue">Continuar</string>
+    <string name="action_not_now">Ahora no</string>
+
     <!-- Sin resultados -->
     <string name="no_result_title">Sin resultados</string>
     <string name="no_result_no_route">No encontré una ruta directa entre esos lugares.</string>
     <string name="no_result_same_place">El origen y el destino son el mismo lugar.</string>
     <string name="no_result_origin_not_found">No reconozco ese lugar de origen. Prueba con el nombre de una parada.</string>
     <string name="no_result_destination_not_found">No reconozco ese destino. Prueba con el nombre de una parada.</string>
+    <string name="no_result_no_nearby_stops">No hay paradas registradas cerca de ti. Di o escribe dónde estás.</string>
     <string name="action_new_query">Nueva consulta</string>
 
     <!-- Errores (por código estable) -->

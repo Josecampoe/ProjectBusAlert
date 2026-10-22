@@ -31,3 +31,13 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | `npm test` | 12 archivos, **99 pruebas OK** (cobertura de líneas 92,97%) |
 | `npm run build` + `node dist/index.js` + `POST /api/voice` | Responde con plan E1 (planificador) |
 | `./gradlew assembleDebug testDebugUnitTest lintDebug` | BUILD SUCCESSFUL; **28 pruebas OK**; lint: "No issues found" en los 3 módulos |
+
+## Fase 3 — Datos y GPS (2026-10-22)
+
+| Verificación | Resultado |
+|---|---|
+| Prueba de aceptación `src/gps.acceptance.test.ts`: "¿Cómo voy a UDENAR?" desde (1.2143, -77.2787) | Origen = parada más cercana "Parque Nariño" (40 m); plan FX1 sentido "Centro → Udenar" desde la BD; `isEstimate: true`; la IA no recibe las coordenadas |
+| `npm test` (backend) | **120 pruebas OK** (transbordos, caminata, estimaciones, horario por zona horaria, nearby, demo) |
+| `npm run data:validate` (datos reales) y `-- --data-dir ./data/sample` | Ambos válidos, 0 errores |
+| Contratos `ok_gps` y `ok_transfer` | Generados por el backend y parseados por Android |
+| `./gradlew clean assembleDebug testDebugUnitTest lintDebug` | BUILD SUCCESSFUL; **35 pruebas OK**; lint "No issues found" en los 3 módulos |

@@ -619,6 +619,33 @@ fun ResultScreen(
                 fontSize = 8.5.sp,
                 textAlign = TextAlign.Center
             )
+            option.estimatedMinutes?.let { minutes ->
+                Text(
+                    text = stringResource(R.string.result_estimate, minutes),
+                    color = tokens.textSecondary,
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            option.transferSteps.firstOrNull()?.let { step ->
+                Text(
+                    text = if (step.walkMeters > 0) {
+                        stringResource(R.string.result_walk_transfer, step.walkMeters, step.to.name)
+                    } else {
+                        stringResource(R.string.result_transfer_at, step.to.name)
+                    },
+                    color = tokens.textMuted,
+                    fontSize = 8.5.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+            plan.nearestStopDistanceMeters?.let { meters ->
+                Text(
+                    text = stringResource(R.string.result_nearest_stop, meters),
+                    color = tokens.textMuted,
+                    fontSize = 8.5.sp
+                )
+            }
             if (plan.isDemoData) {
                 Text(
                     text = stringResource(R.string.result_demo_badge),
@@ -664,6 +691,98 @@ fun ErrorScreen(
         actionLabel = stringResource(if (error.isRetryable) R.string.action_retry else R.string.action_home),
         onAction = if (error.isRetryable) onRetry else onHome
     )
+}
+
+@Composable
+fun LocatingScreen(onUseVoice: () -> Unit) {
+    val tokens = LocalBusAlertTheme.current
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(tokens.bgBrush),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(36.dp),
+                indicatorColor = tokens.primaryAccent,
+                trackColor = tokens.cardBorder,
+                strokeWidth = 3.dp
+            )
+            Text(
+                text = stringResource(R.string.locating_title),
+                color = tokens.textPrimary,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+            Button(
+                onClick = onUseVoice,
+                modifier = Modifier
+                    .fillMaxWidth(0.75f)
+                    .height(26.dp),
+                shape = RoundedCornerShape(13.dp),
+                colors = ButtonDefaults.secondaryButtonColors()
+            ) {
+                Text(
+                    text = stringResource(R.string.action_say_location),
+                    color = tokens.textPrimary,
+                    fontSize = 9.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun LocationRationaleScreen(onContinue: () -> Unit, onNotNow: () -> Unit) {
+    val tokens = LocalBusAlertTheme.current
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(tokens.bgBrush),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 18.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.location_rationale_title),
+                color = tokens.textPrimary,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = stringResource(R.string.location_rationale_body),
+                color = tokens.textSecondary,
+                fontSize = 9.sp,
+                textAlign = TextAlign.Center,
+                lineHeight = 12.sp
+            )
+            Button(
+                onClick = onContinue,
+                modifier = Modifier
+                    .fillMaxWidth(0.65f)
+                    .height(26.dp),
+                shape = RoundedCornerShape(13.dp),
+                colors = ButtonDefaults.primaryButtonColors(backgroundColor = tokens.primary)
+            ) {
+                Text(text = stringResource(R.string.action_continue), color = PureWhite, fontSize = 10.sp)
+            }
+            Text(
+                text = stringResource(R.string.action_not_now),
+                color = tokens.textMuted,
+                fontSize = 9.sp,
+                modifier = Modifier.clickable(onClick = onNotNow)
+            )
+        }
+    }
 }
 
 @Composable
