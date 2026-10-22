@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main, mejoras-profesionales]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend (Node.js)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend-node
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: backend-node/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Importar los datos reales del repositorio
+        run: npm run seed
+        env:
+          DB_PATH: ./data/db/ci.sqlite
+          DATA_DIR: ./data
+
+  android:
+    name: Android (Wear OS, móvil y shared)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: BusAlertFrontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Compilar, probar y analizar
+        run: ./gradlew --no-daemon assembleDebug testDebugUnitTest lintDebug
+      - name: Reportes de pruebas y lint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-reports
+          path: |
+            BusAlertFrontend/*/build/reports/
+            BusAlertFrontend/*/build/test-results/
+          retention-days: 7

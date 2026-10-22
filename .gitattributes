@@ -1,0 +1,13 @@
+# Finales de línea consistentes entre Windows, macOS, Linux y la CI.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+gradlew text eol=lf
+
+# Binarios
+*.jar binary
+*.png binary
+*.webp binary
+*.db binary
+*.sqlite binary

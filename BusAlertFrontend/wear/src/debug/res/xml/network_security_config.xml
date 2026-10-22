@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Debug: permite HTTP para el backend local (emulador 10.0.2.2 o IP de la red). -->
-<network-security-config>
-    <base-config cleartextTrafficPermitted="true" />
+<!-- Debug: permite HTTP para el backend local (emulador 10.0.2.2 o IP de la red).
+     Este archivo solo existe en el source set debug; release usa solo HTTPS. -->
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
+    <base-config
+        cleartextTrafficPermitted="true"
+        tools:ignore="InsecureBaseConfiguration" />
 </network-security-config>

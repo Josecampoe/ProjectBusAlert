@@ -12,13 +12,13 @@ const PROMPT_DELIMITER_CHARS = /[<>`{}[\]]/g;
 
 /** Minúsculas, sin tildes, solo letras/números separados por un espacio. */
 export function normalizeForSearch(text: string): string {
-    return text
-        .normalize('NFD')
-        .replace(DIACRITICS, '')
-        .toLowerCase()
-        .replace(NON_ALPHANUMERIC, ' ')
-        .trim()
-        .replace(WHITESPACE_RUN, ' ');
+  return text
+    .normalize('NFD')
+    .replace(DIACRITICS, '')
+    .toLowerCase()
+    .replace(NON_ALPHANUMERIC, ' ')
+    .trim()
+    .replace(WHITESPACE_RUN, ' ');
 }
 
 /**
@@ -27,17 +27,17 @@ export function normalizeForSearch(text: string): string {
  * espacios y recorta a `maxLength`.
  */
 export function sanitizeUserText(text: string, maxLength: number): string {
-    return text
-        .normalize('NFC')
-        .replace(CONTROL_CHARS, ' ')
-        .replace(PROMPT_DELIMITER_CHARS, ' ')
-        .replace(WHITESPACE_RUN, ' ')
-        .trim()
-        .slice(0, maxLength);
+  return text
+    .normalize('NFC')
+    .replace(CONTROL_CHARS, ' ')
+    .replace(PROMPT_DELIMITER_CHARS, ' ')
+    .replace(WHITESPACE_RUN, ' ')
+    .trim()
+    .slice(0, maxLength);
 }
 
 /** ¿`needle` aparece en `haystack` como palabras completas? (ambos ya normalizados) */
 export function containsWholePhrase(haystack: string, needle: string): boolean {
-    if (needle.length === 0) return false;
-    return ` ${haystack} `.includes(` ${needle} `);
+  if (needle.length === 0) return false;
+  return ` ${haystack} `.includes(` ${needle} `);
 }

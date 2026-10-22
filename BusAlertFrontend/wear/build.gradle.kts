@@ -33,12 +33,23 @@ android {
             isMinifyEnabled = false
         }
     }
+    bundle {
+        // El idioma se elige dentro de la app: todos los idiomas deben venir en el APK.
+        language { enableSplit = false }
+    }
     buildFeatures {
         compose = true
         buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.9"
+    }
+    lint {
+        // Los avisos también rompen el build. GradleDependency se desactiva porque
+        // las versiones nuevas exigen otra toolchain (ver docs/DECISIONES.md, D-002).
+        warningsAsErrors = true
+        abortOnError = true
+        disable += "GradleDependency"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -82,4 +93,10 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("app.cash.turbine:turbine:1.0.0")
+
+    // Pruebas de UI de Compose en la JVM (Robolectric), sin emulador.
+    testImplementation("org.robolectric:robolectric:4.11.1")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("androidx.compose.ui:ui-test-junit4:1.6.3")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.3")
 }

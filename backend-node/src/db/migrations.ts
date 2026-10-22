@@ -3,16 +3,16 @@
  * publicada: los cambios se agregan como una versión nueva al final.
  */
 export interface Migration {
-    version: number;
-    name: string;
-    sql: string;
+  version: number;
+  name: string;
+  sql: string;
 }
 
 export const MIGRATIONS: Migration[] = [
-    {
-        version: 1,
-        name: 'esquema_inicial',
-        sql: `
+  {
+    version: 1,
+    name: 'esquema_inicial',
+    sql: `
 CREATE TABLE IF NOT EXISTS sources (
     id              TEXT PRIMARY KEY,
     name            TEXT NOT NULL,
@@ -127,5 +127,5 @@ CREATE TABLE IF NOT EXISTS route_changes (
     notes       TEXT
 );
 `,
-    },
+  },
 ];

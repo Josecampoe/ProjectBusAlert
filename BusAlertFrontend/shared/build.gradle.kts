@@ -9,6 +9,13 @@ android {
     defaultConfig {
         minSdk = 26
     }
+    lint {
+        // Los avisos también rompen el build. GradleDependency se desactiva porque
+        // las versiones nuevas exigen otra toolchain (ver docs/DECISIONES.md, D-002).
+        warningsAsErrors = true
+        abortOnError = true
+        disable += "GradleDependency"
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
