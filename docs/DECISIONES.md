@@ -27,3 +27,32 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 
 ## D-007 · Primero el renombrado de la carpeta
 - **Motivo:** el paso 8 de la Fase 1 (`BusAlertfrotend` → `BusAlertFrontend`) se hace al principio para no tocar dos veces las rutas de CI, README y scripts.
+
+## D-008 · Vitest en lugar de Jest
+- **Alternativas:** Jest + ts-jest.
+- **Motivo:** Vitest carga `node:sqlite` y TypeScript sin configuración extra (se probó antes de elegir), es más rápido y su API (`describe/it/expect`) es la misma que usaban los tests anteriores. Se combina con `supertest` para las pruebas HTTP.
+
+## D-009 · `tsx` en lugar de `ts-node-dev`
+- **Motivo:** `ts-node-dev` está sin mantenimiento. `tsx` ejecuta TypeScript en Node 24 sin compilar y trae modo `watch`. En producción se usa `tsc` + `node dist/`.
+
+## D-010 · Resolución de lugares determinista; la IA solo redacta
+- **Alternativas:** que la IA interprete el texto libre y decida la ruta.
+- **Motivo:** la regla es no inventar datos. El backend resuelve origen y destino contra la BD (nombre, alias, palabras clave, sin tildes) y el planificador calcula las alternativas. La IA solo elige **un índice** entre esas alternativas y redacta el texto; si responde algo fuera de esquema o un índice inexistente, se descarta y se usa el planificador. Así una IA que "obedece" un intento de inyección no puede introducir una ruta inventada.
+
+## D-011 · Contratos JSON compartidos (`contracts/`)
+- **Motivo:** las pruebas del backend guardan respuestas reales en `contracts/voice/*.json` y las pruebas de Android parsean esos mismos archivos. Un cambio de formato en cualquiera de los dos lados rompe una prueba. Se regeneran con `UPDATE_CONTRACTS=1 npm test -- contracts`.
+
+## D-012 · DTOs anulables + mapeo validado en Android
+- **Motivo:** Gson ignora la nulidad de Kotlin. Los DTOs son anulables y `DtoMappers.kt` valida al convertir al dominio. Si la respuesta no cumple el contrato, el resultado es `ErrorCode.SERVER` y la app no se cae.
+
+## D-013 · Retrofit 2.11 + OkHttp 4.12
+- **Motivo:** Retrofit 2.9 arrastraba OkHttp 3. Con OkHttp 4 se puede usar `mockwebserver` 4.12 en las pruebas y el interceptor de la cabecera `X-API-Key`.
+
+## D-014 · Demo solo en debug y con datos marcados
+- **Motivo:** `busalert.useMock=true` activa `DemoTripAssistantRepository` **solo en debug** (en release el flag queda en `false` a la fuerza). La demo usa la ruta ficticia "DEMO" y marca todo con `isDemoData`. Se eliminaron los mocks anteriores, que tenían tiempos y rutas inventados.
+
+## D-015 · Configuración Android por `local.properties` / variables de entorno
+- **Motivo:** el `build.gradle.kts` raíz lee `busalert.*` (o `BUSALERT_*`) y los módulos los pasan a `BuildConfig`. El build release se detiene si `busalert.release.backendUrl` no es HTTPS. Debug permite HTTP (`network_security_config` de debug); release solo HTTPS.
+
+## D-016 · Nueva ruta por defecto de la BD (`data/db/busalert.sqlite`)
+- **Motivo:** el archivo anterior `data/busalert.db` tiene el esquema viejo, sin restricciones `UNIQUE`, y no se puede migrar con seguridad. No se borró: queda en disco (está ignorado por git) y la BD nueva se crea en otra ruta.
