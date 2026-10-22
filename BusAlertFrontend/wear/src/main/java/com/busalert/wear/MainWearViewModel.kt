@@ -1,151 +1,163 @@
 package com.busalert.wear
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.busalert.shared.di.SharedDependencies
-import com.busalert.shared.domain.NavigationInstruction
+import com.busalert.shared.domain.AppLanguage
+import com.busalert.shared.domain.ErrorCode
+import com.busalert.shared.domain.Outcome
+import com.busalert.shared.domain.TripAssistantRepository
+import com.busalert.shared.domain.TripPlan
+import com.busalert.shared.domain.TripQuery
+import com.busalert.shared.domain.TripStatus
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * Estados de la app:
+ * Pantallas/estados del flujo del reloj:
  *
- * IDLE              → pantalla de inicio (logo + selector modo/idioma + botón micrófono)
- * ASKING_LOCATION   → escuchando/preguntando "¿Dónde estás?"
- * ASKING_DESTINATION→ escuchando/preguntando "¿A dónde vas?"
- * LISTENING         → animación de barras de audio (STT activo)
- * PROCESSING        → spinner mientras el backend calcula la ruta
- * RESULT            → muestra la ruta recomendada
- * ERROR             → error de red o de IA
- * TYPING_LOCATION   → fallback: el usuario escribe su ubicación
- * TYPING_DESTINATION→ fallback: el usuario escribe su destino
+ * IDLE → ASKING_LOCATION (voz) ⇄ TYPING_LOCATION (teclado)
+ *      → ASKING_DESTINATION (voz) ⇄ TYPING_DESTINATION (teclado)
+ *      → PROCESSING → RESULT | NO_RESULT | ERROR
  */
 enum class AppState {
     IDLE,
     ASKING_LOCATION,
     ASKING_DESTINATION,
-    LISTENING,
+    TYPING_LOCATION,
+    TYPING_DESTINATION,
     PROCESSING,
     RESULT,
+    NO_RESULT,
     ERROR,
-    TYPING_LOCATION,
-    TYPING_DESTINATION
 }
 
-class MainWearViewModel : ViewModel() {
-    private val aiRepository = SharedDependencies.aiAssistantRepository
+class MainWearViewModel(
+    private val repository: TripAssistantRepository,
+) : ViewModel() {
 
     private val _appState = MutableStateFlow(AppState.IDLE)
     val appState: StateFlow<AppState> = _appState.asStateFlow()
 
-    private val _lastResult = MutableStateFlow<NavigationInstruction?>(null)
-    val lastResult: StateFlow<NavigationInstruction?> = _lastResult.asStateFlow()
+    private val _plan = MutableStateFlow<TripPlan?>(null)
+    val plan: StateFlow<TripPlan?> = _plan.asStateFlow()
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+    private val _error = MutableStateFlow<ErrorCode?>(null)
+    val error: StateFlow<ErrorCode?> = _error.asStateFlow()
 
     private val _typedText = MutableStateFlow("")
     val typedText: StateFlow<String> = _typedText.asStateFlow()
 
-    // ── Preferencias del usuario: Modo Oscuro e Idioma ────────────────
+    private val _capturedLocation = MutableStateFlow<String?>(null)
+    val capturedLocation: StateFlow<String?> = _capturedLocation.asStateFlow()
+
     private val _isDarkMode = MutableStateFlow(true)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
 
-    private val _isEnglish = MutableStateFlow(false)
-    val isEnglish: StateFlow<Boolean> = _isEnglish.asStateFlow()
+    private val _language = MutableStateFlow(AppLanguage.SPANISH)
+    val language: StateFlow<AppLanguage> = _language.asStateFlow()
+
+    /** Última consulta enviada, para reintentar sin volver a preguntar. */
+    private var lastQuery: TripQuery? = null
+    private var requestJob: Job? = null
+
+    // ── Preferencias ──────────────────────────────────────────────────────
 
     fun toggleDarkMode() {
         _isDarkMode.value = !_isDarkMode.value
     }
 
     fun toggleLanguage() {
-        _isEnglish.value = !_isEnglish.value
+        _language.value = if (_language.value == AppLanguage.SPANISH) AppLanguage.ENGLISH else AppLanguage.SPANISH
     }
 
-    // Almacena la ubicación capturada en el paso 1
-    private val _capturedLocation = MutableStateFlow<String?>(null)
-    val capturedLocation: StateFlow<String?> = _capturedLocation.asStateFlow()
+    // ── Flujo de consulta ─────────────────────────────────────────────────
 
-    // ─── Paso 1: el usuario pulsa el botón en HomeScreen ──────────────
-    fun onMicrophoneClick() {
-        _capturedLocation.value = null
-        _lastResult.value = null
-        _errorMessage.value = null
-        _typedText.value = ""
+    fun startQuery() {
+        clearQuery()
         _appState.value = AppState.ASKING_LOCATION
     }
 
-    // ─── Inicia STT (la UI lo llama cuando está lista para escuchar) ──
-    fun onStartListening() {
-        _appState.value = AppState.LISTENING
-    }
-
-    // ─── Recibe la ubicación hablada (Paso 1 completado) ──────────────
     fun onLocationReceived(location: String) {
-        _capturedLocation.value = location.trim()
+        val text = location.trim()
+        if (text.isEmpty()) return
+        _capturedLocation.value = text
+        _typedText.value = ""
         _appState.value = AppState.ASKING_DESTINATION
     }
 
-    // ─── Recibe el destino hablado (Paso 2 completado → llama al backend)
     fun onDestinationReceived(destination: String) {
-        val location = _capturedLocation.value ?: "Pasto, Nariño"
-        processVoiceInput(destination.trim(), location)
+        val text = destination.trim()
+        val origin = _capturedLocation.value
+        if (text.isEmpty()) return
+        if (origin == null) {
+            // No debería ocurrir: sin origen se vuelve a preguntar en vez de suponer uno.
+            _appState.value = AppState.ASKING_LOCATION
+            return
+        }
+        _typedText.value = ""
+        submit(TripQuery(destination = text, origin = origin, language = _language.value))
     }
 
-    // ─── Llama al backend con ubicación + destino + idioma ────────────
-    private fun processVoiceInput(destination: String, location: String) {
-        _appState.value = AppState.PROCESSING
-        val lang = if (_isEnglish.value) "en" else "es"
+    /** Reintenta la última consulta (por ejemplo tras un error de red). */
+    fun retry() {
+        val query = lastQuery
+        if (query == null) startQuery() else submit(query.copy(language = _language.value))
+    }
 
-        viewModelScope.launch {
-            try {
-                val instruction = aiRepository.processVoiceCommand(destination, location, lang)
-                val isError = instruction.recommendedRouteId == null && (
-                    instruction.displayTitle.contains("Error", ignoreCase = true) ||
-                    instruction.displayTitle.contains("Apagado", ignoreCase = true) ||
-                    instruction.displayTitle.contains("Offline", ignoreCase = true) ||
-                    instruction.displayTitle.contains("Unavailable", ignoreCase = true) ||
-                    instruction.displayTitle.contains("conexión", ignoreCase = true) ||
-                    instruction.displayTitle.contains("conexion", ignoreCase = true)
-                )
-                if (isError) {
-                    _errorMessage.value = instruction.spokenText
+    /** Cancela lo que esté en curso y vuelve al inicio. */
+    fun resetToIdle() {
+        requestJob?.cancel()
+        requestJob = null
+        clearQuery()
+        lastQuery = null
+        _appState.value = AppState.IDLE
+    }
+
+    private fun submit(query: TripQuery) {
+        lastQuery = query
+        _error.value = null
+        _plan.value = null
+        _appState.value = AppState.PROCESSING
+        requestJob?.cancel()
+        requestJob = viewModelScope.launch {
+            when (val outcome = repository.planTrip(query)) {
+                is Outcome.Success -> {
+                    _plan.value = outcome.value
+                    _appState.value = if (outcome.value.status == TripStatus.OK) AppState.RESULT else AppState.NO_RESULT
+                }
+                is Outcome.Failure -> {
+                    _error.value = outcome.error
                     _appState.value = AppState.ERROR
-                } else {
-                    _lastResult.value = instruction
-                    _appState.value = AppState.RESULT
                 }
-            } catch (e: Exception) {
-                _errorMessage.value = if (_isEnglish.value) {
-                    "Could not connect to Gemini AI. Check your internet connection."
-                } else {
-                    "No se pudo conectar con la IA de Gemini. Verifica tu conexión a internet."
-                }
-                _appState.value = AppState.ERROR
             }
         }
     }
 
-    // ─── Fallbacks de escritura ────────────────────────────────────────
+    private fun clearQuery() {
+        _capturedLocation.value = null
+        _plan.value = null
+        _error.value = null
+        _typedText.value = ""
+    }
 
-    /** STT falló en el paso de ubicación → modo escritura */
+    // ── Alternancia voz / teclado ─────────────────────────────────────────
+
     fun onLocationSpeechFailed() {
         _appState.value = AppState.TYPING_LOCATION
     }
 
-    /** STT falló en el paso de destino → modo escritura */
     fun onDestinationSpeechFailed() {
         _appState.value = AppState.TYPING_DESTINATION
     }
 
-    /** Cambia de escritura a voz en el paso de ubicación */
     fun retryLocationSpeech() {
         _appState.value = AppState.ASKING_LOCATION
     }
 
-    /** Cambia de escritura a voz en el paso de destino */
     fun retryDestinationSpeech() {
         _appState.value = AppState.ASKING_DESTINATION
     }
@@ -154,29 +166,15 @@ class MainWearViewModel : ViewModel() {
         _typedText.value = text
     }
 
-    /** Envía el texto escrito como ubicación */
-    fun submitTypedLocation() {
-        val text = _typedText.value.trim()
-        if (text.isNotEmpty()) {
-            _typedText.value = ""
-            onLocationReceived(text)
-        }
-    }
+    fun submitTypedLocation() = onLocationReceived(_typedText.value)
 
-    /** Envía el texto escrito como destino */
-    fun submitTypedDestination() {
-        val text = _typedText.value.trim()
-        if (text.isNotEmpty()) {
-            _typedText.value = ""
-            onDestinationReceived(text)
-        }
-    }
+    fun submitTypedDestination() = onDestinationReceived(_typedText.value)
 
-    fun resetToIdle() {
-        _appState.value = AppState.IDLE
-        _lastResult.value = null
-        _errorMessage.value = null
-        _capturedLocation.value = null
-        _typedText.value = ""
+    class Factory(private val repository: TripAssistantRepository) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            require(modelClass.isAssignableFrom(MainWearViewModel::class.java)) { "ViewModel desconocido: $modelClass" }
+            return MainWearViewModel(repository) as T
+        }
     }
 }

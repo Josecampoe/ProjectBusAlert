@@ -1,34 +1,51 @@
 package com.busalert.shared.di
 
-import com.busalert.shared.data.GeminiDirectAssistantRepositoryImpl
-import com.busalert.shared.data.MockTransitRepositoryImpl
-import com.busalert.shared.data.api.gemini.GeminiApiService
-import com.busalert.shared.data.api.gemini.GeminiConfig
-import com.busalert.shared.domain.AIAssistantRepository
-import com.busalert.shared.domain.TransitRepository
+import com.busalert.shared.config.NetworkDefaults
+import com.busalert.shared.config.SharedConfig
+import com.busalert.shared.data.DemoTripAssistantRepository
+import com.busalert.shared.data.RemoteTripAssistantRepository
+import com.busalert.shared.data.UnconfiguredTripAssistantRepository
+import com.busalert.shared.data.api.BusAlertApi
+import com.busalert.shared.domain.TripAssistantRepository
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
-object SharedDependencies {
+/**
+ * Contenedor de dependencias del módulo compartido.
+ * El backend real es el predeterminado; la demo solo se usa si la app lo
+ * pide explícitamente (flag de BuildConfig habilitado solo en debug).
+ */
+class SharedDependencies(private val config: SharedConfig) {
 
-    // Cliente Retrofit conectado directamente a Google Gemini API (Sin Backend local)
-    private val geminiRetrofit: Retrofit by lazy {
+    val tripAssistantRepository: TripAssistantRepository by lazy {
+        when {
+            config.useMockBackend -> DemoTripAssistantRepository()
+            !config.isBackendConfigured -> UnconfiguredTripAssistantRepository
+            else -> RemoteTripAssistantRepository(api)
+        }
+    }
+
+    private val api: BusAlertApi by lazy {
         Retrofit.Builder()
-            .baseUrl(GeminiConfig.BASE_URL)
+            .baseUrl(config.backendBaseUrl)
+            .client(httpClient(config))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(BusAlertApi::class.java)
     }
 
-    private val geminiApiService: GeminiApiService by lazy {
-        geminiRetrofit.create(GeminiApiService::class.java)
-    }
+    companion object {
+        fun httpClient(config: SharedConfig): OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(config.connectTimeoutMs, TimeUnit.MILLISECONDS)
+            .readTimeout(config.readTimeoutMs, TimeUnit.MILLISECONDS)
+            .addInterceptor(apiKeyInterceptor(config.apiKey))
+            .build()
 
-    // Repositorio de IA con conexión directa a la API de Gemini (cero backend requerido)
-    val aiAssistantRepository: AIAssistantRepository by lazy {
-        GeminiDirectAssistantRepositoryImpl(geminiApiService)
-    }
-
-    val transitRepository: TransitRepository by lazy {
-        MockTransitRepositoryImpl()
+        fun apiKeyInterceptor(apiKey: String) = Interceptor { chain ->
+            chain.proceed(chain.request().newBuilder().header(NetworkDefaults.API_KEY_HEADER, apiKey).build())
+        }
     }
 }

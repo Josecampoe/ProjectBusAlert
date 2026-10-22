@@ -28,7 +28,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.*
-import com.busalert.shared.domain.NavigationInstruction
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import com.busalert.shared.domain.ErrorCode
+import com.busalert.shared.domain.TripPlan
+import com.busalert.shared.domain.TripStatus
+import com.busalert.wear.R
 import com.busalert.wear.theme.*
 
 // ─────────────────────────────────────────────────────────────
@@ -544,12 +549,14 @@ fun ProcessingScreen(isEnglish: Boolean = false) {
 // ─────────────────────────────────────────────────────────────
 @Composable
 fun ResultScreen(
-    result: NavigationInstruction,
-    isEnglish: Boolean = false,
+    plan: TripPlan,
     onDismiss: () -> Unit
 ) {
     val tokens = LocalBusAlertTheme.current
-    val strings = remember(isEnglish) { AppStrings(isEnglish) }
+    val option = plan.recommended ?: return
+    val leg = option.firstLeg
+    val title = plan.message?.displayTitle ?: stringResource(R.string.result_route_title, leg.routeCode)
+    val subtitle = plan.message?.displaySubtitle ?: stringResource(R.string.result_board_at, leg.board.name)
 
     Box(
         modifier = Modifier
@@ -567,27 +574,23 @@ fun ResultScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            // Chip de ruta
-            result.recommendedRouteId?.let { id ->
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(tokens.primary)
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                ) {
-                    Text(
-                        text = "${strings.routePrefix} $id",
-                        color = PureWhite,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        letterSpacing = 0.5.sp
-                    )
-                }
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(tokens.primary)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.result_route_title, leg.routeCode),
+                    color = PureWhite,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    letterSpacing = 0.5.sp
+                )
             }
 
-            // Título
             Text(
-                text = result.displayTitle,
+                text = title,
                 color = tokens.textPrimary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
@@ -595,7 +598,6 @@ fun ResultScreen(
                 lineHeight = 15.sp
             )
 
-            // Línea divisora
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
@@ -603,18 +605,29 @@ fun ResultScreen(
                     .background(tokens.cardBorder)
             )
 
-            // Subtítulo
             Text(
-                text = result.displaySubtitle,
+                text = subtitle,
                 color = tokens.textSecondary,
                 fontSize = 9.5.sp,
                 textAlign = TextAlign.Center,
                 lineHeight = 12.sp
             )
+            Text(
+                text = stringResource(R.string.result_alight_at, leg.alight.name) + " • " +
+                    pluralStringResource(R.plurals.result_stops_count, option.totalStops, option.totalStops),
+                color = tokens.textMuted,
+                fontSize = 8.5.sp,
+                textAlign = TextAlign.Center
+            )
+            if (plan.isDemoData) {
+                Text(
+                    text = stringResource(R.string.result_demo_badge),
+                    color = tokens.primaryAccent,
+                    fontSize = 8.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
-            Spacer(modifier = Modifier.height(2.dp))
-
-            // Botón cerrar
             Button(
                 onClick = onDismiss,
                 modifier = Modifier
@@ -626,7 +639,7 @@ fun ResultScreen(
                 )
             ) {
                 Text(
-                    text = strings.resultClose,
+                    text = stringResource(R.string.action_home),
                     color = PureWhite,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
@@ -637,16 +650,43 @@ fun ResultScreen(
 }
 
 // ─────────────────────────────────────────────────────────────
-// ERROR SCREEN
+// ERROR / SIN RESULTADOS
 // ─────────────────────────────────────────────────────────────
 @Composable
 fun ErrorScreen(
-    message: String?,
-    isEnglish: Boolean = false,
-    onRetry: () -> Unit
+    error: ErrorCode,
+    onRetry: () -> Unit,
+    onHome: () -> Unit
+) {
+    MessageScreen(
+        title = stringResource(R.string.error_title),
+        message = stringResource(error.messageRes()),
+        actionLabel = stringResource(if (error.isRetryable) R.string.action_retry else R.string.action_home),
+        onAction = if (error.isRetryable) onRetry else onHome
+    )
+}
+
+@Composable
+fun NoResultScreen(
+    status: TripStatus,
+    onNewQuery: () -> Unit
+) {
+    MessageScreen(
+        title = stringResource(R.string.no_result_title),
+        message = stringResource(status.noResultMessageRes()),
+        actionLabel = stringResource(R.string.action_new_query),
+        onAction = onNewQuery
+    )
+}
+
+@Composable
+private fun MessageScreen(
+    title: String,
+    message: String,
+    actionLabel: String,
+    onAction: () -> Unit
 ) {
     val tokens = LocalBusAlertTheme.current
-    val strings = remember(isEnglish) { AppStrings(isEnglish) }
 
     Box(
         modifier = Modifier
@@ -659,53 +699,23 @@ fun ErrorScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(34.dp)
-                    .clip(CircleShape)
-                    .background(tokens.chipBackground)
-                    .border(1.5.dp, tokens.primaryAccent, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(2.5.dp)
-                            .height(10.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(tokens.primaryAccent)
-                    )
-                    Box(
-                        modifier = Modifier
-                            .size(2.5.dp)
-                            .clip(CircleShape)
-                            .background(tokens.primaryAccent)
-                    )
-                }
-            }
-
             Text(
-                text = strings.errorTitle,
+                text = title,
                 color = tokens.textPrimary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-
             Text(
-                text = message ?: strings.errorTitle,
+                text = message,
                 color = tokens.textMuted,
                 fontSize = 9.sp,
                 textAlign = TextAlign.Center,
                 lineHeight = 12.sp,
-                maxLines = 2
+                maxLines = 3
             )
-
             Button(
-                onClick = onRetry,
+                onClick = onAction,
                 modifier = Modifier
                     .fillMaxWidth(0.65f)
                     .height(26.dp),
@@ -715,7 +725,7 @@ fun ErrorScreen(
                 )
             ) {
                 Text(
-                    text = strings.errorRetry,
+                    text = actionLabel,
                     color = PureWhite,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
@@ -1171,42 +1181,6 @@ private fun HomeScreenLightPreview() {
 private fun ListeningDarkPreview() {
     BusAlertTheme(isDark = true) {
         ListeningScreen(prompt = "¿Dónde estás?", isEnglish = false)
-    }
-}
-
-@Preview(name = "3. Resultado - Oscuro", device = "id:wearos_large_round", showSystemUi = true)
-@Composable
-private fun ResultDarkPreview() {
-    BusAlertTheme(isDark = true) {
-        ResultScreen(
-            result = NavigationInstruction(
-                spokenText = "Take route E1 from Avenida Boyacá",
-                displayTitle = "Route E1",
-                displaySubtitle = "Av. Boyacá Cll 22 • 8 min",
-                estimatedMinutes = 8,
-                recommendedRouteId = "E1"
-            ),
-            isEnglish = true,
-            onDismiss = {}
-        )
-    }
-}
-
-@Preview(name = "4. Resultado - Claro", device = "id:wearos_large_round", showSystemUi = true)
-@Composable
-private fun ResultLightPreview() {
-    BusAlertTheme(isDark = false) {
-        ResultScreen(
-            result = NavigationInstruction(
-                spokenText = "Toma la ruta E1 desde la Avenida Boyacá",
-                displayTitle = "Ruta E1",
-                displaySubtitle = "Av. Boyacá Cll 22 • 8 min",
-                estimatedMinutes = 8,
-                recommendedRouteId = "E1"
-            ),
-            isEnglish = false,
-            onDismiss = {}
-        )
     }
 }
 
