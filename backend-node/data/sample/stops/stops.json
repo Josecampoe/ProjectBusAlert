@@ -1,0 +1,10 @@
+[
+  { "external_id": "DEMO-01", "name": "Demo Torobajo", "aliases": ["Demo Udenar"], "latitude": 1.2336, "longitude": -77.2922, "source": "demo_sample", "notes": "DEMO: coordenada aproximada." },
+  { "external_id": "DEMO-02", "name": "Demo Universidades", "aliases": [], "latitude": 1.2291, "longitude": -77.2871, "source": "demo_sample", "notes": "DEMO: coordenada aproximada." },
+  { "external_id": "DEMO-03", "name": "Demo Avenida Boyacá", "aliases": [], "latitude": 1.2245, "longitude": -77.2850, "source": "demo_sample", "notes": "DEMO: coordenada aproximada." },
+  { "external_id": "DEMO-04", "name": "Demo Parque Bolívar", "aliases": [], "latitude": 1.2201, "longitude": -77.2831, "source": "demo_sample", "notes": "DEMO: coordenada aproximada." },
+  { "external_id": "DEMO-05", "name": "Demo Centro", "aliases": [], "latitude": 1.2142, "longitude": -77.2786, "source": "demo_sample", "notes": "DEMO: coordenada aproximada." },
+  { "external_id": "DEMO-06", "name": "Demo Plazuela", "aliases": [], "latitude": 1.2148, "longitude": -77.2792, "source": "demo_sample", "notes": "DEMO: a unos 90 m de Demo Centro para probar transbordos a pie." },
+  { "external_id": "DEMO-07", "name": "Demo Hospital", "aliases": [], "latitude": 1.2101, "longitude": -77.2741, "source": "demo_sample", "notes": "DEMO: coordenada aproximada." },
+  { "external_id": "DEMO-08", "name": "Demo Terminal", "aliases": [], "latitude": 1.2051, "longitude": -77.2701, "source": "demo_sample", "notes": "DEMO: coordenada aproximada." }
+]

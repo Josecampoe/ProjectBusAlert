@@ -54,7 +54,7 @@ describe('contratos de POST /api/voice', () => {
     const res = await request(app)
       .post('/api/voice')
       .set(auth)
-      .send({ voiceText: 'udenar', currentLocationName: 'parque nariño' });
+      .send({ voiceText: 'barrio sin rutas', currentLocationName: 'parque nariño' });
     checkContract('no_route', res.body);
   });
 

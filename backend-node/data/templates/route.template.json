@@ -1,0 +1,74 @@
+{
+  "_instrucciones": "Copia cada bloque al archivo indicado en 'destino' y reemplaza los valores <...>. Borra las claves que empiezan con '_'.",
+
+  "routes": {
+    "_destino": "data/routes/routes.json (agregar al arreglo)",
+    "code": "<CODIGO, ej. E2>",
+    "name": "<CODIGO> — <Origen> / <Destino>",
+    "type": "<estrategica | complementaria | ...>",
+    "description": "<texto o null>",
+    "origin": "<texto o null>",
+    "destination": "<texto o null>",
+    "active": true,
+    "source": "<id de data/sources/sources.json, ej. ruti_setp>",
+    "verified": true,
+    "data_quality": "<complete | partial | minimal | unknown>",
+    "notes": null,
+    "last_verified_at": "<AAAA-MM-DD>",
+    "color": "<#RRGGBB o null>"
+  },
+
+  "route_directions": {
+    "_destino": "data/routes/route_directions.json (un objeto por sentido)",
+    "route_code": "<CODIGO>",
+    "direction_key": "<CODIGO>_D1",
+    "name": "<Origen> → <Destino>",
+    "origin": "<texto o null>",
+    "destination": "<texto o null>",
+    "description": null,
+    "stop_count": "<número de paradas o null>",
+    "verified": true,
+    "source": "<id de fuente>"
+  },
+
+  "route_stops": {
+    "_destino": "data/routes/route_stops.json (una clave por sentido)",
+    "<CODIGO>_D1": {
+      "direction_key": "<CODIGO>_D1",
+      "route_code": "<CODIGO>",
+      "name": "<Origen> → <Destino>",
+      "stops": [
+        { "order": 1, "stop_external_id": "<código Ruti o null>", "stop_name": "<nombre exacto de la parada>" },
+        { "order": 2, "stop_external_id": "<código Ruti o null>", "stop_name": "<nombre exacto de la parada>" }
+      ]
+    }
+  },
+
+  "stops": {
+    "_destino": "data/stops/stops_<codigo>.json (arreglo; un archivo por ruta o uno general)",
+    "external_id": "<código Ruti o null>",
+    "name": "<nombre de la parada>",
+    "aliases": ["<otros nombres con los que la gente la llama>"],
+    "latitude": "<grados decimales, ej. 1.2141, o null>",
+    "longitude": "<grados decimales, ej. -77.2786, o null>",
+    "address": "<texto o null>",
+    "neighborhood": "<barrio o null>",
+    "active": true,
+    "source": "<id de fuente>",
+    "verified": true,
+    "notes": null
+  },
+
+  "schedules": {
+    "_destino": "data/schedules/schedules.json (arreglo; un objeto por tipo de día)",
+    "route_code": "<CODIGO>",
+    "day_type": "<LV | LS | S | DF | LD>",
+    "day_type_label": "<Lunes a Viernes | ...>",
+    "start_time": "<HH:MM o null>",
+    "end_time": "<HH:MM o null>",
+    "frequency_minutes": "<entero o null>",
+    "source": "<id de fuente>",
+    "verified": false,
+    "notes": null
+  }
+}

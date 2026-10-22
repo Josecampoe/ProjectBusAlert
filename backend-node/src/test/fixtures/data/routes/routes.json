@@ -1,4 +1,5 @@
 [
-  { "code": "FX1", "name": "FX1 — Udenar / Centro", "type": "prueba", "source": "test_fixture" },
-  { "code": "FX2", "name": "FX2 — Centro / Terminal", "type": "prueba", "source": "test_fixture" }
+  { "code": "FX1", "name": "FX1 — Udenar / Centro", "type": "prueba", "source": "test_fixture", "color": "#1565C0" },
+  { "code": "FX2", "name": "FX2 — Centro / Terminal", "type": "prueba", "source": "test_fixture" },
+  { "code": "FX3", "name": "FX3 — San Andrés / Obrero", "type": "prueba", "source": "test_fixture" }
 ]

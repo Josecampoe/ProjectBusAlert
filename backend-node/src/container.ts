@@ -7,6 +7,7 @@ import type { Logger } from './lib/logger';
 import { TransitRepository } from './repositories/transitRepository';
 import type { AiClient } from './services/ai/aiClient';
 import { GeminiClient } from './services/ai/geminiClient';
+import { createArrivalEstimator } from './services/arrivalTime';
 import { AssistantService } from './services/assistantService';
 import { MemoryCache } from './services/cacheService';
 
@@ -37,5 +38,9 @@ export function buildContainer(
             logger,
           )
         : null;
-  return { db, repo, assistant: new AssistantService(repo, ai, config, logger) };
+  return {
+    db,
+    repo,
+    assistant: new AssistantService(repo, ai, createArrivalEstimator(config), config, logger),
+  };
 }

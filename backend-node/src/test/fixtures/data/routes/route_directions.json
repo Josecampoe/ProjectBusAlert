@@ -1,4 +1,6 @@
 [
   { "route_code": "FX1", "direction_key": "FX1_D1", "name": "Udenar → Centro", "source": "test_fixture" },
-  { "route_code": "FX2", "direction_key": "FX2_D1", "name": "Centro → Terminal", "source": "test_fixture" }
+  { "route_code": "FX1", "direction_key": "FX1_D2", "name": "Centro → Udenar", "source": "test_fixture" },
+  { "route_code": "FX2", "direction_key": "FX2_D1", "name": "Centro → Terminal", "source": "test_fixture" },
+  { "route_code": "FX3", "direction_key": "FX3_D1", "name": "San Andrés → Obrero", "source": "test_fixture" }
 ]

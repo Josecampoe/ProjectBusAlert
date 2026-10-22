@@ -16,7 +16,9 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "seed:sample": "tsx src/db/seed.ts --data-dir ./data/sample",
+    "data:validate": "tsx src/db/seed.ts --dry-run"
   },
   "dependencies": {
     "@google/genai": "^2.28.0",

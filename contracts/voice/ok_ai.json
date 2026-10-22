@@ -10,6 +10,7 @@
       {
         "routeCode": "FX1",
         "routeName": "FX1 — Udenar / Centro",
+        "routeColor": "#1565C0",
         "directionKey": "FX1_D1",
         "directionName": "Udenar → Centro",
         "board": {
@@ -26,11 +27,23 @@
           "latitude": 1.22,
           "longitude": -77.283
         },
-        "stopsCount": 2
+        "stopsCount": 2,
+        "estimate": {
+          "rideMinutes": 7,
+          "waitMinutes": 5,
+          "totalMinutes": 12,
+          "basis": "distance",
+          "headwaySource": "schedule",
+          "withinServiceHours": true,
+          "isEstimate": true
+        }
       }
     ],
     "transfers": 0,
+    "transferSteps": [],
     "totalStops": 2,
+    "estimatedMinutes": 12,
+    "isEstimate": true,
     "isDemo": true
   },
   "alternatives": [],
@@ -40,7 +53,8 @@
       "externalId": "T01",
       "name": "Udenar Torobajo",
       "latitude": 1.2335,
-      "longitude": -77.2925
+      "longitude": -77.2925,
+      "distanceMeters": null
     }
   ],
   "destinationCandidates": [

@@ -6,19 +6,23 @@
  * GET /api/routes/:code/stops
  * GET /api/stops                  · GET /api/stops/search?q=
  * GET /api/stops/:id              · GET /api/stops/:id/routes
+ * GET /api/stops/nearby?lat=&lng=&radius=
  * GET /api/route-planner?origin=&destination=
  */
 import { Router } from 'express';
 import type { AppConfig } from '../config/env';
 import { AppError, ErrorCode } from '../errors/AppError';
 import type { TransitRepository } from '../repositories/transitRepository';
+import type { AssistantService } from '../services/assistantService';
+import { countStopsWithoutCoordinates, findNearbyStops } from '../services/nearby';
 import { resolvePlace } from '../services/placeResolver';
-import { planTrip, toStopRef } from '../services/planner';
+import { toStopRef } from '../services/planner';
 import { validate } from '../middleware/validate';
 import type { Schemas } from './schemas';
 
 export function createTransitRouter(
   repo: TransitRepository,
+  assistant: AssistantService,
   schemas: Schemas,
   config: AppConfig,
 ): Router {
@@ -91,6 +95,28 @@ export function createTransitRouter(
     res.json({ query: q, matchKind, count: enriched.length, stops: enriched });
   });
 
+  router.get('/stops/nearby', validate('query', schemas.nearbyQuery), (_req, res) => {
+    const { lat, lng, radius } = res.locals.query as { lat: number; lng: number; radius: number };
+    const network = repo.getNetwork();
+    const nearby = findNearbyStops(
+      network,
+      { latitude: lat, longitude: lng },
+      radius,
+      config.nearby.maxResults,
+    );
+    res.json({
+      radiusMeters: radius,
+      count: nearby.length,
+      // Las paradas sin coordenadas no se pueden ubicar: se informa para que el cliente lo sepa.
+      stopsWithoutCoordinates: countStopsWithoutCoordinates(network),
+      stops: nearby.map(({ stop: { searchNames: _names, ...stop }, distanceMeters }) => ({
+        ...stop,
+        distanceMeters: Math.round(distanceMeters),
+        routes: repo.getRoutesAtStop(stop.id),
+      })),
+    });
+  });
+
   router.get('/stops/:id', validate('params', schemas.stopParams), (_req, res) => {
     const stop = findStop((res.locals.params as { id: string }).id);
     res.json({ stop, aliases: repo.getAliases(stop.id) });
@@ -123,14 +149,10 @@ export function createTransitRouter(
       res.json({ ...base, status: 'destination_not_found', plans: [] });
       return;
     }
-    const plan = planTrip(
+    const plan = assistant.plan(
       network,
       from.stops.map((s) => s.id),
       to.stops.map((s) => s.id),
-      {
-        maxAlternatives: config.planner.maxAlternatives,
-        minutesPerStop: config.planner.minutesPerStop,
-      },
     );
     res.json({ ...base, status: plan.status, plans: plan.options });
   });

@@ -7,7 +7,7 @@
 import { Router } from 'express';
 import { AppError, ErrorCode } from '../errors/AppError';
 import { validate } from '../middleware/validate';
-import type { AssistantService } from '../services/assistantService';
+import type { AssistantService, TripOrigin } from '../services/assistantService';
 import type { Language } from '../services/ai/prompts';
 import { asyncHandler } from './asyncHandler';
 import type { Schemas } from './schemas';
@@ -21,12 +21,19 @@ export function createAssistantRouter(assistant: AssistantService, schemas: Sche
     asyncHandler(async (_req, res) => {
       const body = res.locals.body as {
         voiceText: string;
-        currentLocationName: string;
+        currentLocationName?: string;
+        latitude?: number;
+        longitude?: number;
         language: Language;
       };
+      // Si llegan coordenadas, tienen prioridad sobre el texto.
+      const origin: TripOrigin =
+        body.latitude !== undefined && body.longitude !== undefined
+          ? { kind: 'coordinates', point: { latitude: body.latitude, longitude: body.longitude } }
+          : { kind: 'text', text: body.currentLocationName ?? '' };
       const result = await assistant.planTrip({
         destination: body.voiceText,
-        originText: body.currentLocationName,
+        origin,
         language: body.language,
       });
       res.json(result);
