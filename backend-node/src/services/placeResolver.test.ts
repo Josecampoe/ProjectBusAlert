@@ -32,6 +32,10 @@ describe('resolvePlace', () => {
     expect(names('termin')).toEqual(['Terminal de Transportes']);
   });
 
+  it('con texto parcial devuelve todas las coincidencias, las más parecidas primero', () => {
+    expect(names('parque')).toEqual(['Parque Nariño', 'Parque Bolívar']);
+  });
+
   it('no devuelve nada para lugares inexistentes o palabras vacías', () => {
     expect(names('quiero ir a la luna')).toEqual([]);
     expect(names('para el de la')).toEqual([]);

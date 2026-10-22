@@ -1,0 +1,123 @@
+{
+  "routeCode": "FX1",
+  "directions": [
+    {
+      "id": 1,
+      "key": "FX1_D1",
+      "name": "Udenar → Centro",
+      "origin": null,
+      "destination": null,
+      "stopCount": 4,
+      "verified": false,
+      "stops": [
+        {
+          "id": 1,
+          "externalId": "T01",
+          "name": "Udenar Torobajo",
+          "neighborhood": "Torobajo",
+          "address": null,
+          "latitude": 1.2335,
+          "longitude": -77.2925,
+          "verified": false,
+          "isDemo": true,
+          "order": 1
+        },
+        {
+          "id": 2,
+          "externalId": "T02",
+          "name": "Universidad Cooperativa",
+          "neighborhood": null,
+          "address": null,
+          "latitude": 1.229,
+          "longitude": -77.287,
+          "verified": false,
+          "isDemo": true,
+          "order": 2
+        },
+        {
+          "id": 3,
+          "externalId": "T03",
+          "name": "Parque Bolívar",
+          "neighborhood": null,
+          "address": null,
+          "latitude": 1.22,
+          "longitude": -77.283,
+          "verified": false,
+          "isDemo": true,
+          "order": 3
+        },
+        {
+          "id": 4,
+          "externalId": "T04",
+          "name": "Parque Nariño",
+          "neighborhood": null,
+          "address": null,
+          "latitude": 1.214,
+          "longitude": -77.2785,
+          "verified": false,
+          "isDemo": true,
+          "order": 4
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "key": "FX1_D2",
+      "name": "Centro → Udenar",
+      "origin": null,
+      "destination": null,
+      "stopCount": 4,
+      "verified": false,
+      "stops": [
+        {
+          "id": 4,
+          "externalId": "T04",
+          "name": "Parque Nariño",
+          "neighborhood": null,
+          "address": null,
+          "latitude": 1.214,
+          "longitude": -77.2785,
+          "verified": false,
+          "isDemo": true,
+          "order": 1
+        },
+        {
+          "id": 3,
+          "externalId": "T03",
+          "name": "Parque Bolívar",
+          "neighborhood": null,
+          "address": null,
+          "latitude": 1.22,
+          "longitude": -77.283,
+          "verified": false,
+          "isDemo": true,
+          "order": 2
+        },
+        {
+          "id": 2,
+          "externalId": "T02",
+          "name": "Universidad Cooperativa",
+          "neighborhood": null,
+          "address": null,
+          "latitude": 1.229,
+          "longitude": -77.287,
+          "verified": false,
+          "isDemo": true,
+          "order": 3
+        },
+        {
+          "id": 1,
+          "externalId": "T01",
+          "name": "Udenar Torobajo",
+          "neighborhood": "Torobajo",
+          "address": null,
+          "latitude": 1.2335,
+          "longitude": -77.2925,
+          "verified": false,
+          "isDemo": true,
+          "order": 4
+        }
+      ]
+    }
+  ]
+}

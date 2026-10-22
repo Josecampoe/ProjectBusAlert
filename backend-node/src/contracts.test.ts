@@ -10,13 +10,14 @@ import request from 'supertest';
 import { describe, expect, it } from 'vitest';
 import { createTestContext, FakeAiClient, TEST_API_KEY } from './test/helpers';
 
-const CONTRACTS_DIR = path.join(__dirname, '..', '..', 'contracts', 'voice');
+const CONTRACTS_ROOT = path.join(__dirname, '..', '..', 'contracts');
+const CONTRACTS_DIR = path.join(CONTRACTS_ROOT, 'voice');
 const UPDATE = process.env.UPDATE_CONTRACTS === '1';
 
-function checkContract(name: string, actual: unknown): void {
-  const file = path.join(CONTRACTS_DIR, `${name}.json`);
+function checkContract(name: string, actual: unknown, dir: string = CONTRACTS_DIR): void {
+  const file = path.join(dir, `${name}.json`);
   if (UPDATE) {
-    fs.mkdirSync(CONTRACTS_DIR, { recursive: true });
+    fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(file, `${JSON.stringify(actual, null, 2)}\n`);
   }
   expect(actual).toEqual(JSON.parse(fs.readFileSync(file, 'utf-8')));
@@ -86,5 +87,33 @@ describe('contratos de POST /api/voice', () => {
     const { app } = createTestContext();
     const res = await request(app).post('/api/voice').set(auth).send({ voiceText: '' });
     checkContract('error_validation', { status: res.status, body: res.body });
+  });
+});
+
+describe('contratos de consulta de rutas y paradas', () => {
+  const dir = path.join(CONTRACTS_ROOT, 'transit');
+
+  it('routes', async () => {
+    const { app } = createTestContext();
+    const res = await request(app).get('/api/routes').set(auth);
+    checkContract('routes', res.body, dir);
+  });
+
+  it('route_stops', async () => {
+    const { app } = createTestContext();
+    const res = await request(app).get('/api/routes/FX1/stops').set(auth);
+    checkContract('route_stops', res.body, dir);
+  });
+
+  it('stops_search', async () => {
+    const { app } = createTestContext();
+    const res = await request(app).get('/api/stops/search').query({ q: 'parque' }).set(auth);
+    checkContract('stops_search', res.body, dir);
+  });
+
+  it('error_route_not_found', async () => {
+    const { app } = createTestContext();
+    const res = await request(app).get('/api/routes/ZZ9/stops').set(auth);
+    checkContract('error_route_not_found', { status: res.status, body: res.body }, dir);
   });
 });

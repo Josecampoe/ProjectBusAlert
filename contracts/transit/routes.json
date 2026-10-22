@@ -1,0 +1,50 @@
+{
+  "count": 3,
+  "routes": [
+    {
+      "id": 1,
+      "code": "FX1",
+      "name": "FX1 — Udenar / Centro",
+      "type": "prueba",
+      "description": null,
+      "origin": null,
+      "destination": null,
+      "verified": false,
+      "dataQuality": "unknown",
+      "lastVerifiedAt": null,
+      "directionCount": 2,
+      "color": "#1565C0",
+      "isDemo": true
+    },
+    {
+      "id": 2,
+      "code": "FX2",
+      "name": "FX2 — Centro / Terminal",
+      "type": "prueba",
+      "description": null,
+      "origin": null,
+      "destination": null,
+      "verified": false,
+      "dataQuality": "unknown",
+      "lastVerifiedAt": null,
+      "directionCount": 1,
+      "color": null,
+      "isDemo": true
+    },
+    {
+      "id": 3,
+      "code": "FX3",
+      "name": "FX3 — San Andrés / Obrero",
+      "type": "prueba",
+      "description": null,
+      "origin": null,
+      "destination": null,
+      "verified": false,
+      "dataQuality": "unknown",
+      "lastVerifiedAt": null,
+      "directionCount": 1,
+      "color": null,
+      "isDemo": true
+    }
+  ]
+}
