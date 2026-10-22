@@ -13,7 +13,8 @@ android {
     namespace = "com.busalert.wear"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.busalert.wear"
+        // Mismo applicationId que la app del teléfono: la Data Layer solo conecta apps iguales.
+        applicationId = "com.busalert"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

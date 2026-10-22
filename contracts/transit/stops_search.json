@@ -1,0 +1,68 @@
+{
+  "query": "parque",
+  "matchKind": "query_in_name",
+  "count": 2,
+  "stops": [
+    {
+      "id": 4,
+      "externalId": "T04",
+      "name": "Parque Nariño",
+      "neighborhood": null,
+      "address": null,
+      "latitude": 1.214,
+      "longitude": -77.2785,
+      "verified": false,
+      "isDemo": true,
+      "routes": [
+        {
+          "routeCode": "FX1",
+          "routeName": "FX1 — Udenar / Centro",
+          "directionKey": "FX1_D1",
+          "directionName": "Udenar → Centro",
+          "stopOrder": 4
+        },
+        {
+          "routeCode": "FX1",
+          "routeName": "FX1 — Udenar / Centro",
+          "directionKey": "FX1_D2",
+          "directionName": "Centro → Udenar",
+          "stopOrder": 1
+        },
+        {
+          "routeCode": "FX2",
+          "routeName": "FX2 — Centro / Terminal",
+          "directionKey": "FX2_D1",
+          "directionName": "Centro → Terminal",
+          "stopOrder": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "externalId": "T03",
+      "name": "Parque Bolívar",
+      "neighborhood": null,
+      "address": null,
+      "latitude": 1.22,
+      "longitude": -77.283,
+      "verified": false,
+      "isDemo": true,
+      "routes": [
+        {
+          "routeCode": "FX1",
+          "routeName": "FX1 — Udenar / Centro",
+          "directionKey": "FX1_D1",
+          "directionName": "Udenar → Centro",
+          "stopOrder": 3
+        },
+        {
+          "routeCode": "FX1",
+          "routeName": "FX1 — Udenar / Centro",
+          "directionKey": "FX1_D2",
+          "directionName": "Centro → Udenar",
+          "stopOrder": 2
+        }
+      ]
+    }
+  ]
+}

@@ -27,6 +27,7 @@ Los valores se leen de variables de entorno o de `local.properties` (que no se s
 | `busalert.debug.backendUrl` | `BUSALERT_DEBUG_BACKEND_URL` | URL del backend en debug. Por defecto `http://10.0.2.2:3000/` (la PC vista desde el emulador). |
 | `busalert.release.backendUrl` | `BUSALERT_RELEASE_BACKEND_URL` | URL **HTTPS** en release. Sin ella el build release se detiene. |
 | `busalert.useMock` | `BUSALERT_USE_MOCK` | `true` = datos de demostración sin backend (solo en debug; en release siempre es `false`). |
+| `busalert.mapsApiKey` | `BUSALERT_MAPS_API_KEY` | Clave de Google Maps para el mapa de la app del teléfono (opcional). |
 
 Ejemplo de `local.properties`:
 
@@ -49,7 +50,9 @@ Si falta la URL o la clave, la app no se cae: muestra "La app no tiene configura
 ## Pruebas
 
 - `shared`: `RemoteTripAssistantRepository` contra MockWebServer, usando las respuestas reales del backend guardadas en `../contracts/` (si el backend cambia el formato, estas pruebas fallan).
-- `wear`: `MainWearViewModel` (todas las transiciones, errores, reintento y cancelación) con coroutines-test y Turbine. Pantallas de Compose con Robolectric en español e inglés.
+- `wear`: `MainWearViewModel` (todas las transiciones, errores, reintento y cancelación) con coroutines-test y Turbine. Pantallas de Compose con Robolectric en español e inglés y contraste del tema.
+- `mobile`: ViewModels y navegación completa con Robolectric.
+- `shared`: también la sincronización (formato, conflictos y publicación) y DataStore.
 
 ## Interfaz del reloj
 
@@ -61,6 +64,17 @@ Si falta la URL o la clave, la app no se cae: muestra "La app no tiene configura
 - Accesibilidad: objetivos táctiles de Wear (chips ≥ 52 dp), descripciones para TalkBack, regiones vivas en la transcripción, texto escalable y contraste AA verificado por pruebas.
 - Preferencias (idioma, tema, lectura en voz alta) e historial en DataStore; las sugerencias al escribir salen del historial.
 - Para escribir se usa la entrada de texto del sistema (teclado, escritura a mano o dictado).
+
+## App del teléfono
+
+- Pestañas: **Rutas** (búsqueda sin tildes, favoritos primero, detalle con sentidos, mapa y paradas en orden), **Paradas** (búsqueda con las rutas que pasan), **Historial** (consultas del reloj y favoritos) y **Ajustes** (idioma, tema, lectura en voz alta del reloj).
+- Material 3 con tema por tokens (`mobile/.../theme/Theme.kt`) y textos en `strings.xml` es/en.
+
+## Sincronización reloj ↔ teléfono
+
+- Preferencias, historial y favoritos se guardan en DataStore (`shared/preferences`) y se sincronizan por la **Data Layer API** (`shared/sync`).
+- Cada cambio local publica el estado completo con su hora; el otro dispositivo lo aplica si es más reciente.
+- Las dos apps tienen el mismo `applicationId` (`com.busalert`) y deben firmarse con la misma clave.
 
 ## Errores y textos
 

@@ -51,3 +51,14 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | Contraste WCAG (`ThemeTest`) | Todos los textos ≥ 4,5:1 en tema oscuro y claro |
 | `./gradlew clean assembleDebug testDebugUnitTest lintDebug` | BUILD SUCCESSFUL; **52 pruebas OK** (ViewModel 14, UI 15, tema 2, shared 21); lint sin hallazgos |
 | Previews | Compilan: 3 formas de reloj (redondo pequeño y grande, cuadrado) en oscuro/español, y variantes claro/inglés |
+
+## Fase 5 — App móvil y sincronización (2026-10-22)
+
+| Verificación | Resultado |
+|---|---|
+| Contratos `contracts/transit/*.json` (backend) parseados por `RemoteTransitRepositoryTest` | 4 pruebas OK |
+| Sincronización (`SyncTest`, `DataStorePreferencesRepositoryTest`) | Formato ida y vuelta, versiones, campos desconocidos, publicación en cada cambio local, sin republicar lo recibido, "gana el más reciente" |
+| App móvil (`MobileViewModelsTest`, `MobileUiTest`) | 12 pruebas OK: filtro sin tildes, favoritos primero, espera entre teclas, reintentos, navegación lista→detalle→volver, búsqueda de paradas, historial sincronizado, ajustes es/en |
+| `./gradlew clean assembleDebug testDebugUnitTest lintDebug` | BUILD SUCCESSFUL; **75 pruebas Android OK**; lint sin hallazgos en los 3 módulos |
+| `npm test` (backend) | 127 pruebas OK |
+| **No verificable aquí** | Envío real por la Data Layer entre dispositivos emparejados y el mapa con una clave real (ver PENDIENTES) |

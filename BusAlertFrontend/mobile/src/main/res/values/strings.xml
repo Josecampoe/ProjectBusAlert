@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Español (idioma por defecto). Toda cadena visible o leída por TalkBack está aquí. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="es">
+    <string name="app_name">BusAlert</string>
+
+    <!-- Navegación -->
+    <string name="tab_routes">Rutas</string>
+    <string name="tab_stops">Paradas</string>
+    <string name="tab_history">Historial</string>
+    <string name="tab_settings">Ajustes</string>
+    <string name="action_back">Volver</string>
+
+    <!-- Rutas -->
+    <string name="routes_search_hint">Buscar ruta por código o nombre</string>
+    <string name="routes_empty">No hay rutas cargadas en el servidor.</string>
+    <string name="routes_no_match">Ninguna ruta coincide con la búsqueda.</string>
+    <string name="route_endpoints">%1$s → %2$s</string>
+    <plurals name="route_directions_count">
+        <item quantity="one">%1$d sentido</item>
+        <item quantity="many">%1$d sentidos</item>
+        <item quantity="other">%1$d sentidos</item>
+    </plurals>
+    <string name="route_unverified">Sin verificar</string>
+
+    <!-- Detalle de ruta -->
+    <string name="route_detail_stops">Paradas</string>
+    <string name="route_stop_order">%1$d</string>
+    <string name="map_not_configured">Mapa no disponible: falta la clave de Google Maps.</string>
+    <string name="map_no_coordinates">Las paradas de esta ruta todavía no tienen coordenadas.</string>
+    <plurals name="map_partial_coordinates">
+        <item quantity="one">%1$d de %2$d parada tiene coordenadas.</item>
+        <item quantity="many">%1$d de %2$d paradas tienen coordenadas.</item>
+        <item quantity="other">%1$d de %2$d paradas tienen coordenadas.</item>
+    </plurals>
+    <string name="route_no_stops">Este sentido no tiene paradas cargadas.</string>
+
+    <!-- Paradas -->
+    <string name="stops_search_hint">Buscar parada o lugar</string>
+    <plurals name="stops_prompt">
+        <item quantity="one">Escribe al menos %1$d letra para buscar.</item>
+        <item quantity="many">Escribe al menos %1$d letras para buscar.</item>
+        <item quantity="other">Escribe al menos %1$d letras para buscar.</item>
+    </plurals>
+    <string name="stops_empty">No encontré paradas con ese nombre.</string>
+    <string name="stop_routes">Rutas: %1$s</string>
+    <string name="list_separator">", "</string>
+
+    <!-- Historial y favoritos -->
+    <string name="history_title">Historial</string>
+    <string name="history_empty">Aún no hay consultas. Las que hagas en el reloj aparecerán aquí.</string>
+    <string name="history_from_to">%1$s → %2$s</string>
+    <string name="history_to">→ %1$s</string>
+    <string name="history_clear">Borrar historial</string>
+    <string name="favorites_title">Favoritos</string>
+    <string name="favorites_empty">Marca rutas o paradas con la estrella.</string>
+    <string name="action_add_favorite">Agregar a favoritos</string>
+    <string name="action_remove_favorite">Quitar de favoritos</string>
+
+    <!-- Ajustes -->
+    <string name="settings_language">Idioma</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_english">English</string>
+    <string name="settings_dark_theme">Tema oscuro</string>
+    <string name="settings_speak_results">Leer respuestas en voz alta en el reloj</string>
+    <string name="settings_sync_note">Los ajustes, el historial y los favoritos se sincronizan con el reloj.</string>
+    <string name="settings_backend">Servidor</string>
+    <string name="settings_backend_demo">Modo demostración (datos ficticios)</string>
+    <string name="settings_backend_missing">Sin configurar</string>
+
+    <!-- Estados -->
+    <string name="loading">Cargando…</string>
+    <string name="demo_badge">Demo</string>
+    <string name="demo_notice">Datos de demostración: no son información real del SETP.</string>
+    <string name="action_retry">Reintentar</string>
+
+    <!-- Errores (por código estable) -->
+    <string name="error_network">Sin conexión a internet.</string>
+    <string name="error_timeout">El servidor tardó demasiado. Intenta de nuevo.</string>
+    <string name="error_unauthorized">La app no está autorizada en el servidor.</string>
+    <string name="error_rate_limited">Demasiadas consultas. Espera un momento.</string>
+    <string name="error_invalid_request">La consulta no es válida.</string>
+    <string name="error_not_found">No encontré esa información.</string>
+    <string name="error_ai_unavailable">El asistente no está disponible ahora.</string>
+    <string name="error_server">El servidor tuvo un problema. Intenta más tarde.</string>
+    <string name="error_configuration">La app no tiene configurado el servidor.</string>
+    <string name="error_unknown">Ocurrió un error inesperado.</string>
+</resources>

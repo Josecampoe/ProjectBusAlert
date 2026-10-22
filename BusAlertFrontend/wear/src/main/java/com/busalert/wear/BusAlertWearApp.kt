@@ -9,8 +9,11 @@ import com.busalert.shared.config.SharedConfig
 import com.busalert.shared.di.SharedDependencies
 import com.busalert.shared.preferences.DataStorePreferencesRepository
 import com.busalert.shared.preferences.PreferencesRepository
+import com.busalert.shared.sync.DataLayerSyncPublisher
+import com.busalert.shared.sync.SyncListenerService
+import com.busalert.shared.sync.SyncingPreferencesRepository
 
-/** Nombre del archivo de DataStore con preferencias e historial. */
+/** Nombre del archivo de DataStore con preferencias, historial y favoritos. */
 private const val PREFERENCES_STORE = "user_preferences"
 
 private val Context.userPreferencesStore: DataStore<Preferences> by preferencesDataStore(PREFERENCES_STORE)
@@ -28,7 +31,17 @@ class BusAlertWearApp : Application() {
         )
     }
 
+    /** Repositorio local (lo usa el receptor de sincronización, que no debe republicar). */
+    val localPreferences: PreferencesRepository by lazy { DataStorePreferencesRepository(userPreferencesStore) }
+
+    /** Repositorio que usa la UI: cada cambio se envía al teléfono. */
     val preferencesRepository: PreferencesRepository by lazy {
-        DataStorePreferencesRepository(userPreferencesStore)
+        SyncingPreferencesRepository(localPreferences, DataLayerSyncPublisher(this))
     }
+}
+
+/** Recibe preferencias, historial y favoritos desde el teléfono. */
+class WearSyncListenerService : SyncListenerService() {
+    override val localPreferences: PreferencesRepository
+        get() = (application as BusAlertWearApp).localPreferences
 }

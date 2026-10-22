@@ -7,9 +7,10 @@
  *   0. Texto (o texto sin palabras vacías) idéntico a un nombre o alias,
  *      sin importar su largo (permite siglas como "UCC").
  *   1. Nombre o alias de parada contenido como frase completa en el texto.
- *   2. Texto (sin palabras vacías) contenido en un nombre o alias.
+ *   2. Texto (sin palabras vacías) contenido en un nombre o alias (todas,
+ *      ordenadas de la más parecida a la menos).
  *   3. Coincidencia por palabras sueltas significativas.
- * En cada nivel se quedan solo las paradas con mejor puntaje.
+ * En los niveles 0, 1 y 3 se quedan solo las paradas con mejor puntaje.
  */
 import { containsWholePhrase, normalizeForSearch } from '../lib/text';
 import { SEARCH_STOPWORDS } from '../lib/stopwords';
@@ -91,11 +92,17 @@ export function resolvePlace(
     const contained = stops.filter((s) => s.searchNames.some((name) => name.includes(core)));
     if (contained.length > 0) {
       return {
-        stops: bestBy(
-          contained,
-          (s) => 1 / Math.min(...s.searchNames.map((n) => n.length)),
-          options.maxResults,
-        ),
+        // Todas las que contienen el texto; primero las de nombre más corto (más parecidas).
+        stops: contained
+          .map((stop) => ({ stop, length: Math.min(...stop.searchNames.map((n) => n.length)) }))
+          .sort(
+            (x, y) =>
+              x.length - y.length ||
+              x.stop.name.localeCompare(y.stop.name) ||
+              x.stop.id - y.stop.id,
+          )
+          .map((x) => x.stop)
+          .slice(0, options.maxResults),
         matchKind: 'query_in_name',
       };
     }

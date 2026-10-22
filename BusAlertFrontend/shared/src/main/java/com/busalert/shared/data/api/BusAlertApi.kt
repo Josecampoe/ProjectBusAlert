@@ -1,12 +1,24 @@
 package com.busalert.shared.data.api
 
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 /** Contrato HTTP del backend BusAlert. */
 interface BusAlertApi {
     @POST("api/voice")
     suspend fun planTrip(@Body request: VoiceRequestDto): TripResponseDto
+
+    @GET("api/routes")
+    suspend fun routes(): RouteListDto
+
+    @GET("api/routes/{code}/stops")
+    suspend fun routeStops(@Path("code") code: String): RouteStopsDto
+
+    @GET("api/stops/search")
+    suspend fun searchStops(@Query("q") query: String): StopSearchDto
 }
 
 // Los DTO son anulables a propósito: Gson no respeta la nulidad de Kotlin,

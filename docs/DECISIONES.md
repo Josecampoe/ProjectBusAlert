@@ -105,3 +105,20 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 
 ## D-031 · `ProvideAppLanguage` con `ContextWrapper`
 - **Motivo:** la versión anterior reemplazaba el contexto por uno de configuración y perdía la referencia a la Activity, así que fallaban en ejecución los lanzadores de permisos y del teclado del sistema. Lo detectó una prueba de UI. Ahora se envuelve la Activity y solo se cambian los recursos.
+
+## D-032 · Mismo `applicationId` (`com.busalert`) para el reloj y el teléfono
+- **Motivo:** la Data Layer API solo comunica apps con el mismo nombre de paquete y la misma firma. El reloj pasó de `com.busalert.wear` a `com.busalert` (los `namespace` siguen siendo distintos). Si ya había una versión instalada en el reloj, hay que desinstalarla una vez.
+
+## D-033 · Sincronización por estado completo con "gana el último cambio"
+- **Alternativas:** mensajes por cada cambio; fusión campo a campo.
+- **Motivo:** el estado es pequeño (preferencias, 20 consultas, 30 favoritos). Cada cambio local publica todo en un DataItem (`/busalert/sync`) con la hora del cambio, y el receptor lo aplica solo si es más reciente que lo suyo. Lo recibido no se vuelve a publicar, así no hay bucles. El formato tiene versión (`schema_version`) y es tolerante a campos desconocidos.
+
+## D-034 · Paradas favoritas identificadas por nombre
+- **Motivo:** el reloj las ofrece como sugerencias de texto y el backend resuelve por nombre o alias. Así los favoritos sobreviven a cambios de id interno al reimportar datos.
+
+## D-035 · Clave de Google Maps por `manifestPlaceholders`
+- **Motivo:** la clave nunca va al código ni a git: sale de `busalert.mapsApiKey` (o `BUSALERT_MAPS_API_KEY`). Sin clave la app muestra "Mapa no disponible" en vez de un mapa en blanco. El mapa solo dibuja paradas con coordenadas y avisa cuántas faltan.
+
+## D-036 · `ProvideAppLanguage` duplicado en reloj y teléfono
+- **Alternativas:** moverlo a `shared`.
+- **Motivo:** `shared` no usa Compose; agregar el compilador de Compose solo para 30 líneas no compensa. Las dos copias siguen el mismo diseño (D-031).
