@@ -31,3 +31,4 @@ extra["busalert.debug.backendUrl"] =
 extra["busalert.release.backendUrl"] = busAlertSetting("busalert.release.backendUrl", "BUSALERT_RELEASE_BACKEND_URL")
 extra["busalert.apiKey"] = busAlertSetting("busalert.apiKey", "BUSALERT_API_KEY")
 extra["busalert.useMock"] = busAlertSetting("busalert.useMock", "BUSALERT_USE_MOCK", "false")
+extra["busalert.mapsApiKey"] = busAlertSetting("busalert.mapsApiKey", "BUSALERT_MAPS_API_KEY")

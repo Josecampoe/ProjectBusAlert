@@ -11,6 +11,8 @@ import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripPlan
 import com.busalert.shared.domain.TripQuery
 import com.busalert.shared.domain.TripStatus
+import com.busalert.shared.preferences.FavoriteKind
+import com.busalert.shared.preferences.PreferenceDefaults
 import com.busalert.shared.preferences.PreferencesRepository
 import com.busalert.shared.preferences.QueryHistoryEntry
 import com.busalert.shared.preferences.UserPreferences
@@ -22,7 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -79,9 +81,15 @@ class MainWearViewModel(
     val preferences: StateFlow<UserPreferences> = preferencesRepository.preferences
         .stateIn(viewModelScope, SharingStarted.Eagerly, UserPreferences())
 
-    val recentPlaces: StateFlow<List<String>> = preferencesRepository.history
-        .map { it.recentPlaces() }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    /** Sugerencias al escribir: paradas favoritas primero y luego lugares recientes. */
+    val recentPlaces: StateFlow<List<String>> = combine(
+        preferencesRepository.favorites,
+        preferencesRepository.history,
+    ) { favorites, history ->
+        (favorites.filter { it.kind == FavoriteKind.STOP }.map { it.label } + history.recentPlaces())
+            .distinctBy { it.lowercase() }
+            .take(PreferenceDefaults.MAX_RECENT_PLACES)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     /** Última consulta enviada, para reintentar sin volver a preguntar. */
     private var lastQuery: TripQuery? = null

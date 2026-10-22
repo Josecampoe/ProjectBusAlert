@@ -36,6 +36,19 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
+        <!-- Sincronización con el teléfono (Data Layer). -->
+        <service
+            android:name=".WearSyncListenerService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/busalert"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

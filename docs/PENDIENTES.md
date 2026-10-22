@@ -43,3 +43,9 @@ Todo va en `backend-node/data/`, siguiendo `backend-node/data/templates/route.te
 4. **Color oficial de cada ruta** (opcional): campo `color` (`#RRGGBB`) en `routes/routes.json`. El reloj y la app móvil lo usan para identificar la ruta.
 5. **Calendario de festivos** (decisión): hoy los festivos se tratan como día hábil. Si se necesita, hay que definir la fuente del calendario de festivos de Colombia.
 6. **Tiempo real** (decisión): si Avante/Ruti ofrece una API de buses en tiempo real, se conecta con una nueva implementación de `ArrivalTimeProvider` (`backend-node/src/services/arrivalTime.ts`). Hace falta acceso o credenciales del operador.
+
+## App del teléfono
+
+- **Clave de Google Maps** (opcional): crea una clave para "Maps SDK for Android", restringida al paquete `com.busalert` y a tu huella SHA-1, y ponla en `BusAlertFrontend/local.properties` como `busalert.mapsApiKey=<clave>`. Sin ella, la app funciona pero muestra "Mapa no disponible".
+- **Probar la sincronización en dispositivos reales**: hay pruebas automáticas del formato, los conflictos y la publicación, pero el envío por la Data Layer necesita un reloj y un teléfono emparejados, que no hay en este entorno. Instala las dos apps debug desde la misma máquina (misma firma) y cambia un ajuste en una para verlo en la otra.
+- **Firma de release**: para publicar, las dos apps deben firmarse con la **misma** clave (requisito de la Data Layer). Define dónde se guarda el keystore y cómo se inyecta en la CI.

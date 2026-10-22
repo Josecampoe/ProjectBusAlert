@@ -10,6 +10,8 @@ import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripPlan
 import com.busalert.shared.domain.TripQuery
 import com.busalert.shared.domain.TripStatus
+import com.busalert.shared.preferences.Favorite
+import com.busalert.shared.preferences.FavoriteKind
 import com.busalert.shared.preferences.QueryHistoryEntry
 import com.busalert.wear.TestData.okPlan
 import com.busalert.wear.location.LocationSource
@@ -100,6 +102,16 @@ class MainWearViewModelTest {
             preferences.history.value,
         )
         assertEquals(listOf("Parque Bolívar", "Udenar"), viewModel.recentPlaces.value)
+    }
+
+    @Test
+    fun `las paradas favoritas (sincronizadas del teléfono) se sugieren primero`() = runTest(dispatcher) {
+        askFullQuery()
+        advanceUntilIdle()
+        preferences.toggleFavorite(Favorite(FavoriteKind.STOP, "Terminal", "Terminal"))
+        preferences.toggleFavorite(Favorite(FavoriteKind.ROUTE, "E1", "E1"))
+        advanceUntilIdle()
+        assertEquals(listOf("Terminal", "Parque Bolívar", "Udenar"), viewModel.recentPlaces.value)
     }
 
     @Test
