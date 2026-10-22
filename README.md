@@ -13,7 +13,7 @@ BusAlert es una solución integral de asistencia al viajero y alertas inteligent
 
 ## 🌟 Características Principales
 
-### ⌚ Wear OS App (`BusAlertfrotend/wear`)
+### ⌚ Wear OS App (`BusAlertFrontend/wear`)
 - **Diseño Ergonómico Circular**: Interfaz Jetpack Compose Wear OS adaptada con curvaturas y ergonomía táctil para pantallas redondas de 390px, 450px y 454px.
 - **Asistente por Voz In-App**: Reconocimiento de voz continuo con `SpeechRecognizer`, transcripción en vivo en tiempo real, ondas de audio animadas y botones circulares de cancelación rápida (`✕`) y reintento (`🔄`).
 - **Teclado Táctil Integrado**: Teclado numérico/alfanumérico circular con soporte adaptativo para **Modo Claro** y **Modo Oscuro**, garantizando contraste óptimo y alternancia instantánea entre voz y teclado.
@@ -26,7 +26,7 @@ BusAlert es una solución integral de asistencia al viajero y alertas inteligent
 - **Integración con Google Gemini**: Asistente conversacional con inyección de contexto geográfico y de transporte en tiempo real.
 - **Base de Datos SQLite**: Modelado relacional optimizado con índices compuestos en latitud/longitud y secuencias de parada.
 
-### 🔄 Módulo Compartido (`BusAlertfrotend/shared`)
+### 🔄 Módulo Compartido (`BusAlertFrontend/shared`)
 - Arquitectura limpia con separación de capas (`domain`, `data`, `di`).
 - Conexión directa con Google Gemini REST API o mediante backend Node.js.
 - Conmutador dinámico entre modo de producción y modo simulado (`MockTransitRepositoryImpl`, `MockAIAssistantRepositoryImpl`).
@@ -51,7 +51,7 @@ c:/ProyectoBusAlert/
 │       ├── db/                    # Conexión, esquemas y migración seed.ts
 │       ├── services/              # Servicio de Google Gemini AI y caché
 │       └── utils/                 # Cálculo haversine y geofencing
-└── BusAlertfrotend/               # Proyecto Android multi-módulo
+└── BusAlertFrontend/               # Proyecto Android multi-módulo
     ├── settings.gradle.kts        # Definición de módulos compartidos
     ├── build.gradle.kts           # Configuración raíz de Gradle
     ├── setup.ps1                  # Automatización de emuladores Wear OS
@@ -83,7 +83,7 @@ npm run dev      # Iniciar servidor en http://localhost:3000
 
 ### 3. Frontend Android Wear OS
 ```bash
-cd BusAlertfrotend
+cd BusAlertFrontend
 # Compilar e instalar en emulador o reloj conectado
 ./gradlew :wear:installDebug
 ```

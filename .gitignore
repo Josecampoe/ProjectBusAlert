@@ -29,3 +29,8 @@ local.properties
 *.db-shm
 *.db-wal
 *.log
+
+# SQLite (node:sqlite)
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

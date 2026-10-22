@@ -1,0 +1,53 @@
+{
+  "source": "planner",
+  "message": null,
+  "recommended": {
+    "legs": [
+      {
+        "routeCode": "FX1",
+        "routeName": "FX1 — Udenar / Centro",
+        "directionKey": "FX1_D1",
+        "directionName": "Udenar → Centro",
+        "board": {
+          "id": 1,
+          "externalId": "T01",
+          "name": "Udenar Torobajo",
+          "latitude": 1.2335,
+          "longitude": -77.2925
+        },
+        "alight": {
+          "id": 3,
+          "externalId": "T03",
+          "name": "Parque Bolívar",
+          "latitude": 1.22,
+          "longitude": -77.283
+        },
+        "stopsCount": 2
+      }
+    ],
+    "transfers": 0,
+    "totalStops": 2,
+    "isDemo": true
+  },
+  "alternatives": [],
+  "originCandidates": [
+    {
+      "id": 1,
+      "externalId": "T01",
+      "name": "Udenar Torobajo",
+      "latitude": 1.2335,
+      "longitude": -77.2925
+    }
+  ],
+  "destinationCandidates": [
+    {
+      "id": 3,
+      "externalId": "T03",
+      "name": "Parque Bolívar",
+      "latitude": 1.22,
+      "longitude": -77.283
+    }
+  ],
+  "isDemoData": true,
+  "status": "ok"
+}

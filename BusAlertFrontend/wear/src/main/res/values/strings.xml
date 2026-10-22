@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Español (idioma por defecto). -->
+<resources>
+    <string name="app_name">BusAlert</string>
+
+    <!-- Resultado (cuando el backend no trae texto redactado por la IA) -->
+    <string name="result_route_title">Ruta %1$s</string>
+    <string name="result_board_at">Sube en %1$s</string>
+    <string name="result_alight_at">Baja en %1$s</string>
+    <plurals name="result_stops_count">
+        <item quantity="one">%1$d parada</item>
+        <item quantity="other">%1$d paradas</item>
+    </plurals>
+    <string name="result_spoken_template">Toma la ruta %1$s. Súbete en %2$s y bájate en %3$s.</string>
+    <string name="result_demo_badge">Datos de demostración</string>
+
+    <!-- Sin resultados -->
+    <string name="no_result_title">Sin resultados</string>
+    <string name="no_result_no_route">No encontré una ruta directa entre esos lugares.</string>
+    <string name="no_result_same_place">El origen y el destino son el mismo lugar.</string>
+    <string name="no_result_origin_not_found">No reconozco ese lugar de origen. Prueba con el nombre de una parada.</string>
+    <string name="no_result_destination_not_found">No reconozco ese destino. Prueba con el nombre de una parada.</string>
+    <string name="action_new_query">Nueva consulta</string>
+
+    <!-- Errores (por código estable) -->
+    <string name="error_title">Algo salió mal</string>
+    <string name="error_network">Sin conexión. Revisa el internet del reloj.</string>
+    <string name="error_timeout">El servidor tardó demasiado. Intenta de nuevo.</string>
+    <string name="error_unauthorized">La app no está autorizada en el servidor.</string>
+    <string name="error_rate_limited">Demasiadas consultas. Espera un momento.</string>
+    <string name="error_invalid_request">No pude procesar la consulta. Intenta decirlo de otra forma.</string>
+    <string name="error_not_found">No encontré esa información.</string>
+    <string name="error_ai_unavailable">El asistente no está disponible ahora.</string>
+    <string name="error_server">El servidor tuvo un problema. Intenta más tarde.</string>
+    <string name="error_configuration">La app no tiene configurado el servidor.</string>
+    <string name="error_unknown">Ocurrió un error inesperado.</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="action_home">Inicio</string>
+</resources>

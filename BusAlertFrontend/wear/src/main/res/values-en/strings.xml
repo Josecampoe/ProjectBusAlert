@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BusAlert</string>
+
+    <string name="result_route_title">Route %1$s</string>
+    <string name="result_board_at">Board at %1$s</string>
+    <string name="result_alight_at">Get off at %1$s</string>
+    <plurals name="result_stops_count">
+        <item quantity="one">%1$d stop</item>
+        <item quantity="other">%1$d stops</item>
+    </plurals>
+    <string name="result_spoken_template">Take route %1$s. Board at %2$s and get off at %3$s.</string>
+    <string name="result_demo_badge">Demo data</string>
+
+    <string name="no_result_title">No results</string>
+    <string name="no_result_no_route">I couldn\'t find a direct route between those places.</string>
+    <string name="no_result_same_place">Origin and destination are the same place.</string>
+    <string name="no_result_origin_not_found">I don\'t recognize that origin. Try a stop name.</string>
+    <string name="no_result_destination_not_found">I don\'t recognize that destination. Try a stop name.</string>
+    <string name="action_new_query">New query</string>
+
+    <string name="error_title">Something went wrong</string>
+    <string name="error_network">No connection. Check the watch\'s internet.</string>
+    <string name="error_timeout">The server took too long. Try again.</string>
+    <string name="error_unauthorized">The app is not authorized on the server.</string>
+    <string name="error_rate_limited">Too many requests. Please wait a moment.</string>
+    <string name="error_invalid_request">I couldn\'t process that. Try saying it differently.</string>
+    <string name="error_not_found">I couldn\'t find that information.</string>
+    <string name="error_ai_unavailable">The assistant is not available right now.</string>
+    <string name="error_server">The server had a problem. Try again later.</string>
+    <string name="error_configuration">The app has no server configured.</string>
+    <string name="error_unknown">An unexpected error occurred.</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_home">Home</string>
+</resources>

@@ -1,0 +1,9 @@
+[
+  { "external_id": "T01", "name": "Udenar Torobajo", "aliases": ["Udenar", "Universidad de Nariño"], "latitude": 1.2335, "longitude": -77.2925, "neighborhood": "Torobajo", "source": "test_fixture" },
+  { "external_id": "T02", "name": "Universidad Cooperativa", "aliases": ["UCC"], "latitude": 1.2290, "longitude": -77.2870, "source": "test_fixture" },
+  { "external_id": "T03", "name": "Parque Bolívar", "aliases": [], "latitude": 1.2200, "longitude": -77.2830, "source": "test_fixture" },
+  { "external_id": "T04", "name": "Parque Nariño", "aliases": ["Centro"], "latitude": 1.2140, "longitude": -77.2785, "source": "test_fixture" },
+  { "external_id": null,  "name": "Hospital Departamental", "aliases": [], "latitude": 1.2100, "longitude": -77.2740, "source": "test_fixture" },
+  { "external_id": "T06", "name": "Terminal de Transportes", "aliases": ["Terminal"], "latitude": 1.2050, "longitude": -77.2700, "source": "test_fixture" },
+  { "external_id": "T07", "name": "Barrio Sin Rutas", "aliases": [], "latitude": null, "longitude": null, "source": "test_fixture" }
+]

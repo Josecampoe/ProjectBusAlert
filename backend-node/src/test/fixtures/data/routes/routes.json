@@ -1,0 +1,4 @@
+[
+  { "code": "FX1", "name": "FX1 — Udenar / Centro", "type": "prueba", "source": "test_fixture" },
+  { "code": "FX2", "name": "FX2 — Centro / Terminal", "type": "prueba", "source": "test_fixture" }
+]
