@@ -11,7 +11,11 @@
 import type { AppConfig } from '../config/env';
 import type { Logger } from '../lib/logger';
 import { normalizeForSearch, sanitizeUserText } from '../lib/text';
-import type { TransitRepository, TransitNetwork } from '../repositories/transitRepository';
+import type {
+  NetworkStop,
+  TransitNetwork,
+  TransitRepository,
+} from '../repositories/transitRepository';
 import type { AiClient } from './ai/aiClient';
 import {
   buildUserContent,
@@ -23,17 +27,27 @@ import {
   tripSystemInstruction,
   type Language,
 } from './ai/prompts';
-import { planTrip, toStopRef, type PlanOption, type StopRef } from './planner';
+import type { ArrivalEstimate, ArrivalTimeProvider } from './arrivalTime';
+import { findNearbyStops, type GeoPoint } from './nearby';
+import { planTrip, toStopRef, type PlanOption, type StopRef, type TransferStep } from './planner';
 import { resolvePlace } from './placeResolver';
 
 export type TripStatus =
-  'ok' | 'same_place' | 'no_route' | 'origin_not_found' | 'destination_not_found';
+  | 'ok'
+  | 'same_place'
+  | 'no_route'
+  | 'origin_not_found'
+  | 'destination_not_found'
+  | 'no_nearby_stops';
 
 export type AnswerSource = 'ai' | 'planner';
 
+/** Origen del viaje: texto dicho/escrito o coordenadas del GPS. */
+export type TripOrigin = { kind: 'text'; text: string } | { kind: 'coordinates'; point: GeoPoint };
+
 export interface TripRequest {
   destination: string;
-  originText: string;
+  origin: TripOrigin;
   language: Language;
 }
 
@@ -46,18 +60,28 @@ export interface TripMessage {
 export interface LegDto {
   routeCode: string;
   routeName: string;
+  routeColor: string | null;
   directionKey: string;
   directionName: string;
   board: StopRef;
   alight: StopRef;
   stopsCount: number;
+  estimate: ArrivalEstimate;
 }
 
 export interface OptionDto {
   legs: LegDto[];
   transfers: number;
+  transferSteps: TransferStep[];
   totalStops: number;
+  estimatedMinutes: number;
+  isEstimate: true;
   isDemo: boolean;
+}
+
+export interface OriginCandidate extends StopRef {
+  /** Distancia desde la ubicación del usuario (solo si el origen es GPS). */
+  distanceMeters: number | null;
 }
 
 export interface TripResponse {
@@ -66,7 +90,7 @@ export interface TripResponse {
   message: TripMessage | null;
   recommended: OptionDto | null;
   alternatives: OptionDto[];
-  originCandidates: StopRef[];
+  originCandidates: OriginCandidate[];
   destinationCandidates: StopRef[];
   isDemoData: boolean;
 }
@@ -84,7 +108,10 @@ export function toOptionDto(option: PlanOption): OptionDto {
   return {
     legs: option.legs.map(({ stops: _segment, ...leg }) => leg),
     transfers: option.transfers,
+    transferSteps: option.transferSteps,
     totalStops: option.totalStops,
+    estimatedMinutes: option.estimatedMinutes,
+    isEstimate: true,
     isDemo: option.isDemo,
   };
 }
@@ -93,8 +120,10 @@ export class AssistantService {
   constructor(
     private readonly repo: TransitRepository,
     private readonly ai: AiClient | null,
+    private readonly arrival: ArrivalTimeProvider,
     private readonly config: AppConfig,
     private readonly logger: Logger,
+    private readonly now: () => Date = () => new Date(),
   ) {}
 
   get aiEnabled(): boolean {
@@ -112,34 +141,78 @@ export class AssistantService {
     });
   }
 
+  private resolveOrigin(
+    network: TransitNetwork,
+    origin: TripOrigin,
+  ): { stops: NetworkStop[]; candidates: OriginCandidate[]; textForAi: string } {
+    if (origin.kind === 'text') {
+      const text = this.sanitize(origin.text);
+      const stops = this.resolve(network, text).stops;
+      return {
+        stops,
+        candidates: stops.map((s) => ({ ...toStopRef(s), distanceMeters: null })),
+        textForAi: text,
+      };
+    }
+    const nearby = findNearbyStops(
+      network,
+      origin.point,
+      this.config.nearby.defaultRadiusM,
+      this.config.nearby.maxResults,
+    );
+    return {
+      stops: nearby.map((n) => n.stop),
+      candidates: nearby.map((n) => ({
+        ...toStopRef(n.stop),
+        distanceMeters: Math.round(n.distanceMeters),
+      })),
+      // A la IA no se le envían las coordenadas del usuario: solo la parada más cercana.
+      textForAi: nearby[0]?.stop.name ?? '',
+    };
+  }
+
+  /** Planificación con los parámetros configurados (también la usa /api/route-planner). */
+  plan(network: TransitNetwork, originIds: number[], destinationIds: number[]) {
+    return planTrip(
+      network,
+      originIds,
+      destinationIds,
+      {
+        maxAlternatives: this.config.planner.maxAlternatives,
+        maxTransfers: this.config.planner.maxTransfers,
+        transferPenaltyMin: this.config.planner.transferPenaltyMin,
+        transferWalkRadiusM: this.config.planner.transferWalkRadiusM,
+      },
+      this.arrival,
+      this.now(),
+    );
+  }
+
   async planTrip(request: TripRequest): Promise<TripResponse> {
     const network = this.repo.getNetwork();
     const destinationText = this.sanitize(request.destination);
-    const originText = this.sanitize(request.originText);
-
-    const origin = this.resolve(network, originText);
+    const origin = this.resolveOrigin(network, request.origin);
     const destination = this.resolve(network, destinationText);
     const base = {
       source: 'planner' as const,
       message: null,
       recommended: null,
       alternatives: [],
-      originCandidates: origin.stops.map(toStopRef),
+      originCandidates: origin.candidates,
       destinationCandidates: destination.stops.map(toStopRef),
       isDemoData: [...origin.stops, ...destination.stops].some((s) => s.isDemo),
     };
 
-    if (origin.stops.length === 0) return { ...base, status: 'origin_not_found' };
+    if (origin.stops.length === 0) {
+      const status = request.origin.kind === 'coordinates' ? 'no_nearby_stops' : 'origin_not_found';
+      return { ...base, status };
+    }
     if (destination.stops.length === 0) return { ...base, status: 'destination_not_found' };
 
-    const plan = planTrip(
+    const plan = this.plan(
       network,
       origin.stops.map((s) => s.id),
       destination.stops.map((s) => s.id),
-      {
-        maxAlternatives: this.config.planner.maxAlternatives,
-        minutesPerStop: this.config.planner.minutesPerStop,
-      },
     );
     if (plan.status !== 'ok') return { ...base, status: plan.status };
 
@@ -147,7 +220,7 @@ export class AssistantService {
     const isDemoData = base.isDemoData || options.some((o) => o.isDemo);
     const aiResult = await this.composeWithAi(
       options,
-      originText,
+      origin.textForAi,
       destinationText,
       request.language,
     );

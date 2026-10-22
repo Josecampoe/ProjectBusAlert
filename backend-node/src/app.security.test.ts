@@ -24,7 +24,7 @@ describe('seguridad de la API', () => {
   it('acepta la clave configurada', async () => {
     const res = await request(app).get('/api/routes').set(auth);
     expect(res.status).toBe(200);
-    expect(res.body.count).toBe(2);
+    expect(res.body.count).toBe(3);
   });
 
   it('aplica cabeceras de seguridad y no expone la tecnología', async () => {

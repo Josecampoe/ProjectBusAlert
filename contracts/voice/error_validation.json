@@ -11,7 +11,7 @@
         },
         {
           "field": "currentLocationName",
-          "issue": "invalid_type"
+          "issue": "custom"
         }
       ]
     }

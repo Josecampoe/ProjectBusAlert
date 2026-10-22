@@ -1,48 +1,115 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { TransitNetwork } from '../repositories/transitRepository';
-import { createTestContext } from '../test/helpers';
-import { planTrip } from './planner';
+import { createTestContext, FIXED_NOW } from '../test/helpers';
+import { createArrivalEstimator } from './arrivalTime';
+import { planTrip, type PlannerOptions } from './planner';
 
-const OPTIONS = { maxAlternatives: 5, minutesPerStop: 1.5 };
 let network: TransitNetwork;
+let arrival: ReturnType<typeof createArrivalEstimator>;
 const id = (name: string) => [...network.stops.values()].find((s) => s.name === name)!.id;
 
+const OPTIONS: PlannerOptions = {
+  maxAlternatives: 5,
+  maxTransfers: 1,
+  transferPenaltyMin: 8,
+  transferWalkRadiusM: 150,
+};
+const plan = (from: string, to: string, options: Partial<PlannerOptions> = {}) =>
+  planTrip(network, [id(from)], [id(to)], { ...OPTIONS, ...options }, arrival, FIXED_NOW);
+
 beforeAll(() => {
-  network = createTestContext().repo.getNetwork();
+  const ctx = createTestContext();
+  network = ctx.repo.getNetwork();
+  arrival = createArrivalEstimator(ctx.config);
 });
 
-describe('planTrip (directo)', () => {
-  it('encuentra una ruta directa con subida, bajada y paradas intermedias', () => {
-    const result = planTrip(network, [id('Udenar Torobajo')], [id('Parque Nariño')], OPTIONS);
+describe('planTrip — directo', () => {
+  it('encuentra la ruta directa con subida, bajada y paradas intermedias', () => {
+    const result = plan('Udenar Torobajo', 'Parque Nariño');
     expect(result.status).toBe('ok');
-    const [leg] = result.options[0].legs;
-    expect(leg.routeCode).toBe('FX1');
-    expect(leg.board.name).toBe('Udenar Torobajo');
-    expect(leg.alight.name).toBe('Parque Nariño');
-    expect(leg.stopsCount).toBe(3);
+    const [option] = result.options;
+    expect(option.transfers).toBe(0);
+    const [leg] = option.legs;
+    expect(leg).toMatchObject({
+      routeCode: 'FX1',
+      routeColor: '#1565C0',
+      directionKey: 'FX1_D1',
+      stopsCount: 3,
+      board: { name: 'Udenar Torobajo' },
+      alight: { name: 'Parque Nariño' },
+    });
     expect(leg.stops.map((s) => s.name)).toEqual([
       'Udenar Torobajo',
       'Universidad Cooperativa',
       'Parque Bolívar',
       'Parque Nariño',
     ]);
-    expect(result.options[0].isDemo).toBe(true);
+    expect(option.isDemo).toBe(true);
+    expect(option.isEstimate).toBe(true);
   });
 
-  it('no ofrece el sentido contrario', () => {
-    const result = planTrip(network, [id('Parque Nariño')], [id('Udenar Torobajo')], OPTIONS);
-    expect(result.status).toBe('no_route');
-    expect(result.options).toEqual([]);
+  it('usa el sentido correcto de la ruta', () => {
+    expect(plan('Parque Nariño', 'Udenar Torobajo').options[0].legs[0].directionKey).toBe('FX1_D2');
   });
 
   it('detecta origen igual a destino', () => {
-    const stop = id('Parque Bolívar');
-    expect(planTrip(network, [stop], [stop], OPTIONS).status).toBe('same_place');
+    expect(plan('Parque Bolívar', 'Parque Bolívar').status).toBe('same_place');
   });
 
   it('devuelve sin ruta cuando la parada no está en ningún recorrido', () => {
-    expect(planTrip(network, [id('Barrio Sin Rutas')], [id('Parque Nariño')], OPTIONS).status).toBe(
+    expect(plan('Barrio Sin Rutas', 'Parque Nariño').status).toBe('no_route');
+  });
+});
+
+describe('planTrip — transbordos', () => {
+  it('combina dos rutas en la misma parada', () => {
+    const result = plan('Udenar Torobajo', 'Terminal de Transportes');
+    expect(result.status).toBe('ok');
+    const [option] = result.options;
+    expect(option.transfers).toBe(1);
+    expect(option.legs.map((l) => l.routeCode)).toEqual(['FX1', 'FX2']);
+    expect(option.transferSteps[0]).toMatchObject({
+      from: { name: 'Parque Nariño' },
+      to: { name: 'Parque Nariño' },
+      walkMeters: 0,
+      walkMinutes: 0,
+    });
+    expect(option.totalStops).toBe(5);
+  });
+
+  it('permite caminar a una parada cercana dentro del radio', () => {
+    const [option] = plan('Udenar Torobajo', 'Barrio Obrero').options;
+    expect(option.legs.map((l) => l.routeCode)).toEqual(['FX1', 'FX3']);
+    expect(option.transferSteps[0]).toMatchObject({
+      from: { name: 'Parque Nariño' },
+      to: { name: 'Plazuela San Andrés' },
+    });
+    expect(option.transferSteps[0].walkMeters).toBeGreaterThan(90);
+    expect(option.transferSteps[0].walkMinutes).toBeGreaterThan(0);
+  });
+
+  it('no camina más allá del radio configurado', () => {
+    expect(plan('Udenar Torobajo', 'Barrio Obrero', { transferWalkRadiusM: 50 }).status).toBe(
       'no_route',
     );
+  });
+
+  it('con PLANNER_MAX_TRANSFERS=0 solo devuelve directos', () => {
+    expect(plan('Udenar Torobajo', 'Terminal de Transportes', { maxTransfers: 0 }).status).toBe(
+      'no_route',
+    );
+  });
+
+  it('ordena por costo e incluye la penalización por transbordo', () => {
+    const [option] = plan('Udenar Torobajo', 'Terminal de Transportes').options;
+    expect(option.cost).toBe(option.estimatedMinutes + OPTIONS.transferPenaltyMin);
+    const direct = plan('Udenar Torobajo', 'Parque Nariño').options[0];
+    expect(direct.cost).toBe(direct.estimatedMinutes);
+  });
+
+  it('respeta el máximo de alternativas', () => {
+    expect(
+      plan('Udenar Torobajo', 'Terminal de Transportes', { maxAlternatives: 1 }).options,
+    ).toHaveLength(1);
   });
 });

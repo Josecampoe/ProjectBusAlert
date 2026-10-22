@@ -51,6 +51,12 @@ export const RouteSchema = z.strictObject({
   data_quality: z.enum(['complete', 'partial', 'minimal', 'unknown']).default('unknown'),
   notes: nullableText,
   last_verified_at: nullableText,
+  /** Color de la ruta en formato #RRGGBB (opcional). */
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .nullable()
+    .default(null),
 });
 
 export const DirectionSchema = z.strictObject({
@@ -308,12 +314,12 @@ function writeDataset(db: Db, data: Dataset, report: ImportReport): void {
   }
 
   const upsertRoute = db.prepare(`
-        INSERT INTO routes (code, name, type, description, origin, destination, active, source, verified, data_quality, notes, last_verified_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO routes (code, name, type, description, origin, destination, active, source, verified, data_quality, notes, last_verified_at, color)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(code) DO UPDATE SET name=excluded.name, type=excluded.type, description=excluded.description,
             origin=excluded.origin, destination=excluded.destination, active=excluded.active, source=excluded.source,
             verified=excluded.verified, data_quality=excluded.data_quality, notes=excluded.notes,
-            last_verified_at=excluded.last_verified_at, updated_at=datetime('now')`);
+            last_verified_at=excluded.last_verified_at, color=excluded.color, updated_at=datetime('now')`);
   for (const r of data.routes) {
     upsertRoute.run(
       r.code,
@@ -328,6 +334,7 @@ function writeDataset(db: Db, data: Dataset, report: ImportReport): void {
       r.data_quality,
       r.notes,
       r.last_verified_at,
+      r.color,
     );
     c.routes++;
   }

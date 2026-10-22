@@ -45,7 +45,7 @@ export function createApp({ config, logger, repo, assistant }: AppDependencies):
   const api = express.Router();
   api.use(createRateLimiter(config.security.rateLimitWindowMs, config.security.rateLimitMax));
   api.use(requireApiKey(config.security.apiKeys));
-  api.use(createTransitRouter(repo, schemas, config));
+  api.use(createTransitRouter(repo, assistant, schemas, config));
   api.use(createAssistantRouter(assistant, schemas));
   app.use('/api', api);
 

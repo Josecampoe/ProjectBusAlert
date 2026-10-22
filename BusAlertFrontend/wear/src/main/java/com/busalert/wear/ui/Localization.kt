@@ -63,4 +63,5 @@ fun TripStatus.noResultMessageRes(): Int = when (this) {
     TripStatus.SAME_PLACE -> R.string.no_result_same_place
     TripStatus.ORIGIN_NOT_FOUND -> R.string.no_result_origin_not_found
     TripStatus.DESTINATION_NOT_FOUND -> R.string.no_result_destination_not_found
+    TripStatus.NO_NEARBY_STOPS -> R.string.no_result_no_nearby_stops
 }

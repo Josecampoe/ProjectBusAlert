@@ -49,12 +49,30 @@ describe('contratos de POST /api/voice', () => {
     checkContract('ok_planner', res.body);
   });
 
+  it('ok_gps', async () => {
+    const { app } = createTestContext();
+    const res = await request(app)
+      .post('/api/voice')
+      .set(auth)
+      .send({ voiceText: 'udenar', latitude: 1.2143, longitude: -77.2787, language: 'en' });
+    checkContract('ok_gps', res.body);
+  });
+
+  it('ok_transfer', async () => {
+    const { app } = createTestContext();
+    const res = await request(app)
+      .post('/api/voice')
+      .set(auth)
+      .send({ voiceText: 'terminal', currentLocationName: 'udenar' });
+    checkContract('ok_transfer', res.body);
+  });
+
   it('no_route', async () => {
     const { app } = createTestContext();
     const res = await request(app)
       .post('/api/voice')
       .set(auth)
-      .send({ voiceText: 'udenar', currentLocationName: 'parque nariño' });
+      .send({ voiceText: 'barrio sin rutas', currentLocationName: 'parque nariño' });
     checkContract('no_route', res.body);
   });
 

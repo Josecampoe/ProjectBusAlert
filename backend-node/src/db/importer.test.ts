@@ -5,6 +5,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { FIXTURES_DIR } from '../test/helpers';
 import { IN_MEMORY_DB, openDatabase } from './database';
 import { importDataset } from './importer';
+import { TransitRepository } from '../repositories/transitRepository';
+import { MemoryCache } from '../services/cacheService';
 
 const tempDirs: string[] = [];
 function copyFixtures(): string {
@@ -42,7 +44,7 @@ describe('importDataset', () => {
         count(db, t),
       ),
     ).toEqual(snapshot);
-    expect(count(db, 'routes')).toBe(2);
+    expect(count(db, 'routes')).toBe(3);
     expect(first.summary.stopsWithoutCoordinates).toBe(1);
   });
 
@@ -58,7 +60,7 @@ describe('importDataset', () => {
     expect(
       (db.prepare("SELECT name FROM routes WHERE code = 'FX1'").get() as { name: string }).name,
     ).toBe('Nombre actualizado');
-    expect(count(db, 'routes')).toBe(2);
+    expect(count(db, 'routes')).toBe(3);
   });
 
   it('rechaza archivos que no cumplen el esquema y no escribe nada', () => {
@@ -105,5 +107,20 @@ describe('importDataset', () => {
     );
     expect(report.errors).toEqual([]);
     expect(report.ok).toBe(true);
+  });
+
+  it('el set de demostración se importa junto a los reales y queda marcado como demo', () => {
+    const db = openDatabase(IN_MEMORY_DB);
+    const dataDir = path.join(__dirname, '..', '..', 'data');
+    expect(importDataset(db, dataDir).ok).toBe(true);
+    const sample = importDataset(db, path.join(dataDir, 'sample'));
+    expect(sample.errors).toEqual([]);
+    const repo = new TransitRepository(db, new MemoryCache(60));
+    const routes = repo.listRoutes();
+    expect(routes.filter((r) => r.isDemo).map((r) => r.code)).toEqual(['DEMO-1', 'DEMO-2']);
+    expect(routes.find((r) => r.code === 'E1')?.isDemo).toBe(false);
+    const demoStops = repo.listStops().filter((s) => s.isDemo);
+    expect(demoStops.length).toBeGreaterThan(0);
+    expect(demoStops.every((s) => s.name.startsWith('Demo '))).toBe(true);
   });
 });

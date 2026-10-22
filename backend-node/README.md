@@ -30,6 +30,8 @@ node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"
 | `npm run build`                           | Compila a `dist/` (sin pruebas).                                                                                                                     |
 | `npm start`                               | Ejecuta `dist/index.js` (producción).                                                                                                                |
 | `npm run seed`                            | Importa `DATA_DIR` en `DB_PATH`. Es idempotente y valida los datos; si hay errores no escribe nada. Con `-- --data-dir <ruta>` importa otra carpeta. |
+| `npm run seed:sample`                     | Importa además los datos de **demostración** de `data/sample/` (marcados como demo).                                                                 |
+| `npm run data:validate`                   | Valida `DATA_DIR` sin escribir nada (BD en memoria). Acepta `-- --data-dir <ruta>`.                                                                  |
 | `npm run seed:prod`                       | Igual que `seed`, pero desde `dist/`.                                                                                                                |
 | `npm test` / `npm run test:watch`         | Pruebas (Vitest + supertest).                                                                                                                        |
 | `npm run coverage`                        | Pruebas con reporte de cobertura.                                                                                                                    |
@@ -54,31 +56,38 @@ Todas las variables están documentadas en [`.env.example`](.env.example) y se v
 
 Todas las rutas bajo `/api` exigen la cabecera `X-API-Key` y tienen límite de tasa. `GET /health` es pública.
 
-| Método | Ruta                                                       | Descripción                                                                           |
-| ------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| GET    | `/health`                                                  | Estado del servicio y si la IA está activa.                                           |
-| POST   | `/api/voice`                                               | Plan de viaje para el reloj. Cuerpo: `{ voiceText, currentLocationName, language? }`. |
-| POST   | `/api/ai/transport-query`                                  | Pregunta libre respondida con datos de la BD. Cuerpo: `{ question, language? }`.      |
-| GET    | `/api/routes` · `/api/routes/search?q=`                    | Rutas activas / búsqueda.                                                             |
-| GET    | `/api/routes/:code`                                        | Detalle con sentidos y horarios.                                                      |
-| GET    | `/api/routes/:code/directions` · `/api/routes/:code/stops` | Sentidos y paradas en orden.                                                          |
-| GET    | `/api/stops` · `/api/stops/search?q=`                      | Paradas / búsqueda por nombre o alias (acepta frases libres).                         |
-| GET    | `/api/stops/:id` · `/api/stops/:id/routes`                 | Parada por código Ruti o id interno, y rutas que pasan.                               |
-| GET    | `/api/route-planner?origin=&destination=`                  | Alternativas entre dos lugares.                                                       |
+| Método | Ruta                                                       | Descripción                                                                                                                                                                                  |
+| ------ | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/health`                                                  | Estado del servicio y si la IA está activa.                                                                                                                                                  |
+| POST   | `/api/voice`                                               | Plan de viaje para el reloj. Cuerpo: `{ voiceText, currentLocationName?, latitude?, longitude?, language? }`. El origen va por texto **o** por GPS; si llegan coordenadas, tienen prioridad. |
+| POST   | `/api/ai/transport-query`                                  | Pregunta libre respondida con datos de la BD. Cuerpo: `{ question, language? }`.                                                                                                             |
+| GET    | `/api/routes` · `/api/routes/search?q=`                    | Rutas activas / búsqueda.                                                                                                                                                                    |
+| GET    | `/api/routes/:code`                                        | Detalle con sentidos y horarios.                                                                                                                                                             |
+| GET    | `/api/routes/:code/directions` · `/api/routes/:code/stops` | Sentidos y paradas en orden.                                                                                                                                                                 |
+| GET    | `/api/stops` · `/api/stops/search?q=`                      | Paradas / búsqueda por nombre o alias (acepta frases libres).                                                                                                                                |
+| GET    | `/api/stops/nearby?lat=&lng=&radius=`                      | Paradas con coordenadas dentro del radio, por distancia y con sus rutas.                                                                                                                     |
+| GET    | `/api/stops/:id` · `/api/stops/:id/routes`                 | Parada por código Ruti o id interno, y rutas que pasan.                                                                                                                                      |
+| GET    | `/api/route-planner?origin=&destination=`                  | Alternativas entre dos lugares.                                                                                                                                                              |
 
 ### Respuesta de `/api/voice`
 
 ```jsonc
 {
-  "status": "ok",              // ok | same_place | no_route | origin_not_found | destination_not_found
+  "status": "ok",              // ok | same_place | no_route | origin_not_found | destination_not_found | no_nearby_stops
   "source": "ai",              // ai | planner
   "message": { "spokenText": "...", "displayTitle": "...", "displaySubtitle": "..." }, // null si no hay IA
-  "recommended": { "legs": [{ "routeCode": "E1", "board": {...}, "alight": {...}, "stopsCount": 5 }], ... },
+  "recommended": {
+    "legs": [{ "routeCode": "E1", "routeColor": null, "board": {...}, "alight": {...}, "stopsCount": 5,
+               "estimate": { "rideMinutes": 8, "waitMinutes": null, "totalMinutes": 8, "basis": "stop_count", "isEstimate": true } }],
+    "transfers": 0, "transferSteps": [], "estimatedMinutes": 8, "isEstimate": true, "isDemo": false
+  },
   "alternatives": [],
   "originCandidates": [], "destinationCandidates": [],
   "isDemoData": false
 }
 ```
+
+Los tiempos son **estimaciones** deterministas (distancia o número de paradas, velocidad media configurable y frecuencia si existe), nunca tiempo real. Para conectar una fuente en tiempo real hay que implementar `ArrivalTimeProvider` (`src/services/arrivalTime.ts`).
 
 Ejemplos reales generados por las pruebas: [`../contracts/voice/`](../contracts/voice/).
 
@@ -111,7 +120,9 @@ src/
 ├── repositories/          # Acceso a datos y red de transporte en memoria (con caché TTL)
 ├── services/
 │   ├── placeResolver.ts   # Texto libre → paradas (sin IA)
-│   ├── planner.ts         # Alternativas de viaje
+│   ├── planner.ts         # Alternativas directas y con un transbordo (también a pie)
+│   ├── arrivalTime.ts     # ArrivalTimeProvider + estimador por horario
+│   ├── nearby.ts          # Paradas cercanas a una coordenada
 │   ├── assistantService.ts# Orquesta resolver + planner + IA
 │   └── ai/                # Cliente Gemini, prompts y esquemas de salida
 └── lib/, utils/           # Texto, logger, geodesia
@@ -125,5 +136,6 @@ src/
 
 ## Datos
 
-- `data/`: datos reales verificados (hoy solo la ruta E1, sin coordenadas). Ver `docs/PENDIENTES.md` en la raíz.
+- `data/`: datos reales verificados (hoy solo la ruta E1, sin coordenadas). Formato y procedimiento en [`data/README.md`](data/README.md); lo que falta, en `docs/PENDIENTES.md`.
+- `data/sample/`: datos de **demostración** con coordenadas aproximadas, marcados como demo.
 - `src/test/fixtures/data/`: datos **ficticios** para pruebas (rutas `FX*`).

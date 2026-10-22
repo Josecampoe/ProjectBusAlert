@@ -26,6 +26,7 @@ export interface RouteSummary {
   dataQuality: string | null;
   lastVerifiedAt: string | null;
   directionCount: number;
+  color: string | null;
   isDemo: boolean;
 }
 
@@ -74,11 +75,23 @@ export interface RouteAtStop {
 }
 
 /** Instantánea en memoria de la red, usada por el buscador y el planificador. */
+/** Horario de servicio de una ruta para un tipo de día (LV, S, DF...). */
+export interface RouteSchedule {
+  dayType: string;
+  startTime: string | null;
+  endTime: string | null;
+  frequencyMinutes: number | null;
+  verified: boolean;
+}
+
 export interface NetworkRoute {
   id: number;
   code: string;
   name: string;
+  /** Color de la ruta (#RRGGBB) definido en los datos, o null. */
+  color: string | null;
   isDemo: boolean;
+  schedules: RouteSchedule[];
 }
 
 export interface NetworkDirection {
@@ -301,16 +314,35 @@ export class TransitRepository {
   private loadNetwork(): TransitNetwork {
     const routeRows = this.db
       .prepare(
-        `SELECT r.id, r.code, r.name,
+        `SELECT r.id, r.code, r.name, r.color,
                         CASE WHEN src.source_type = '${DEMO_SOURCE_TYPE}' THEN 1 ELSE 0 END AS is_demo
                  FROM routes r LEFT JOIN sources src ON src.id = r.source
                  WHERE r.active = 1`,
       )
-      .all() as Array<{ id: number; code: string; name: string; is_demo: number }>;
+      .all() as Array<{
+      id: number;
+      code: string;
+      name: string;
+      color: string | null;
+      is_demo: number;
+    }>;
     const routes = new Map<number, NetworkRoute>(
       routeRows.map((r) => [
         r.id,
-        { id: r.id, code: r.code, name: r.name, isDemo: r.is_demo === 1 },
+        {
+          id: r.id,
+          code: r.code,
+          name: r.name,
+          color: r.color,
+          isDemo: r.is_demo === 1,
+          schedules: this.getSchedules(r.id).map((sch) => ({
+            dayType: sch.dayType,
+            startTime: sch.startTime,
+            endTime: sch.endTime,
+            frequencyMinutes: sch.frequencyMinutes,
+            verified: sch.verified,
+          })),
+        },
       ]),
     );
 
@@ -373,7 +405,7 @@ export class TransitRepository {
   private queryRoutes(extraWhere: string, params: string[]): RouteSummary[] {
     const rows = this.db
       .prepare(
-        `SELECT r.id, r.code, r.name, r.type, r.description, r.origin, r.destination,
+        `SELECT r.id, r.code, r.name, r.type, r.description, r.origin, r.destination, r.color,
                         r.verified, r.data_quality, r.last_verified_at,
                         (SELECT COUNT(*) FROM route_directions rd WHERE rd.route_id = r.id) AS direction_count,
                         CASE WHEN src.source_type = '${DEMO_SOURCE_TYPE}' THEN 1 ELSE 0 END AS is_demo
@@ -393,6 +425,7 @@ export class TransitRepository {
       data_quality: string | null;
       last_verified_at: string | null;
       direction_count: number;
+      color: string | null;
       is_demo: number;
     }>;
     return rows.map((r) => ({
@@ -407,6 +440,7 @@ export class TransitRepository {
       dataQuality: r.data_quality,
       lastVerifiedAt: r.last_verified_at,
       directionCount: r.direction_count,
+      color: r.color,
       isDemo: r.is_demo === 1,
     }));
   }

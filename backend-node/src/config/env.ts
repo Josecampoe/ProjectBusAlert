@@ -80,8 +80,11 @@ const EnvSchema = z.object({
   PLANNER_MAX_TRANSFERS: z.coerce.number().int().min(0).max(1).default(1),
   PLANNER_TRANSFER_PENALTY_MIN: nonNegativeNumber.default(8),
   PLANNER_MINUTES_PER_STOP: z.coerce.number().positive().default(1.5),
+  PLANNER_TRANSFER_WALK_RADIUS_M: nonNegativeNumber.default(150),
   ETA_AVERAGE_BUS_SPEED_KMH: z.coerce.number().positive().default(18),
   ETA_DEFAULT_HEADWAY_MIN: nonNegativeNumber.default(0),
+  ETA_WALK_SPEED_KMH: z.coerce.number().positive().default(4.5),
+  TRANSIT_TIMEZONE: z.string().min(1).default('America/Bogota'),
 
   // ── Búsqueda geográfica ──────────────────────────────────────────────
   NEARBY_DEFAULT_RADIUS_M: positiveInt.default(500),
@@ -131,10 +134,13 @@ export interface AppConfig {
     maxTransfers: number;
     transferPenaltyMin: number;
     minutesPerStop: number;
+    transferWalkRadiusM: number;
   };
   eta: {
     averageBusSpeedKmh: number;
     defaultHeadwayMin: number;
+    walkSpeedKmh: number;
+    timeZone: string;
   };
   nearby: {
     defaultRadiusM: number;
@@ -160,6 +166,11 @@ export function loadConfig(source: Record<string, string | undefined> = process.
   }
   const e = parsed.data;
 
+  try {
+    new Intl.DateTimeFormat('en', { timeZone: e.TRANSIT_TIMEZONE });
+  } catch {
+    throw new ConfigError([`TRANSIT_TIMEZONE: zona horaria desconocida "${e.TRANSIT_TIMEZONE}"`]);
+  }
   if (e.NEARBY_DEFAULT_RADIUS_M > e.NEARBY_MAX_RADIUS_M) {
     throw new ConfigError(['NEARBY_DEFAULT_RADIUS_M no puede ser mayor que NEARBY_MAX_RADIUS_M']);
   }
@@ -204,10 +215,13 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       maxTransfers: e.PLANNER_MAX_TRANSFERS,
       transferPenaltyMin: e.PLANNER_TRANSFER_PENALTY_MIN,
       minutesPerStop: e.PLANNER_MINUTES_PER_STOP,
+      transferWalkRadiusM: e.PLANNER_TRANSFER_WALK_RADIUS_M,
     },
     eta: {
       averageBusSpeedKmh: e.ETA_AVERAGE_BUS_SPEED_KMH,
       defaultHeadwayMin: e.ETA_DEFAULT_HEADWAY_MIN,
+      walkSpeedKmh: e.ETA_WALK_SPEED_KMH,
+      timeZone: e.TRANSIT_TIMEZONE,
     },
     nearby: {
       defaultRadiusM: e.NEARBY_DEFAULT_RADIUS_M,

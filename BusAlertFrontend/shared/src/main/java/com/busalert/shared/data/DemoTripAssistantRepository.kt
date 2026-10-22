@@ -6,6 +6,7 @@ import com.busalert.shared.domain.StopRef
 import com.busalert.shared.domain.TripAssistantRepository
 import com.busalert.shared.domain.TripLeg
 import com.busalert.shared.domain.TripOption
+import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripPlan
 import com.busalert.shared.domain.TripQuery
 import com.busalert.shared.domain.TripStatus
@@ -18,21 +19,26 @@ import com.busalert.shared.domain.TripStatus
 class DemoTripAssistantRepository : TripAssistantRepository {
 
     override suspend fun planTrip(query: TripQuery): Outcome<TripPlan> {
-        val board = StopRef(id = DEMO_BOARD_ID, externalId = null, name = query.origin, latitude = null, longitude = null)
+        val originName = (query.origin as? TripOrigin.Named)?.name ?: DEMO_ROUTE_CODE
+        val board = StopRef(id = DEMO_BOARD_ID, externalId = null, name = originName, latitude = null, longitude = null)
         val alight = StopRef(id = DEMO_ALIGHT_ID, externalId = null, name = query.destination, latitude = null, longitude = null)
         val option = TripOption(
             legs = listOf(
                 TripLeg(
                     routeCode = DEMO_ROUTE_CODE,
                     routeName = DEMO_ROUTE_CODE,
+                    routeColor = null,
                     directionName = DEMO_ROUTE_CODE,
                     board = board,
                     alight = alight,
                     stopsCount = DEMO_STOPS_COUNT,
+                    estimate = null,
                 ),
             ),
             transfers = 0,
+            transferSteps = emptyList(),
             totalStops = DEMO_STOPS_COUNT,
+            estimatedMinutes = null,
             isDemo = true,
         )
         return Outcome.Success(
@@ -42,6 +48,7 @@ class DemoTripAssistantRepository : TripAssistantRepository {
                 message = null,
                 recommended = option,
                 alternatives = emptyList(),
+                nearestStopDistanceMeters = null,
                 isDemoData = true,
             ),
         )

@@ -1,0 +1,4 @@
+[
+  { "route_code": "DEMO-1", "day_type": "LV", "day_type_label": "Lunes a Viernes", "start_time": "05:00", "end_time": "22:00", "frequency_minutes": 10, "source": "demo_sample", "verified": false, "notes": "DEMO: valores ficticios." },
+  { "route_code": "DEMO-2", "day_type": "LV", "day_type_label": "Lunes a Viernes", "start_time": "05:30", "end_time": "21:30", "frequency_minutes": 15, "source": "demo_sample", "verified": false, "notes": "DEMO: valores ficticios." }
+]

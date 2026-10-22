@@ -3,8 +3,8 @@ package com.busalert.shared.data
 import com.busalert.shared.data.api.BusAlertApi
 import com.busalert.shared.data.api.ErrorBodyDto
 import com.busalert.shared.data.api.MalformedResponseException
-import com.busalert.shared.data.api.VoiceRequestDto
 import com.busalert.shared.data.api.toDomain
+import com.busalert.shared.data.api.toDto
 import com.busalert.shared.domain.ErrorCode
 import com.busalert.shared.domain.Outcome
 import com.busalert.shared.domain.TripAssistantRepository
@@ -25,13 +25,7 @@ class RemoteTripAssistantRepository(
 ) : TripAssistantRepository {
 
     override suspend fun planTrip(query: TripQuery): Outcome<TripPlan> = safeCall {
-        api.planTrip(
-            VoiceRequestDto(
-                voiceText = query.destination,
-                currentLocationName = query.origin,
-                language = query.language.code,
-            ),
-        ).toDomain()
+        api.planTrip(query.toDto()).toDomain()
     }
 
     private suspend fun <T> safeCall(block: suspend () -> T): Outcome<T> = try {

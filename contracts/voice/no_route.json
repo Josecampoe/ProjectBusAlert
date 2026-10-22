@@ -9,16 +9,17 @@
       "externalId": "T04",
       "name": "Parque Nariño",
       "latitude": 1.214,
-      "longitude": -77.2785
+      "longitude": -77.2785,
+      "distanceMeters": null
     }
   ],
   "destinationCandidates": [
     {
-      "id": 1,
-      "externalId": "T01",
-      "name": "Udenar Torobajo",
-      "latitude": 1.2335,
-      "longitude": -77.2925
+      "id": 7,
+      "externalId": "T07",
+      "name": "Barrio Sin Rutas",
+      "latitude": null,
+      "longitude": null
     }
   ],
   "isDemoData": true,

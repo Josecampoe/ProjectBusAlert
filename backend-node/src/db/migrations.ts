@@ -128,4 +128,9 @@ CREATE TABLE IF NOT EXISTS route_changes (
 );
 `,
   },
+  {
+    version: 2,
+    name: 'color_de_ruta',
+    sql: `ALTER TABLE routes ADD COLUMN color TEXT;`,
+  },
 ];

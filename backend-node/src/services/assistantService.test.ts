@@ -47,7 +47,7 @@ describe('POST /api/voice sin IA (planificador)', () => {
     ['origin_not_found', voice('terminal', 'la luna')],
     ['destination_not_found', voice('la luna', 'udenar')],
     ['same_place', voice('udenar', 'universidad de nariño')],
-    ['no_route', voice('udenar', 'parque nariño')],
+    ['no_route', voice('barrio sin rutas', 'parque nariño')],
   ])('devuelve el estado %s', async (status, body) => {
     const res = await request(app).post('/api/voice').set(auth).send(body);
     expect(res.status).toBe(200);

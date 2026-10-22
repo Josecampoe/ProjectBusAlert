@@ -1,0 +1,20 @@
+[
+  {
+    "code": "DEMO-1",
+    "name": "DEMO-1 — Demo Torobajo / Demo Centro",
+    "type": "demostracion",
+    "description": "Ruta ficticia de demostración.",
+    "source": "demo_sample",
+    "data_quality": "minimal",
+    "color": "#1565C0"
+  },
+  {
+    "code": "DEMO-2",
+    "name": "DEMO-2 — Demo Centro / Demo Terminal",
+    "type": "demostracion",
+    "description": "Ruta ficticia de demostración.",
+    "source": "demo_sample",
+    "data_quality": "minimal",
+    "color": "#2E7D32"
+  }
+]

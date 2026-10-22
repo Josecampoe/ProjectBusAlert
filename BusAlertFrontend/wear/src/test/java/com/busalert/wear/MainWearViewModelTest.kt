@@ -1,21 +1,22 @@
 package com.busalert.wear
 
 import app.cash.turbine.test
-import com.busalert.shared.domain.AnswerSource
 import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.domain.ErrorCode
+import com.busalert.shared.domain.GeoPoint
 import com.busalert.shared.domain.Outcome
-import com.busalert.shared.domain.StopRef
 import com.busalert.shared.domain.TripAssistantRepository
-import com.busalert.shared.domain.TripLeg
-import com.busalert.shared.domain.TripOption
+import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripPlan
 import com.busalert.shared.domain.TripQuery
 import com.busalert.shared.domain.TripStatus
+import com.busalert.wear.TestData.okPlan
+import com.busalert.wear.location.LocationSource
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -42,12 +43,15 @@ class MainWearViewModelTest {
     }
 
     private val repository = FakeRepository()
+
+    /** Por defecto no hay GPS: el flujo pide el lugar por voz. */
+    private var location: suspend () -> GeoPoint? = { null }
     private lateinit var viewModel: MainWearViewModel
 
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        viewModel = MainWearViewModel(repository)
+        viewModel = MainWearViewModel(repository, LocationSource { location() })
     }
 
     @After
@@ -55,24 +59,61 @@ class MainWearViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun askFullQuery() {
+    private fun TestScope.askFullQuery() {
         viewModel.startQuery()
+        advanceUntilIdle()
         viewModel.onLocationReceived("Udenar")
         viewModel.onDestinationReceived("Parque Bolívar")
     }
 
     @Test
-    fun `recorre el flujo completo hasta el resultado`() = runTest(dispatcher) {
+    fun `sin GPS recorre el flujo por voz hasta el resultado`() = runTest(dispatcher) {
         viewModel.appState.test {
             assertEquals(AppState.IDLE, awaitItem())
-            askFullQuery()
+            viewModel.startQuery()
+            assertEquals(AppState.LOCATING, awaitItem())
             assertEquals(AppState.ASKING_LOCATION, awaitItem())
+            viewModel.onLocationReceived("Udenar")
             assertEquals(AppState.ASKING_DESTINATION, awaitItem())
+            viewModel.onDestinationReceived("Parque Bolívar")
             assertEquals(AppState.PROCESSING, awaitItem())
             assertEquals(AppState.RESULT, awaitItem())
         }
         assertEquals(okPlan, viewModel.plan.value)
-        assertEquals(TripQuery("Parque Bolívar", "Udenar", AppLanguage.SPANISH), repository.queries.single())
+        assertEquals(
+            TripQuery("Parque Bolívar", TripOrigin.Named("Udenar"), AppLanguage.SPANISH),
+            repository.queries.single(),
+        )
+    }
+
+    @Test
+    fun `con GPS salta la pregunta de origen y envía las coordenadas`() = runTest(dispatcher) {
+        val point = GeoPoint(1.2143, -77.2787)
+        location = { point }
+        viewModel.startQuery()
+        advanceUntilIdle()
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
+        assertEquals(TripOrigin.Located(point), viewModel.origin.value)
+
+        viewModel.onDestinationReceived("Udenar")
+        advanceUntilIdle()
+        assertEquals(TripOrigin.Located(point), repository.queries.single().origin)
+        assertEquals(AppState.RESULT, viewModel.appState.value)
+    }
+
+    @Test
+    fun `el usuario puede preferir decir su ubicación mientras se busca el GPS`() = runTest(dispatcher) {
+        val gate = CompletableDeferred<GeoPoint?>()
+        location = { gate.await() }
+        viewModel.startQuery()
+        advanceUntilIdle()
+        assertEquals(AppState.LOCATING, viewModel.appState.value)
+
+        viewModel.useSpokenLocation()
+        gate.complete(GeoPoint(1.0, -77.0))
+        advanceUntilIdle()
+        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertNull(viewModel.origin.value)
     }
 
     @Test
@@ -119,6 +160,7 @@ class MainWearViewModelTest {
     @Test
     fun `alterna entre voz y teclado y envía lo escrito`() = runTest(dispatcher) {
         viewModel.startQuery()
+        advanceUntilIdle()
         viewModel.onLocationSpeechFailed()
         assertEquals(AppState.TYPING_LOCATION, viewModel.appState.value)
         viewModel.retryLocationSpeech()
@@ -127,7 +169,7 @@ class MainWearViewModelTest {
         viewModel.onTypedTextChange("  Centro  ")
         viewModel.submitTypedLocation()
         assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
-        assertEquals("Centro", viewModel.capturedLocation.value)
+        assertEquals(TripOrigin.Named("Centro"), viewModel.origin.value)
         assertEquals("", viewModel.typedText.value)
 
         viewModel.onDestinationSpeechFailed()
@@ -139,8 +181,9 @@ class MainWearViewModelTest {
     }
 
     @Test
-    fun `ignora textos vacíos`() {
+    fun `ignora textos vacíos`() = runTest(dispatcher) {
         viewModel.startQuery()
+        advanceUntilIdle()
         viewModel.onLocationReceived("   ")
         assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
         viewModel.onLocationSpeechFailed()
@@ -149,8 +192,9 @@ class MainWearViewModelTest {
     }
 
     @Test
-    fun `sin origen no consulta y vuelve a pedir la ubicación`() {
+    fun `sin origen no consulta y vuelve a pedir la ubicación`() = runTest(dispatcher) {
         viewModel.startQuery()
+        advanceUntilIdle()
         viewModel.onDestinationReceived("Terminal")
         assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
         assertEquals(0, repository.queries.size)
@@ -165,23 +209,5 @@ class MainWearViewModelTest {
         askFullQuery()
         advanceUntilIdle()
         assertEquals(AppLanguage.ENGLISH, repository.queries.single().language)
-    }
-
-    private companion object {
-        val board = StopRef(1, "T01", "Udenar Torobajo", null, null)
-        val alight = StopRef(3, "T03", "Parque Bolívar", null, null)
-        val okPlan = TripPlan(
-            status = TripStatus.OK,
-            source = AnswerSource.PLANNER,
-            message = null,
-            recommended = TripOption(
-                legs = listOf(TripLeg("FX1", "FX1", "Udenar → Centro", board, alight, 2)),
-                transfers = 0,
-                totalStops = 2,
-                isDemo = true,
-            ),
-            alternatives = emptyList(),
-            isDemoData = true,
-        )
     }
 }

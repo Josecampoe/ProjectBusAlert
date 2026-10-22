@@ -1,4 +1,4 @@
 [
-  { "route_code": "FX1", "day_type": "LV", "day_type_label": "Lunes a Viernes", "frequency_minutes": 10, "source": "test_fixture", "verified": false },
+  { "route_code": "FX1", "day_type": "LV", "day_type_label": "Lunes a Viernes", "start_time": "05:00", "end_time": "22:00", "frequency_minutes": 10, "source": "test_fixture", "verified": false },
   { "route_code": "FX2", "day_type": "LV", "day_type_label": "Lunes a Viernes", "source": "test_fixture" }
 ]
