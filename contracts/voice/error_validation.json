@@ -1,0 +1,19 @@
+{
+  "status": 400,
+  "body": {
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "La petición no cumple el formato esperado",
+      "details": [
+        {
+          "field": "voiceText",
+          "issue": "too_small"
+        },
+        {
+          "field": "currentLocationName",
+          "issue": "invalid_type"
+        }
+      ]
+    }
+  }
+}

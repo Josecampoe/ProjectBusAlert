@@ -1,0 +1,9 @@
+{
+  "status": 401,
+  "body": {
+    "error": {
+      "code": "UNAUTHORIZED",
+      "message": "Falta la cabecera X-API-Key o no es válida"
+    }
+  }
+}

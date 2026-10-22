@@ -1,0 +1,11 @@
+[
+  {
+    "id": "test_fixture",
+    "name": "Datos de prueba automatizada (no reales)",
+    "url": null,
+    "source_type": "demo_sample",
+    "last_checked": null,
+    "reliability": "unknown",
+    "notes": "Fixture de pruebas. Rutas FX* ficticias; coordenadas aproximadas solo para probar cálculos."
+  }
+]

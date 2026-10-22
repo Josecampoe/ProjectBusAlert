@@ -1,27 +1,40 @@
 /**
- * Servicio de cache en memoria para optimizar consultas recurrentes de rutas y paradas
+ * Caché en memoria con expiración (TTL) e invalidación explícita.
+ * Se usa para la red de transporte (rutas, paradas y recorridos), que
+ * cambia solo cuando se vuelve a ejecutar el seed.
  */
-class MemoryCacheService {
-  private cache = new Map<string, { value: any; expiry: number }>();
+export class MemoryCache {
+    private readonly entries = new Map<string, { value: unknown; expiresAt: number }>();
 
-  set(key: string, value: any, ttlSeconds: number = 300): void {
-    const expiry = Date.now() + ttlSeconds * 1000;
-    this.cache.set(key, { value, expiry });
-  }
+    constructor(
+        private readonly defaultTtlSeconds: number,
+        private readonly now: () => number = Date.now,
+    ) {}
 
-  get<T>(key: string): T | null {
-    const item = this.cache.get(key);
-    if (!item) return null;
-    if (Date.now() > item.expiry) {
-      this.cache.delete(key);
-      return null;
+    get<T>(key: string): T | undefined {
+        const entry = this.entries.get(key);
+        if (!entry) return undefined;
+        if (this.now() > entry.expiresAt) {
+            this.entries.delete(key);
+            return undefined;
+        }
+        return entry.value as T;
     }
-    return item.value as T;
-  }
 
-  clear(): void {
-    this.cache.clear();
-  }
+    set<T>(key: string, value: T, ttlSeconds: number = this.defaultTtlSeconds): void {
+        this.entries.set(key, { value, expiresAt: this.now() + ttlSeconds * 1000 });
+    }
+
+    getOrSet<T>(key: string, factory: () => T, ttlSeconds?: number): T {
+        const cached = this.get<T>(key);
+        if (cached !== undefined) return cached;
+        const value = factory();
+        this.set(key, value, ttlSeconds);
+        return value;
+    }
+
+    invalidate(key?: string): void {
+        if (key === undefined) this.entries.clear();
+        else this.entries.delete(key);
+    }
 }
-
-export const memoryCache = new MemoryCacheService();
