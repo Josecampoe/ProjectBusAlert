@@ -90,6 +90,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
+    // Entrada de texto del sistema (teclado, escritura a mano, dictado) vía RemoteInput
+    implementation("androidx.wear:wear-input:1.2.0")
+
     // Ubicación (FusedLocationProvider) y su integración con corrutinas
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")

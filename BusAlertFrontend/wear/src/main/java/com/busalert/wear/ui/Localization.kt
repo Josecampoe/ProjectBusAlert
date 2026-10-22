@@ -1,6 +1,9 @@
 package com.busalert.wear.ui
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Configuration
+import android.content.res.Resources
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -11,6 +14,7 @@ import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.domain.ErrorCode
 import com.busalert.shared.domain.TripStatus
 import com.busalert.wear.R
+import com.busalert.wear.voice.VoiceError
 import java.util.Locale
 
 /**
@@ -24,7 +28,9 @@ fun ProvideAppLanguage(language: AppLanguage, content: @Composable () -> Unit) {
     val configuration = remember(language, baseConfiguration) {
         Configuration(baseConfiguration).apply { setLocale(Locale.forLanguageTag(language.code)) }
     }
-    val localizedContext = remember(configuration) { baseContext.createConfigurationContext(configuration) }
+    val localizedContext = remember(baseContext, configuration) {
+        LocalizedContext(baseContext, baseContext.createConfigurationContext(configuration).resources)
+    }
     CompositionLocalProvider(
         LocalContext provides localizedContext,
         LocalConfiguration provides configuration,
@@ -32,6 +38,16 @@ fun ProvideAppLanguage(language: AppLanguage, content: @Composable () -> Unit) {
     )
 }
 
+/**
+ * Envuelve el contexto original (la Activity) y solo cambia los recursos.
+ * Así se conserva la cadena de contextos que usan los permisos y
+ * `rememberLauncherForActivityResult` para encontrar la Activity.
+ */
+private class LocalizedContext(base: Context, private val localizedResources: Resources) : ContextWrapper(base) {
+    override fun getResources(): Resources = localizedResources
+}
+
+/** Mensaje para cada código de error estable (del backend o del cliente). */
 @StringRes
 fun ErrorCode.messageRes(): Int = when (this) {
     ErrorCode.NETWORK -> R.string.error_network
@@ -64,4 +80,16 @@ fun TripStatus.noResultMessageRes(): Int = when (this) {
     TripStatus.ORIGIN_NOT_FOUND -> R.string.no_result_origin_not_found
     TripStatus.DESTINATION_NOT_FOUND -> R.string.no_result_destination_not_found
     TripStatus.NO_NEARBY_STOPS -> R.string.no_result_no_nearby_stops
+}
+
+@StringRes
+fun VoiceError.messageRes(): Int = when (this) {
+    VoiceError.NO_MATCH -> R.string.voice_error_no_match
+    VoiceError.TIMEOUT -> R.string.voice_error_timeout
+    VoiceError.AUDIO -> R.string.voice_error_audio
+    VoiceError.PERMISSION -> R.string.voice_error_permission
+    VoiceError.NETWORK -> R.string.voice_error_network
+    VoiceError.BUSY -> R.string.voice_error_busy
+    VoiceError.UNAVAILABLE -> R.string.voice_error_unavailable
+    VoiceError.GENERIC -> R.string.voice_error_generic
 }

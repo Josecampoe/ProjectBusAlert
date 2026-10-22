@@ -51,6 +51,17 @@ Si falta la URL o la clave, la app no se cae: muestra "La app no tiene configura
 - `shared`: `RemoteTripAssistantRepository` contra MockWebServer, usando las respuestas reales del backend guardadas en `../contracts/` (si el backend cambia el formato, estas pruebas fallan).
 - `wear`: `MainWearViewModel` (todas las transiciones, errores, reintento y cancelación) con coroutines-test y Turbine. Pantallas de Compose con Robolectric en español e inglés.
 
+## Interfaz del reloj
+
+- `wear/.../theme/`: sistema de diseño (paleta, roles de color claro/oscuro, espaciado, dimensiones, movimiento). Los composables no tienen valores literales.
+- `wear/.../ui/components/`: piezas reutilizables (scaffold con hora, viñeta e indicador de scroll, chips, insignia de ruta, animaciones).
+- `wear/.../ui/screens/`: una pantalla por archivo (inicio, ajustes, escucha, escritura, progreso, resultado y mensajes).
+- `wear/.../ui/WearApp.kt`: navegación por estado, permisos, voz y háptica.
+- Previews en `ui/preview/WearPreviews.kt`: redondo pequeño y grande, cuadrado, claro/oscuro, español/inglés.
+- Accesibilidad: objetivos táctiles de Wear (chips ≥ 52 dp), descripciones para TalkBack, regiones vivas en la transcripción, texto escalable y contraste AA verificado por pruebas.
+- Preferencias (idioma, tema, lectura en voz alta) e historial en DataStore; las sugerencias al escribir salen del historial.
+- Para escribir se usa la entrada de texto del sistema (teclado, escritura a mano o dictado).
+
 ## Errores y textos
 
 El backend responde con **códigos** de error (`UNAUTHORIZED`, `RATE_LIMITED`...). `shared` los convierte en `ErrorCode` y la UI los traduce con `strings.xml` (`values/` en español, `values-en/` en inglés).
