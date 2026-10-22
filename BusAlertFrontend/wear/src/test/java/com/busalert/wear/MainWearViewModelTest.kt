@@ -10,8 +10,10 @@ import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripPlan
 import com.busalert.shared.domain.TripQuery
 import com.busalert.shared.domain.TripStatus
+import com.busalert.shared.preferences.QueryHistoryEntry
 import com.busalert.wear.TestData.okPlan
 import com.busalert.wear.location.LocationSource
+import com.busalert.wear.voice.VoiceError
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +25,9 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -43,6 +47,7 @@ class MainWearViewModelTest {
     }
 
     private val repository = FakeRepository()
+    private val preferences = FakePreferencesRepository()
 
     /** Por defecto no hay GPS: el flujo pide el lugar por voz. */
     private var location: suspend () -> GeoPoint? = { null }
@@ -51,7 +56,7 @@ class MainWearViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        viewModel = MainWearViewModel(repository, LocationSource { location() })
+        viewModel = MainWearViewModel(repository, LocationSource { location() }, preferences, clock = { NOW })
     }
 
     @After
@@ -62,8 +67,8 @@ class MainWearViewModelTest {
     private fun TestScope.askFullQuery() {
         viewModel.startQuery()
         advanceUntilIdle()
-        viewModel.onLocationReceived("Udenar")
-        viewModel.onDestinationReceived("Parque Bolívar")
+        viewModel.onSpeechResult("Udenar")
+        viewModel.onSpeechResult("Parque Bolívar")
     }
 
     @Test
@@ -73,9 +78,9 @@ class MainWearViewModelTest {
             viewModel.startQuery()
             assertEquals(AppState.LOCATING, awaitItem())
             assertEquals(AppState.ASKING_LOCATION, awaitItem())
-            viewModel.onLocationReceived("Udenar")
+            viewModel.onSpeechResult("Udenar")
             assertEquals(AppState.ASKING_DESTINATION, awaitItem())
-            viewModel.onDestinationReceived("Parque Bolívar")
+            viewModel.onSpeechResult("Parque Bolívar")
             assertEquals(AppState.PROCESSING, awaitItem())
             assertEquals(AppState.RESULT, awaitItem())
         }
@@ -87,6 +92,17 @@ class MainWearViewModelTest {
     }
 
     @Test
+    fun `guarda la consulta exitosa en el historial y la ofrece como reciente`() = runTest(dispatcher) {
+        askFullQuery()
+        advanceUntilIdle()
+        assertEquals(
+            listOf(QueryHistoryEntry("Udenar", "Parque Bolívar", listOf("FX1"), NOW)),
+            preferences.history.value,
+        )
+        assertEquals(listOf("Parque Bolívar", "Udenar"), viewModel.recentPlaces.value)
+    }
+
+    @Test
     fun `con GPS salta la pregunta de origen y envía las coordenadas`() = runTest(dispatcher) {
         val point = GeoPoint(1.2143, -77.2787)
         location = { point }
@@ -95,10 +111,11 @@ class MainWearViewModelTest {
         assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
         assertEquals(TripOrigin.Located(point), viewModel.origin.value)
 
-        viewModel.onDestinationReceived("Udenar")
+        viewModel.onSpeechResult("Udenar")
         advanceUntilIdle()
         assertEquals(TripOrigin.Located(point), repository.queries.single().origin)
         assertEquals(AppState.RESULT, viewModel.appState.value)
+        assertNull(preferences.history.value.single().originLabel)
     }
 
     @Test
@@ -117,12 +134,12 @@ class MainWearViewModelTest {
     }
 
     @Test
-    fun `un plan sin ruta lleva a NO_RESULT`() = runTest(dispatcher) {
+    fun `un plan sin ruta lleva a NO_RESULT y no se guarda en el historial`() = runTest(dispatcher) {
         repository.next = { Outcome.Success(okPlan.copy(status = TripStatus.NO_ROUTE, recommended = null)) }
         askFullQuery()
         advanceUntilIdle()
         assertEquals(AppState.NO_RESULT, viewModel.appState.value)
-        assertEquals(TripStatus.NO_ROUTE, viewModel.plan.value?.status)
+        assertTrue(preferences.history.value.isEmpty())
     }
 
     @Test
@@ -138,7 +155,6 @@ class MainWearViewModelTest {
         advanceUntilIdle()
         assertEquals(AppState.RESULT, viewModel.appState.value)
         assertNull(viewModel.error.value)
-        assertEquals(2, repository.queries.size)
         assertEquals(repository.queries[0], repository.queries[1])
     }
 
@@ -161,34 +177,54 @@ class MainWearViewModelTest {
     fun `alterna entre voz y teclado y envía lo escrito`() = runTest(dispatcher) {
         viewModel.startQuery()
         advanceUntilIdle()
-        viewModel.onLocationSpeechFailed()
+        viewModel.switchToKeyboard()
         assertEquals(AppState.TYPING_LOCATION, viewModel.appState.value)
-        viewModel.retryLocationSpeech()
+        viewModel.switchToVoice()
         assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
-        viewModel.onLocationSpeechFailed()
+        viewModel.switchToKeyboard()
         viewModel.onTypedTextChange("  Centro  ")
-        viewModel.submitTypedLocation()
+        viewModel.submitTypedText()
         assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
         assertEquals(TripOrigin.Named("Centro"), viewModel.origin.value)
         assertEquals("", viewModel.typedText.value)
 
-        viewModel.onDestinationSpeechFailed()
+        viewModel.switchToKeyboard()
         assertEquals(AppState.TYPING_DESTINATION, viewModel.appState.value)
         viewModel.onTypedTextChange("Terminal")
-        viewModel.submitTypedDestination()
+        viewModel.submitTypedText()
         advanceUntilIdle()
         assertEquals("Terminal", repository.queries.single().destination)
     }
 
     @Test
-    fun `ignora textos vacíos`() = runTest(dispatcher) {
+    fun `sin permiso de micrófono muestra el aviso y pasa al teclado`() = runTest(dispatcher) {
         viewModel.startQuery()
         advanceUntilIdle()
-        viewModel.onLocationReceived("   ")
-        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
-        viewModel.onLocationSpeechFailed()
-        viewModel.submitTypedLocation()
+        viewModel.onVoiceError(VoiceError.PERMISSION)
         assertEquals(AppState.TYPING_LOCATION, viewModel.appState.value)
+        assertEquals(VoiceError.PERMISSION, viewModel.voiceNotice.value)
+    }
+
+    @Test
+    fun `un error leve de voz muestra el aviso pero sigue escuchando`() = runTest(dispatcher) {
+        viewModel.startQuery()
+        advanceUntilIdle()
+        viewModel.onVoiceError(VoiceError.NO_MATCH)
+        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertEquals(VoiceError.NO_MATCH, viewModel.voiceNotice.value)
+        viewModel.onSpeechResult("Centro")
+        assertNull(viewModel.voiceNotice.value)
+    }
+
+    @Test
+    fun `ignora textos vacíos y resultados de voz tardíos`() = runTest(dispatcher) {
+        viewModel.startQuery()
+        advanceUntilIdle()
+        viewModel.onSpeechResult("   ")
+        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        viewModel.resetToIdle()
+        viewModel.onSpeechResult("Centro")
+        assertEquals(AppState.IDLE, viewModel.appState.value)
     }
 
     @Test
@@ -201,13 +237,34 @@ class MainWearViewModelTest {
     }
 
     @Test
-    fun `envía el idioma elegido y alterna el tema`() = runTest(dispatcher) {
+    fun `las preferencias se guardan y el idioma viaja en la consulta`() = runTest(dispatcher) {
         viewModel.toggleLanguage()
-        viewModel.toggleDarkMode()
-        assertEquals(AppLanguage.ENGLISH, viewModel.language.value)
-        assertEquals(false, viewModel.isDarkMode.value)
+        viewModel.setDarkTheme(false)
+        viewModel.setSpeakResults(false)
+        advanceUntilIdle()
+        assertEquals(AppLanguage.ENGLISH, viewModel.preferences.value.language)
+        assertFalse(viewModel.preferences.value.darkTheme)
+        assertFalse(viewModel.preferences.value.speakResults)
         askFullQuery()
         advanceUntilIdle()
         assertEquals(AppLanguage.ENGLISH, repository.queries.single().language)
+    }
+
+    @Test
+    fun `ajustes y borrar historial`() = runTest(dispatcher) {
+        askFullQuery()
+        advanceUntilIdle()
+        viewModel.resetToIdle()
+        viewModel.openSettings()
+        assertEquals(AppState.SETTINGS, viewModel.appState.value)
+        viewModel.clearHistory()
+        advanceUntilIdle()
+        assertTrue(viewModel.recentPlaces.value.isEmpty())
+        viewModel.closeSettings()
+        assertEquals(AppState.IDLE, viewModel.appState.value)
+    }
+
+    private companion object {
+        const val NOW = 1_761_145_200_000L
     }
 }

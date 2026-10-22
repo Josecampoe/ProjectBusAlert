@@ -41,3 +41,13 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | `npm run data:validate` (datos reales) y `-- --data-dir ./data/sample` | Ambos válidos, 0 errores |
 | Contratos `ok_gps` y `ok_transfer` | Generados por el backend y parseados por Android |
 | `./gradlew clean assembleDebug testDebugUnitTest lintDebug` | BUILD SUCCESSFUL; **35 pruebas OK**; lint "No issues found" en los 3 módulos |
+
+## Fase 4 — Interfaz del reloj (2026-10-22)
+
+| Verificación | Resultado |
+|---|---|
+| Búsqueda de colores literales (`Color(0x…)`), `N.dp`/`N.sp` y cadenas literales en `ui/components`, `ui/screens`, `ui/WearApp.kt` | 0 coincidencias (solo quedan los `label` internos de animación y la clave del RemoteInput, que no son texto visible) |
+| Archivos de UI | Ninguno pasa de 300 líneas (el mayor, `WearApp.kt`, tiene 254) |
+| Contraste WCAG (`ThemeTest`) | Todos los textos ≥ 4,5:1 en tema oscuro y claro |
+| `./gradlew clean assembleDebug testDebugUnitTest lintDebug` | BUILD SUCCESSFUL; **52 pruebas OK** (ViewModel 14, UI 15, tema 2, shared 21); lint sin hallazgos |
+| Previews | Compilan: 3 formas de reloj (redondo pequeño y grande, cuadrado) en oscuro/español, y variantes claro/inglés |

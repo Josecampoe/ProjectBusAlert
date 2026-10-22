@@ -89,3 +89,19 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 
 ## D-026 · Flujo de permiso de ubicación en el reloj
 - **Motivo:** al iniciar una consulta, si no hay permiso se muestra primero una explicación (cuando Android lo sugiere) y luego el diálogo del sistema. Se conceda o no, la consulta sigue: sin permiso o sin señal en `LocationDefaults.TIMEOUT_MS`, se pide el lugar por voz o teclado. Mientras busca el GPS, el usuario puede elegir "Decir dónde estoy".
+
+## D-027 · Entrada de texto del sistema (RemoteInput) en lugar del teclado QWERTY propio
+- **Alternativas:** mantener el teclado dibujado en Compose.
+- **Motivo:** las teclas medían 15–20 dp, muy por debajo del mínimo táctil de 48 dp de Wear OS, no tenían soporte de TalkBack y solo servían en pantallas redondas de cierto tamaño. La entrada del sistema (`androidx.wear:wear-input`) ofrece teclado, escritura a mano y dictado, es accesible y funciona en cualquier forma de pantalla. La pantalla de escritura conserva el texto, las sugerencias y los cambios voz↔teclado.
+
+## D-028 · Sugerencias desde el historial, no fijas
+- **Motivo:** la lista anterior ("UCC", "Udenar", "Terminal"...) eran datos de transporte quemados en el código. Ahora las sugerencias son los lugares de las últimas consultas exitosas del usuario (DataStore).
+
+## D-029 · Preferencias e historial en `shared` con DataStore 1.1.1
+- **Motivo:** la app del reloj y la del teléfono comparten el mismo modelo (`UserPreferences`, `QueryHistoryEntry`), lo que prepara la sincronización de la Fase 5. Se usa la versión 1.1.1 porque la 1.0.0 falla en Windows al renombrar el archivo temporal (en Android no ocurre, pero rompía las pruebas locales).
+
+## D-030 · Sistema de diseño por tokens
+- **Motivo:** `Palette.kt` es el único archivo con colores literales. Los composables usan roles semánticos (`BusAlertTheme.colors`), espaciado, dimensiones, movimiento y efectos del tema, y la tipografía escalable de Wear Material. Una prueba verifica contraste WCAG AA (≥ 4,5) de todos los textos en ambos temas. El color de cada ruta viene de los datos (`routes.color`).
+
+## D-031 · `ProvideAppLanguage` con `ContextWrapper`
+- **Motivo:** la versión anterior reemplazaba el contexto por uno de configuración y perdía la referencia a la Activity, así que fallaban en ejecución los lanzadores de permisos y del teclado del sistema. Lo detectó una prueba de UI. Ahora se envuelve la Activity y solo se cambian los recursos.
