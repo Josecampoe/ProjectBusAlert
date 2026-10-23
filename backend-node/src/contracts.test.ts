@@ -111,6 +111,25 @@ describe('contratos de consulta de rutas y paradas', () => {
     checkContract('stops_search', res.body, dir);
   });
 
+  it('stops_nearby', async () => {
+    const { app } = createTestContext();
+    const res = await request(app)
+      .get('/api/stops/nearby')
+      .query({ lat: 1.2143, lng: -77.2787, radius: 300 })
+      .set(auth);
+    checkContract('stops_nearby', res.body, dir);
+  });
+
+  it('stops_nearby_empty', async () => {
+    const { app } = createTestContext();
+    // Punto a varios kilómetros de cualquier parada de los fixtures.
+    const res = await request(app)
+      .get('/api/stops/nearby')
+      .query({ lat: 1.25, lng: -77.32, radius: 300 })
+      .set(auth);
+    checkContract('stops_nearby_empty', res.body, dir);
+  });
+
   it('error_route_not_found', async () => {
     const { app } = createTestContext();
     const res = await request(app).get('/api/routes/ZZ9/stops').set(auth);
