@@ -62,3 +62,19 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | `./gradlew clean assembleDebug testDebugUnitTest lintDebug` | BUILD SUCCESSFUL; **75 pruebas Android OK**; lint sin hallazgos en los 3 módulos |
 | `npm test` (backend) | 127 pruebas OK |
 | **No verificable aquí** | Envío real por la Data Layer entre dispositivos emparejados y el mapa con una clave real (ver PENDIENTES) |
+
+## Fase 6 — Cierre (2026-10-22)
+
+| Verificación | Resultado |
+|---|---|
+| Modelos de Gemini en https://ai.google.dev/gemini-api/docs/models | `gemini-3.8-flash` y `gemini-3.5-flash-lite` listados como estables |
+| `npm run lint` · `format:check` · `typecheck` · `build` | OK |
+| `npm test` (backend) | 14 archivos, **130 pruebas OK** (+ `loadSeedConfig`, contratos `stops_nearby*`) |
+| `npm run data:validate` y `-- --data-dir ./data/sample` | Ambos válidos, sin `.env` |
+| `node dist/db/seed.js` dos veces sobre la misma BD | Mismo resultado (idempotente) |
+| `docker build` + `docker run` | `/health` → `{"status":"ok"}`; `/api/routes` sin clave → 401, con clave → ruta E1; `/api/stops/nearby` → 0 paradas, `stopsWithoutCoordinates: 86` |
+| `./gradlew testDebugUnitTest` | **80 pruebas Android OK** (wear 35, mobile 12, shared 33) |
+| `./gradlew clean assembleDebug lintDebug` | BUILD SUCCESSFUL; lint "No issues found" en los 3 módulos |
+| Búsqueda `AIza…`/`generativelanguage` dentro de `wear-debug.apk` y `mobile-debug.apk` | 0 |
+| Auditoría "nada quemado" | ver `docs/AUDITORIA.md` |
+| **No verificable aquí** | Envío real por la Data Layer entre dispositivos emparejados, mapa con clave real, GPS en un reloj físico |
