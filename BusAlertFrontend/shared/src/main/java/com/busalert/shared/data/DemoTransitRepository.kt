@@ -1,5 +1,7 @@
 package com.busalert.shared.data
 
+import com.busalert.shared.domain.GeoPoint
+import com.busalert.shared.domain.NearbyStops
 import com.busalert.shared.domain.Outcome
 import com.busalert.shared.domain.RouteDirection
 import com.busalert.shared.domain.RouteStop
@@ -41,6 +43,10 @@ class DemoTransitRepository : TransitRepository {
         stops.filter { it.name.contains(query, ignoreCase = true) }
             .map { StopWithRoutes(it, null, isDemo = true, routes = listOf(StopRoute(DEMO_PREFIX, DEMO_PREFIX))) },
     )
+
+    /** Las paradas demo no tienen coordenadas: igual que el backend, no hay ninguna ubicable cerca. */
+    override suspend fun nearbyStops(point: GeoPoint): Outcome<NearbyStops> =
+        Outcome.Success(NearbyStops(stops = emptyList(), stopsWithoutCoordinates = stops.size))
 
     private companion object {
         const val DEMO_PREFIX = "DEMO"

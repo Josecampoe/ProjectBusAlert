@@ -1,6 +1,8 @@
 package com.busalert.mobile
 
 import com.busalert.shared.domain.ErrorCode
+import com.busalert.shared.domain.GeoPoint
+import com.busalert.shared.domain.NearbyStops
 import com.busalert.shared.domain.Outcome
 import com.busalert.shared.domain.RouteDirection
 import com.busalert.shared.domain.RouteStop
@@ -44,6 +46,9 @@ class FakeTransitRepository : TransitRepository {
         searches += query
         return searchResult
     }
+
+    var nearbyResult: Outcome<NearbyStops> = Outcome.Success(NearbyStops(emptyList(), 0))
+    override suspend fun nearbyStops(point: GeoPoint) = nearbyResult
 
     companion object {
         val networkError: Outcome.Failure = Outcome.Failure(ErrorCode.NETWORK)

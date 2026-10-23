@@ -21,6 +21,8 @@
     <!-- Preguntas del flujo -->
     <string name="prompt_location">¿Dónde estás?</string>
     <string name="prompt_destination">¿A dónde vas?</string>
+    <string name="prompt_destination_from">Desde %1$s, ¿a dónde vas?</string>
+    <string name="prompt_location_no_nearby_stops">No hay paradas ubicadas cerca. ¿Dónde estás?</string>
 
     <!-- Escucha -->
     <string name="listening_speak_now">Habla ahora…</string>

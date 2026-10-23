@@ -23,6 +23,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainWearViewModel by viewModels {
         MainWearViewModel.Factory(
             repository = app.dependencies.tripAssistantRepository,
+            transitRepository = app.dependencies.transitRepository,
             locationSource = FusedLocationSource(applicationContext),
             preferencesRepository = app.preferencesRepository,
         )
