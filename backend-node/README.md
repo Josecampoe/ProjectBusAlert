@@ -31,7 +31,7 @@ node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"
 | `npm start`                               | Ejecuta `dist/index.js` (producción).                                                                                                                |
 | `npm run seed`                            | Importa `DATA_DIR` en `DB_PATH`. Es idempotente y valida los datos; si hay errores no escribe nada. Con `-- --data-dir <ruta>` importa otra carpeta. |
 | `npm run seed:sample`                     | Importa además los datos de **demostración** de `data/sample/` (marcados como demo).                                                                 |
-| `npm run data:validate`                   | Valida `DATA_DIR` sin escribir nada (BD en memoria). Acepta `-- --data-dir <ruta>`.                                                                  |
+| `npm run data:validate`                   | Valida `./data` sin escribir nada (BD en memoria). Acepta `-- --data-dir <ruta>`.                                                                    |
 | `npm run seed:prod`                       | Igual que `seed`, pero desde `dist/`.                                                                                                                |
 | `npm test` / `npm run test:watch`         | Pruebas (Vitest + supertest).                                                                                                                        |
 | `npm run coverage`                        | Pruebas con reporte de cobertura.                                                                                                                    |

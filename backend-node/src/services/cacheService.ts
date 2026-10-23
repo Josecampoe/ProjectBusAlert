@@ -3,6 +3,8 @@
  * Se usa para la red de transporte (rutas, paradas y recorridos), que
  * cambia solo cuando se vuelve a ejecutar el seed.
  */
+const MS_PER_SECOND = 1000;
+
 export class MemoryCache {
   private readonly entries = new Map<string, { value: unknown; expiresAt: number }>();
 
@@ -22,7 +24,7 @@ export class MemoryCache {
   }
 
   set(key: string, value: unknown, ttlSeconds: number = this.defaultTtlSeconds): void {
-    this.entries.set(key, { value, expiresAt: this.now() + ttlSeconds * 1000 });
+    this.entries.set(key, { value, expiresAt: this.now() + ttlSeconds * MS_PER_SECOND });
   }
 
   getOrSet<T>(key: string, factory: () => T, ttlSeconds?: number): T {
