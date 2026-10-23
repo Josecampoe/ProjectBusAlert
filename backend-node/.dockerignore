@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+.env
+data/db
+data/*.db
+data/*.db-*
+*.sqlite*

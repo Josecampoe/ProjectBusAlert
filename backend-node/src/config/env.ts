@@ -92,8 +92,6 @@ const EnvSchema = z.object({
   NEARBY_MAX_RESULTS: positiveInt.default(10),
 });
 
-export type RawEnv = z.input<typeof EnvSchema>;
-
 export interface AppConfig {
   env: 'development' | 'test' | 'production';
   logLevel: 'debug' | 'info' | 'warn' | 'error' | 'silent';

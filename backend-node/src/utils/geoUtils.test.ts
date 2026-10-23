@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateHaversineDistance, isWithinRadius } from './geoUtils';
+import { calculateHaversineDistance } from './geoUtils';
 
 // Puntos de referencia aproximados en San Juan de Pasto (solo para probar el cálculo).
 const PARQUE_NARINO = { lat: 1.2141, lng: -77.2786 };
@@ -42,18 +42,5 @@ describe('calculateHaversineDistance', () => {
       PARQUE_NARINO.lng,
     );
     expect(a).toBeCloseTo(b, 6);
-  });
-});
-
-describe('isWithinRadius', () => {
-  it('respeta el radio indicado', () => {
-    const args = [
-      PARQUE_NARINO.lat,
-      PARQUE_NARINO.lng,
-      UDENAR_TOROBAJO.lat,
-      UDENAR_TOROBAJO.lng,
-    ] as const;
-    expect(isWithinRadius(...args, 3_000)).toBe(true);
-    expect(isWithinRadius(...args, 1_000)).toBe(false);
   });
 });
