@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ConfigError, loadConfig } from './env';
+import { ConfigError, loadConfig, loadSeedConfig } from './env';
 import { BASE_TEST_ENV } from '../test/helpers';
 
 describe('loadConfig', () => {
@@ -45,5 +45,17 @@ describe('loadConfig', () => {
         NEARBY_MAX_RADIUS_M: '1000',
       }),
     ).toThrow(ConfigError);
+  });
+});
+
+describe('loadSeedConfig', () => {
+  it('exige DB_PATH y DATA_DIR', () => {
+    expect(() => loadSeedConfig({})).toThrow(ConfigError);
+  });
+
+  it('permite sobrescribir valores desde la línea de comandos', () => {
+    expect(
+      loadSeedConfig({ DB_PATH: 'a.sqlite', DATA_DIR: './data' }, { DATA_DIR: './data/sample' }),
+    ).toEqual({ dbPath: 'a.sqlite', dataDir: './data/sample' });
   });
 });

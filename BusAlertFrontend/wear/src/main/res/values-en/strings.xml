@@ -17,6 +17,8 @@
 
     <string name="prompt_location">Where are you?</string>
     <string name="prompt_destination">Where to?</string>
+    <string name="prompt_destination_from">From %1$s, where to?</string>
+    <string name="prompt_location_no_nearby_stops">No mapped stops nearby. Where are you?</string>
 
     <string name="listening_speak_now">Speak now…</string>
     <string name="listening_partial">“%1$s”</string>

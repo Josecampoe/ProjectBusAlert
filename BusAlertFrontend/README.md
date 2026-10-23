@@ -2,11 +2,34 @@
 
 Proyecto Android multi-módulo del asistente de transporte BusAlert para San Juan de Pasto.
 
-```
-BusAlertFrontend/
-├── shared/   # Dominio, contrato HTTP con el backend, repositorios y DI
-├── wear/     # App principal para el reloj (Jetpack Compose for Wear OS)
-└── mobile/   # App complementaria para el teléfono
+```mermaid
+flowchart TB
+    subgraph wear["wear (reloj)"]
+        WUI["ui/screens · ui/components<br/>Compose for Wear OS + tema por tokens"]
+        WVM["MainWearViewModel"]
+        LOC["LocationSource<br/>FusedLocationProvider"]
+        VOZ["VoiceRecognitionManager · VoiceSpeaker"]
+        WUI --> WVM
+        WVM --> LOC
+        WVM --> VOZ
+    end
+    subgraph mobile["mobile (teléfono)"]
+        MUI["rutas · paradas · mapa · historial · ajustes"]
+        MVM["ViewModels"]
+        MUI --> MVM
+    end
+    subgraph shared["shared"]
+        DI["SharedDependencies<br/>Remote por defecto · Demo solo con flag en debug"]
+        REMOTE["RemoteTripAssistantRepository<br/>RemoteTransitRepository (Retrofit + OkHttp)"]
+        PREFS["DataStorePreferencesRepository"]
+        SYNC["SyncingPreferencesRepository<br/>Data Layer /busalert/sync"]
+        DI --> REMOTE
+        DI --> SYNC --> PREFS
+    end
+    WVM --> DI
+    MVM --> DI
+    REMOTE -- "HTTPS + X-API-Key" --> BE[("backend-node")]
+    SYNC <-. "Data Layer API" .-> SYNC
 ```
 
 El reloj **no** habla con la IA directamente: llama al backend (`backend-node`), que es quien tiene la clave de Gemini y los datos de rutas.

@@ -4,7 +4,13 @@ import app.cash.turbine.test
 import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.domain.ErrorCode
 import com.busalert.shared.domain.GeoPoint
+import com.busalert.shared.domain.NearbyStop
+import com.busalert.shared.domain.NearbyStops
 import com.busalert.shared.domain.Outcome
+import com.busalert.shared.domain.RouteDirection
+import com.busalert.shared.domain.RouteSummary
+import com.busalert.shared.domain.StopWithRoutes
+import com.busalert.shared.domain.TransitRepository
 import com.busalert.shared.domain.TripAssistantRepository
 import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripPlan
@@ -48,7 +54,23 @@ class MainWearViewModelTest {
         }
     }
 
+    /** Paradas cercanas falsas: por defecto la más cercana es Parque Nariño a 40 m. */
+    private class FakeTransit : TransitRepository {
+        val nearbyRequests = mutableListOf<GeoPoint>()
+        var nearby: suspend () -> Outcome<NearbyStops> = {
+            Outcome.Success(NearbyStops(listOf(NearbyStop(TestData.narino, 40, isDemo = true, routes = emptyList())), 0))
+        }
+        override suspend fun routes(): Outcome<List<RouteSummary>> = Outcome.Success(emptyList())
+        override suspend fun routeDirections(code: String): Outcome<List<RouteDirection>> = Outcome.Success(emptyList())
+        override suspend fun searchStops(query: String): Outcome<List<StopWithRoutes>> = Outcome.Success(emptyList())
+        override suspend fun nearbyStops(point: GeoPoint): Outcome<NearbyStops> {
+            nearbyRequests += point
+            return nearby()
+        }
+    }
+
     private val repository = FakeRepository()
+    private val transit = FakeTransit()
     private val preferences = FakePreferencesRepository()
 
     /** Por defecto no hay GPS: el flujo pide el lugar por voz. */
@@ -58,7 +80,7 @@ class MainWearViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        viewModel = MainWearViewModel(repository, LocationSource { location() }, preferences, clock = { NOW })
+        viewModel = MainWearViewModel(repository, transit, LocationSource { location() }, preferences, clock = { NOW })
     }
 
     @After
@@ -122,12 +144,58 @@ class MainWearViewModelTest {
         advanceUntilIdle()
         assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
         assertEquals(TripOrigin.Located(point), viewModel.origin.value)
+        assertEquals(listOf(point), transit.nearbyRequests)
+        assertEquals("Parque Nariño", viewModel.nearestStop.value?.stop?.name)
 
         viewModel.onSpeechResult("Udenar")
         advanceUntilIdle()
         assertEquals(TripOrigin.Located(point), repository.queries.single().origin)
         assertEquals(AppState.RESULT, viewModel.appState.value)
         assertNull(preferences.history.value.single().originLabel)
+    }
+
+    @Test
+    fun `con GPS pero sin paradas ubicables cerca pide el lugar por voz`() = runTest(dispatcher) {
+        location = { GeoPoint(1.25, -77.32) }
+        transit.nearby = { Outcome.Success(NearbyStops(emptyList(), stopsWithoutCoordinates = 86)) }
+        viewModel.startQuery()
+        advanceUntilIdle()
+        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertTrue(viewModel.noNearbyStops.value)
+        assertNull(viewModel.origin.value)
+
+        viewModel.onSpeechResult("Udenar")
+        assertFalse(viewModel.noNearbyStops.value)
+        assertEquals(TripOrigin.Named("Udenar"), viewModel.origin.value)
+    }
+
+    @Test
+    fun `si falla la búsqueda de paradas cercanas sigue con las coordenadas`() = runTest(dispatcher) {
+        val point = GeoPoint(1.2143, -77.2787)
+        location = { point }
+        transit.nearby = { Outcome.Failure(ErrorCode.NETWORK) }
+        viewModel.startQuery()
+        advanceUntilIdle()
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
+        assertEquals(TripOrigin.Located(point), viewModel.origin.value)
+        assertNull(viewModel.nearestStop.value)
+    }
+
+    @Test
+    fun `cancelar mientras se buscan paradas cercanas descarta la respuesta`() = runTest(dispatcher) {
+        val gate = CompletableDeferred<Outcome<NearbyStops>>()
+        location = { GeoPoint(1.2143, -77.2787) }
+        transit.nearby = { gate.await() }
+        viewModel.startQuery()
+        advanceUntilIdle()
+        assertEquals(AppState.LOCATING, viewModel.appState.value)
+
+        viewModel.resetToIdle()
+        gate.complete(Outcome.Success(NearbyStops(emptyList(), 0)))
+        advanceUntilIdle()
+        assertEquals(AppState.IDLE, viewModel.appState.value)
+        assertNull(viewModel.nearestStop.value)
+        assertFalse(viewModel.noNearbyStops.value)
     }
 
     @Test

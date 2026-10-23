@@ -19,6 +19,9 @@ interface BusAlertApi {
 
     @GET("api/stops/search")
     suspend fun searchStops(@Query("q") query: String): StopSearchDto
+
+    @GET("api/stops/nearby")
+    suspend fun nearbyStops(@Query("lat") latitude: Double, @Query("lng") longitude: Double): NearbyStopsDto
 }
 
 // Los DTO son anulables a propósito: Gson no respeta la nulidad de Kotlin,

@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.domain.ErrorCode
+import com.busalert.shared.domain.NearbyStop
 import com.busalert.shared.domain.Outcome
+import com.busalert.shared.domain.TransitRepository
 import com.busalert.shared.domain.TripAssistantRepository
 import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripPlan
@@ -31,8 +33,8 @@ import kotlinx.coroutines.launch
 /**
  * Pantallas/estados del flujo del reloj:
  *
- * IDLE ─► LOCATING (GPS) ───────────────────────────────┐ ubicación obtenida
- *      └► ASKING_LOCATION (voz) ⇄ TYPING_LOCATION         │ sin permiso / sin GPS
+ * IDLE ─► LOCATING (GPS + /api/stops/nearby) ──────────┐ hay parada cercana
+ *      └► ASKING_LOCATION (voz) ⇄ TYPING_LOCATION         │ sin permiso / sin GPS / sin paradas cerca
  *          └────────────► ASKING_DESTINATION ⇄ TYPING_DESTINATION ◄┘
  *                              └► PROCESSING ─► RESULT | NO_RESULT | ERROR
  * IDLE ⇄ SETTINGS
@@ -53,6 +55,7 @@ enum class AppState {
 
 class MainWearViewModel(
     private val repository: TripAssistantRepository,
+    private val transitRepository: TransitRepository,
     private val locationSource: LocationSource,
     private val preferencesRepository: PreferencesRepository,
     private val clock: () -> Long = System::currentTimeMillis,
@@ -73,6 +76,14 @@ class MainWearViewModel(
     /** Origen elegido: ubicación GPS o lugar dicho/escrito. */
     private val _origin = MutableStateFlow<TripOrigin?>(null)
     val origin: StateFlow<TripOrigin?> = _origin.asStateFlow()
+
+    /** Parada más cercana a la ubicación GPS (se muestra al preguntar el destino). */
+    private val _nearestStop = MutableStateFlow<NearbyStop?>(null)
+    val nearestStop: StateFlow<NearbyStop?> = _nearestStop.asStateFlow()
+
+    /** true si el GPS funcionó pero no hay paradas ubicables cerca: se pide el lugar. */
+    private val _noNearbyStops = MutableStateFlow(false)
+    val noNearbyStops: StateFlow<Boolean> = _noNearbyStops.asStateFlow()
 
     /** Último problema del reconocedor de voz (se muestra como aviso). */
     private val _voiceNotice = MutableStateFlow<VoiceError?>(null)
@@ -125,8 +136,9 @@ class MainWearViewModel(
     // ── Flujo de consulta ─────────────────────────────────────────────────
 
     /**
-     * Inicia una consulta: primero intenta el GPS; si no hay permiso, señal o
-     * respuesta a tiempo, pide el lugar por voz (y teclado como alternativa).
+     * Inicia una consulta: primero intenta el GPS y busca la parada más cercana
+     * con `/api/stops/nearby`. Si no hay permiso, señal, respuesta a tiempo o
+     * ninguna parada ubicable cerca, pide el lugar por voz (y teclado como alternativa).
      */
     fun startQuery() {
         cancelRequest()
@@ -135,12 +147,22 @@ class MainWearViewModel(
         requestJob = viewModelScope.launch {
             val point = locationSource.currentLocation()
             if (_appState.value != AppState.LOCATING) return@launch
-            if (point != null) {
-                _origin.value = TripOrigin.Located(point)
-                _appState.value = AppState.ASKING_DESTINATION
-            } else {
+            if (point == null) {
                 _appState.value = AppState.ASKING_LOCATION
+                return@launch
             }
+            val nearby = transitRepository.nearbyStops(point)
+            if (_appState.value != AppState.LOCATING) return@launch
+            if (nearby is Outcome.Success && nearby.value.nearest == null) {
+                _noNearbyStops.value = true
+                _appState.value = AppState.ASKING_LOCATION
+                return@launch
+            }
+            // Si la consulta falla (red), se sigue con las coordenadas: el backend
+            // vuelve a resolver la parada al planificar y reporta el error si persiste.
+            _nearestStop.value = (nearby as? Outcome.Success)?.value?.nearest
+            _origin.value = TripOrigin.Located(point)
+            _appState.value = AppState.ASKING_DESTINATION
         }
     }
 
@@ -148,6 +170,7 @@ class MainWearViewModel(
     fun useSpokenLocation() {
         cancelRequest()
         _origin.value = null
+        _nearestStop.value = null
         _appState.value = AppState.ASKING_LOCATION
     }
 
@@ -155,6 +178,7 @@ class MainWearViewModel(
         val text = location.trim()
         if (text.isEmpty()) return
         _origin.value = TripOrigin.Named(text)
+        _noNearbyStops.value = false
         _typedText.value = ""
         _voiceNotice.value = null
         _appState.value = AppState.ASKING_DESTINATION
@@ -228,6 +252,8 @@ class MainWearViewModel(
 
     private fun clearQuery() {
         _origin.value = null
+        _nearestStop.value = null
+        _noNearbyStops.value = false
         _plan.value = null
         _error.value = null
         _typedText.value = ""
@@ -283,13 +309,14 @@ class MainWearViewModel(
 
     class Factory(
         private val repository: TripAssistantRepository,
+        private val transitRepository: TransitRepository,
         private val locationSource: LocationSource,
         private val preferencesRepository: PreferencesRepository,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             require(modelClass.isAssignableFrom(MainWearViewModel::class.java)) { "ViewModel desconocido: $modelClass" }
-            return MainWearViewModel(repository, locationSource, preferencesRepository) as T
+            return MainWearViewModel(repository, transitRepository, locationSource, preferencesRepository) as T
         }
     }
 }

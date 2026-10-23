@@ -1,5 +1,7 @@
 package com.busalert.shared.data.api
 
+import com.busalert.shared.domain.NearbyStop
+import com.busalert.shared.domain.NearbyStops
 import com.busalert.shared.domain.RouteDirection
 import com.busalert.shared.domain.RouteStop
 import com.busalert.shared.domain.RouteSummary
@@ -51,6 +53,19 @@ data class StopSearchItemDto(
 
 data class StopRouteDto(val routeCode: String?, val directionName: String?)
 
+data class NearbyStopsDto(val stops: List<NearbyStopDto>?, val stopsWithoutCoordinates: Int?)
+
+data class NearbyStopDto(
+    val id: Long?,
+    val externalId: String?,
+    val name: String?,
+    val latitude: Double?,
+    val longitude: Double?,
+    val distanceMeters: Int?,
+    val isDemo: Boolean?,
+    val routes: List<StopRouteDto>?,
+)
+
 private fun <T> T?.required(field: String): T = this ?: throw MalformedResponseException("Falta $field")
 
 fun RouteListDto.toDomain(): List<RouteSummary> = routes.required("routes").map {
@@ -80,13 +95,27 @@ fun RouteStopsDto.toDomain(): List<RouteDirection> = directions.required("direct
     )
 }
 
+private fun List<StopRouteDto>?.toStopRoutes(): List<StopRoute> = orEmpty()
+    .mapNotNull { r -> r.routeCode?.let { StopRoute(it, r.directionName.orEmpty()) } }
+    .distinct()
+
 fun StopSearchDto.toDomain(): List<StopWithRoutes> = stops.required("stops").map { s ->
     StopWithRoutes(
         stop = StopRef(s.id.required("stop.id"), s.externalId, s.name.required("stop.name"), s.latitude, s.longitude),
         neighborhood = s.neighborhood,
         isDemo = s.isDemo ?: false,
-        routes = s.routes.orEmpty()
-            .mapNotNull { r -> r.routeCode?.let { StopRoute(it, r.directionName.orEmpty()) } }
-            .distinct(),
+        routes = s.routes.toStopRoutes(),
     )
 }
+
+fun NearbyStopsDto.toDomain(): NearbyStops = NearbyStops(
+    stops = stops.required("stops").map { s ->
+        NearbyStop(
+            stop = StopRef(s.id.required("stop.id"), s.externalId, s.name.required("stop.name"), s.latitude, s.longitude),
+            distanceMeters = s.distanceMeters.required("stop.distanceMeters"),
+            isDemo = s.isDemo ?: false,
+            routes = s.routes.toStopRoutes(),
+        )
+    }.sortedBy { it.distanceMeters },
+    stopsWithoutCoordinates = stopsWithoutCoordinates ?: 0,
+)

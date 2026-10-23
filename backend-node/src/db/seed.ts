@@ -6,6 +6,7 @@
  *   npm run seed -- --dry-run            solo valida (BD en memoria, no escribe nada)
  */
 import 'dotenv/config';
+import { ConfigError, loadSeedConfig, type SeedConfig } from '../config/env';
 import { IN_MEMORY_DB, openDatabase } from './database';
 import { importDataset } from './importer';
 
@@ -13,18 +14,28 @@ const DATA_DIR_FLAG = '--data-dir';
 const DRY_RUN_FLAG = '--dry-run';
 
 function argValue(flag: string): string | undefined {
-  const index = process.argv.indexOf(flag);
+  // Gana el último: así `npm run data:validate -- --data-dir <ruta>` sustituye la carpeta por defecto.
+  const index = process.argv.lastIndexOf(flag);
   return index >= 0 ? process.argv[index + 1] : undefined;
 }
 
 function main(): void {
   const dryRun = process.argv.includes(DRY_RUN_FLAG);
-  const dbPath = dryRun ? IN_MEMORY_DB : process.env.DB_PATH;
-  const dataDir = argValue(DATA_DIR_FLAG) ?? process.env.DATA_DIR;
-  if (!dbPath || !dataDir) {
-    console.error('Faltan DB_PATH y/o DATA_DIR. Revisa tu archivo .env (plantilla: .env.example).');
+  const overrides: Partial<Record<'DB_PATH' | 'DATA_DIR', string>> = {};
+  if (dryRun) overrides.DB_PATH = IN_MEMORY_DB;
+  const dataDirArg = argValue(DATA_DIR_FLAG);
+  if (dataDirArg !== undefined) overrides.DATA_DIR = dataDirArg;
+
+  let config: SeedConfig;
+  try {
+    config = loadSeedConfig(undefined, overrides);
+  } catch (err) {
+    if (!(err instanceof ConfigError)) throw err;
+    console.error(`${err.message}
+Revisa tu archivo .env (plantilla: .env.example).`);
     process.exit(1);
   }
+  const { dbPath, dataDir } = config;
 
   const db = openDatabase(dbPath);
   const report = importDataset(db, dataDir);

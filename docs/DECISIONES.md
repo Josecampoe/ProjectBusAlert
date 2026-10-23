@@ -122,3 +122,13 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 ## D-036 · `ProvideAppLanguage` duplicado en reloj y teléfono
 - **Alternativas:** moverlo a `shared`.
 - **Motivo:** `shared` no usa Compose; agregar el compilador de Compose solo para 30 líneas no compensa. Las dos copias siguen el mismo diseño (D-031).
+
+## D-037 · El reloj consulta `/api/stops/nearby` antes de preguntar el destino
+- **Alternativas:** mandar solo las coordenadas a `/api/voice` y dejar que el backend resuelva la parada (lo que se hacía).
+- **Motivo:** con los datos reales actuales ninguna parada tiene coordenadas, así que el GPS siempre terminaba en "origen no encontrado" después de que el usuario dijera el destino. Ahora, si no hay paradas ubicables cerca, el reloj pide el lugar por voz o teclado en ese mismo momento; si las hay, muestra "Desde <parada>, ¿a dónde vas?". Si la consulta de cercanía falla por red, se sigue con las coordenadas (el backend vuelve a resolverlas). La demo de `shared` no tiene coordenadas y responde igual que el backend: sin paradas cercanas.
+
+## D-038 · Configuración del seed validada en `config/`
+- **Motivo:** el CLI de seed leía `process.env` directamente, contra la regla de un único módulo de configuración. `loadSeedConfig()` valida solo `DB_PATH` y `DATA_DIR` (el seed no necesita `API_KEYS` ni `PORT`). `npm run data:validate` apunta a `./data` para no depender de `.env`, y si `--data-dir` aparece varias veces gana el último.
+
+## D-039 · Imagen Docker con seed al arrancar
+- **Motivo:** el seed es idempotente y valida antes de escribir, así que ejecutarlo en cada arranque mantiene la BD del volumen alineada con los datos de la imagen sin un paso manual. La imagen corre como usuario `node` y tiene `HEALTHCHECK` sobre `/health`.

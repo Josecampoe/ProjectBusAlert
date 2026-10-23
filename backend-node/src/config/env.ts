@@ -92,8 +92,6 @@ const EnvSchema = z.object({
   NEARBY_MAX_RESULTS: positiveInt.default(10),
 });
 
-export type RawEnv = z.input<typeof EnvSchema>;
-
 export interface AppConfig {
   env: 'development' | 'test' | 'production';
   logLevel: 'debug' | 'info' | 'warn' | 'error' | 'silent';
@@ -229,4 +227,30 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       maxResults: e.NEARBY_MAX_RESULTS,
     },
   };
+}
+
+// ── Configuración del CLI de importación (npm run seed) ─────────────────
+// El seed no levanta el servidor, así que solo exige las variables de datos.
+const SeedEnvSchema = z.object({
+  DB_PATH: z.string().min(1),
+  DATA_DIR: z.string().min(1),
+});
+
+export interface SeedConfig {
+  dbPath: string;
+  dataDir: string;
+}
+
+/** Valida las variables del seed. `overrides` permite cambiar valores desde la línea de comandos. */
+export function loadSeedConfig(
+  source: Record<string, string | undefined> = process.env,
+  overrides: Partial<Record<'DB_PATH' | 'DATA_DIR', string>> = {},
+): SeedConfig {
+  const parsed = SeedEnvSchema.safeParse({ ...source, ...overrides });
+  if (!parsed.success) {
+    throw new ConfigError(
+      parsed.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`),
+    );
+  }
+  return { dbPath: parsed.data.DB_PATH, dataDir: parsed.data.DATA_DIR };
 }

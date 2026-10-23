@@ -62,6 +62,8 @@ fun WearApp(
     val error by viewModel.error.collectAsState()
     val typedText by viewModel.typedText.collectAsState()
     val voiceNotice by viewModel.voiceNotice.collectAsState()
+    val nearestStop by viewModel.nearestStop.collectAsState()
+    val noNearbyStops by viewModel.noNearbyStops.collectAsState()
     val recentPlaces by viewModel.recentPlaces.collectAsState()
     val partial by partialSpeech.collectAsState()
     val isSpeaking by voiceOutput.isSpeaking.collectAsState()
@@ -140,6 +142,8 @@ fun WearApp(
                         error = error,
                         typedText = typedText,
                         voiceNotice = voiceNotice,
+                        nearestStopName = nearestStop?.stop?.name,
+                        noNearbyStops = noNearbyStops,
                         recentPlaces = recentPlaces,
                         partialSpeech = partial,
                         isSpeaking = isSpeaking,
@@ -163,6 +167,8 @@ private fun Screen(
     error: ErrorCode?,
     typedText: String,
     voiceNotice: VoiceError?,
+    nearestStopName: String?,
+    noNearbyStops: Boolean,
     recentPlaces: List<String>,
     partialSpeech: String,
     isSpeaking: Boolean,
@@ -173,7 +179,12 @@ private fun Screen(
     voiceOutput: VoiceOutput,
 ) {
     val askingDestination = state == AppState.ASKING_DESTINATION || state == AppState.TYPING_DESTINATION
-    val prompt = stringResource(if (askingDestination) R.string.prompt_destination else R.string.prompt_location)
+    val prompt = when {
+        askingDestination && nearestStopName != null -> stringResource(R.string.prompt_destination_from, nearestStopName)
+        askingDestination -> stringResource(R.string.prompt_destination)
+        noNearbyStops -> stringResource(R.string.prompt_location_no_nearby_stops)
+        else -> stringResource(R.string.prompt_location)
+    }
     when (state) {
         AppState.IDLE -> HomeScreen(onStartQuery = onStartQuery, onOpenSettings = viewModel::openSettings)
         AppState.SETTINGS -> SettingsScreen(

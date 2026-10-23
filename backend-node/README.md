@@ -31,7 +31,7 @@ node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"
 | `npm start`                               | Ejecuta `dist/index.js` (producción).                                                                                                                |
 | `npm run seed`                            | Importa `DATA_DIR` en `DB_PATH`. Es idempotente y valida los datos; si hay errores no escribe nada. Con `-- --data-dir <ruta>` importa otra carpeta. |
 | `npm run seed:sample`                     | Importa además los datos de **demostración** de `data/sample/` (marcados como demo).                                                                 |
-| `npm run data:validate`                   | Valida `DATA_DIR` sin escribir nada (BD en memoria). Acepta `-- --data-dir <ruta>`.                                                                  |
+| `npm run data:validate`                   | Valida `./data` sin escribir nada (BD en memoria). Acepta `-- --data-dir <ruta>`.                                                                    |
 | `npm run seed:prod`                       | Igual que `seed`, pero desde `dist/`.                                                                                                                |
 | `npm test` / `npm run test:watch`         | Pruebas (Vitest + supertest).                                                                                                                        |
 | `npm run coverage`                        | Pruebas con reporte de cobertura.                                                                                                                    |
@@ -128,11 +128,62 @@ src/
 └── lib/, utils/           # Texto, logger, geodesia
 ```
 
+### Flujo de `POST /api/voice`
+
+```mermaid
+sequenceDiagram
+    participant R as Reloj
+    participant API as Express (auth, rate limit, zod)
+    participant AS as assistantService
+    participant DB as Repositorio + SQLite
+    participant P as planner + ArrivalTimeProvider
+    participant IA as Gemini (opcional)
+    R->>API: voiceText + (lat/lng o currentLocationName)
+    API->>AS: petición validada
+    AS->>DB: resolver origen (GPS → paradas cercanas) y destino (texto)
+    AS->>P: alternativas directas / 1 transbordo, ordenadas por minutos estimados
+    alt IA configurada
+        AS->>IA: instrucciones de sistema + context (BD) + user_data (saneado, como dato)
+        IA-->>AS: JSON {chosenOptionIndex, textos}
+        AS->>AS: validar con esquema; índice inexistente → se descarta
+    end
+    AS-->>R: plan (source = ai | planner, isEstimate = true)
+```
+
 ### Seguridad frente a la IA
 
 - Las instrucciones van en `systemInstruction`; el texto del usuario va saneado y serializado como JSON dentro de `<user_data>`.
 - La IA solo recibe datos de la BD relacionados con la consulta y solo puede **elegir un índice** entre las alternativas del planificador.
 - Toda salida se valida con un esquema. Si no cumple, se descarta y se responde con el planificador.
+
+## Despliegue
+
+### Con Docker (recomendado)
+
+```bash
+docker build -t busalert-backend .
+docker run -d --name busalert -p 3000:3000   -e API_KEYS=<clave>   -e GEMINI_API_KEY=<clave-opcional>   -e CORS_ORIGINS=   -v busalert-db:/app/var   busalert-backend
+curl http://localhost:3000/health
+```
+
+- La imagen (Node 24 Alpine, usuario sin privilegios) compila con `tsc`, instala solo dependencias de producción y trae `data/`.
+- Al arrancar ejecuta el seed (idempotente) y luego el servidor. La BD vive en el volumen `/app/var`.
+- Cualquier variable de `.env.example` se puede pasar con `-e`.
+
+### Sin Docker
+
+```bash
+npm ci && npm run build
+npm prune --omit=dev
+NODE_ENV=production npm run seed:prod
+NODE_ENV=production npm start
+```
+
+### En producción
+
+- Pon el servicio detrás de un proxy con **HTTPS** (el build release de Android solo acepta `https://`) y define `TRUST_PROXY` con el número de proxies para que el límite de tasa use la IP real.
+- Usa claves de aplicación largas y distintas por entorno; `API_KEYS` acepta varias para rotarlas sin cortar el servicio.
+- Revisa `RATE_LIMIT_*`, `BODY_LIMIT` y `CORS_ORIGINS` (vacío = CORS desactivado; el reloj no lo necesita).
 
 ## Datos
 

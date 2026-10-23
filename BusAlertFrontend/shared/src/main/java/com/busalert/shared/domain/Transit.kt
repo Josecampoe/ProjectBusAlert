@@ -42,9 +42,31 @@ data class StopRoute(
     val directionName: String,
 )
 
-/** Consulta de rutas y paradas (para la app del teléfono). */
+/** Parada cercana a una coordenada, con la distancia calculada por el backend. */
+data class NearbyStop(
+    val stop: StopRef,
+    val distanceMeters: Int,
+    val isDemo: Boolean,
+    val routes: List<StopRoute>,
+)
+
+/**
+ * Paradas dentro del radio de búsqueda, de la más cercana a la más lejana.
+ * [stopsWithoutCoordinates] cuenta las paradas que el backend no puede ubicar.
+ */
+data class NearbyStops(
+    val stops: List<NearbyStop>,
+    val stopsWithoutCoordinates: Int,
+) {
+    val nearest: NearbyStop? get() = stops.firstOrNull()
+}
+
+/** Consulta de rutas y paradas (app del teléfono y parada cercana del reloj). */
 interface TransitRepository {
     suspend fun routes(): Outcome<List<RouteSummary>>
     suspend fun routeDirections(code: String): Outcome<List<RouteDirection>>
     suspend fun searchStops(query: String): Outcome<List<StopWithRoutes>>
+
+    /** Paradas cercanas a [point] dentro del radio por defecto del backend (`/api/stops/nearby`). */
+    suspend fun nearbyStops(point: GeoPoint): Outcome<NearbyStops>
 }

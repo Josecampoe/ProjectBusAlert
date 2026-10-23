@@ -48,18 +48,18 @@ private fun Dark(content: @Composable () -> Unit) = PreviewFrame(true, AppLangua
 @Composable
 private fun LightEnglish(content: @Composable () -> Unit) = PreviewFrame(false, AppLanguage.ENGLISH, content)
 
-/** Datos ficticios SOLO para previews (rutas FX*, como los fixtures de prueba). */
+/** Datos ficticios SOLO para previews: mismos nombres que el set demo de backend-node/data/sample. */
 private object PreviewData {
-    private val udenar = StopRef(1, "T01", "Udenar Torobajo", null, null)
-    private val narino = StopRef(4, "T04", "Parque Nariño", null, null)
-    private val terminal = StopRef(6, "T06", "Terminal de Transportes", null, null)
+    private val torobajo = StopRef(1, "DEMO-01", "Demo Torobajo", null, null)
+    private val centro = StopRef(5, "DEMO-05", "Demo Centro", null, null)
+    private val terminal = StopRef(8, "DEMO-08", "Demo Terminal", null, null)
     private val leg = TripLeg(
-        routeCode = "FX1",
-        routeName = "FX1",
+        routeCode = "DEMO-1",
+        routeName = "DEMO-1",
         routeColor = "#1565C0",
-        directionName = "Udenar → Centro",
-        board = udenar,
-        alight = narino,
+        directionName = "Demo Torobajo → Demo Centro",
+        board = torobajo,
+        alight = centro,
         stopsCount = 3,
         estimate = LegEstimate(rideMinutes = 9, waitMinutes = 5, totalMinutes = 14, withinServiceHours = true),
     )
@@ -69,9 +69,9 @@ private object PreviewData {
         source = AnswerSource.PLANNER,
         message = null,
         recommended = TripOption(
-            legs = listOf(leg, leg.copy(routeCode = "FX2", routeColor = null, board = narino, alight = terminal, stopsCount = 2)),
+            legs = listOf(leg, leg.copy(routeCode = "DEMO-2", routeColor = null, board = centro, alight = terminal, stopsCount = 2)),
             transfers = 1,
-            transferSteps = listOf(TransferStep(narino, narino, 0, 0)),
+            transferSteps = listOf(TransferStep(centro, centro, 0, 0)),
             totalStops = 5,
             estimatedMinutes = 24,
             isDemo = true,
@@ -80,7 +80,7 @@ private object PreviewData {
         nearestStopDistanceMeters = 40,
         isDemoData = true,
     )
-    val recent = listOf("Parque Nariño", "Terminal")
+    val recent = listOf("Demo Centro", "Demo Terminal")
 }
 
 @WearDevicePreviews
