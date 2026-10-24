@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Conectores que separan origen y destino en una sola frase
+         ("estoy en Fátima y voy a la Cooperativa"). Se aceptan en los dos
+         idiomas sin importar el idioma de la app, por eso no se traducen. -->
+    <string-array name="trip_destination_connectors" translatable="false">
+        <item>y voy a</item>
+        <item>y voy al</item>
+        <item>voy a</item>
+        <item>voy al</item>
+        <item>y quiero ir a</item>
+        <item>y quiero ir al</item>
+        <item>quiero ir a</item>
+        <item>quiero ir al</item>
+        <item>y necesito ir a</item>
+        <item>y necesito ir al</item>
+        <item>necesito ir a</item>
+        <item>necesito ir al</item>
+        <item>para ir a</item>
+        <item>para ir al</item>
+        <item>rumbo a</item>
+        <item>rumbo al</item>
+        <item>hasta</item>
+        <item>hacia</item>
+        <item>and i am going to</item>
+        <item>and i\'m going to</item>
+        <item>and going to</item>
+        <item>going to</item>
+        <item>and i want to go to</item>
+        <item>i want to go to</item>
+        <item>heading to</item>
+    </string-array>
+</resources>
