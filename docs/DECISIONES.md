@@ -132,3 +132,13 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 
 ## D-039 · Imagen Docker con seed al arrancar
 - **Motivo:** el seed es idempotente y valida antes de escribir, así que ejecutarlo en cada arranque mantiene la BD del volumen alineada con los datos de la imagen sin un paso manual. La imagen corre como usuario `node` y tiene `HEALTHCHECK` sobre `/health`.
+
+## D-040 · Firma de release del reloj desde `local.properties`
+- **Motivo:** sin `signingConfig` el APK release sale sin firmar y no se puede instalar. El keystore y sus contraseñas se leen de `local.properties` o variables de entorno (`BUSALERT_RELEASE_*`), nunca del código; `validateReleaseConfig` detiene el build si falta algo. El keystore vive en `BusAlertFrontend/keystore/` (ignorado por git).
+
+## D-041 · Despliegue de referencia en Render (`render.yaml`)
+- **Alternativas:** Railway, Fly.io, un VPS con Caddy; túnel temporal (cloudflared) que cambia de URL en cada arranque.
+- **Motivo:** el APK release exige HTTPS y el reloj necesita una URL fija. Render construye el `Dockerfile` existente, da HTTPS gratis y guarda las claves en su panel (`sync: false`). El disco efímero del plan gratis no afecta porque el seed corre al arrancar.
+
+## D-042 · Prioridad: app del reloj
+- **Motivo:** el dueño indicó que solo le importa la app del reloj. `mobile` se mantiene compilando y con pruebas, pero la documentación y los APK se centran en `:wear`, que es independiente (`standalone=true`).
