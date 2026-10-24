@@ -2,7 +2,11 @@
   {
     "external_id": "1265",
     "name": "Udenar - Facultad de Veterinaria",
-    "aliases": ["Facultad de Veterinaria", "Veterinaria Udenar"],
+    "aliases": [
+      "Facultad de Veterinaria",
+      "Veterinaria Udenar",
+      "Veterinaria"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -14,7 +18,10 @@
   {
     "external_id": "1275",
     "name": "Udenar Torobajo",
-    "aliases": ["Udenar", "Universidad de Nariño Torobajo"],
+    "aliases": [
+      "Udenar",
+      "Universidad de Nariño Torobajo"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -26,7 +33,9 @@
   {
     "external_id": "1305",
     "name": "Udenar Torobajo",
-    "aliases": ["Udenar Torobajo 1305"],
+    "aliases": [
+      "Udenar Torobajo 1305"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -51,7 +60,9 @@
   {
     "external_id": "1345",
     "name": "Clínica Bellatriz",
-    "aliases": ["Bellatriz"],
+    "aliases": [
+      "Bellatriz"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -63,7 +74,12 @@
   {
     "external_id": "1360",
     "name": "Universidad Cooperativa",
-    "aliases": ["UCC", "Universidad Cooperativa de Colombia", "Cooperativa"],
+    "aliases": [
+      "UCC",
+      "Universidad Cooperativa de Colombia",
+      "Cooperativa",
+      "U. Cooperativa"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -75,7 +91,11 @@
   {
     "external_id": "1375",
     "name": "Universidad Cooperativa",
-    "aliases": ["UCC 1375", "Cooperativa 1375"],
+    "aliases": [
+      "UCC 1375",
+      "Cooperativa 1375",
+      "U. Cooperativa"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -112,7 +132,9 @@
   {
     "external_id": "1440",
     "name": "Villa del Parque",
-    "aliases": ["Villa del Parque 1440"],
+    "aliases": [
+      "Villa del Parque 1440"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -125,7 +147,9 @@
   {
     "external_id": "1447",
     "name": "Villa María",
-    "aliases": ["Villa María 1447"],
+    "aliases": [
+      "Villa María 1447"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -150,7 +174,9 @@
   {
     "external_id": "1505",
     "name": "Av. Estudiantes, Carrera 38",
-    "aliases": ["Av Los Estudiantes Carrera 38"],
+    "aliases": [
+      "Av Los Estudiantes Carrera 38"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Avenida de los Estudiantes, Carrera 38",
@@ -174,7 +200,9 @@
   {
     "external_id": "1515",
     "name": "Valle de Atríz",
-    "aliases": ["Valle de Atriz"],
+    "aliases": [
+      "Valle de Atriz"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -198,7 +226,9 @@
   {
     "external_id": "1685",
     "name": "Av. Los Estudiantes Carrera 32B",
-    "aliases": ["Avenida de los Estudiantes Carrera 32B"],
+    "aliases": [
+      "Avenida de los Estudiantes Carrera 32B"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Avenida de los Estudiantes, Carrera 32B",
@@ -210,7 +240,9 @@
   {
     "external_id": "1695",
     "name": "Av. Los Estudiantes Carrera 32",
-    "aliases": ["Avenida de los Estudiantes Carrera 32"],
+    "aliases": [
+      "Avenida de los Estudiantes Carrera 32"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Avenida de los Estudiantes, Carrera 32",
@@ -294,7 +326,9 @@
   {
     "external_id": "2390",
     "name": "San Agustín",
-    "aliases": ["Iglesia San Agustín"],
+    "aliases": [
+      "Iglesia San Agustín"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -330,7 +364,10 @@
   {
     "external_id": "2585",
     "name": "María Goretti Carrera 21A",
-    "aliases": ["Colegio María Goretti"],
+    "aliases": [
+      "Colegio María Goretti",
+      "María Goretti"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Carrera 21A sector María Goretti",
@@ -354,7 +391,9 @@
   {
     "external_id": "2635",
     "name": "María Goretti Calle 14",
-    "aliases": [],
+    "aliases": [
+      "María Goretti"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Calle 14 sector María Goretti",
@@ -378,7 +417,9 @@
   {
     "external_id": "2670",
     "name": "Avenida Las Américas Calle 16",
-    "aliases": ["Av. Las Américas Calle 16"],
+    "aliases": [
+      "Av. Las Américas Calle 16"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Avenida Las Américas con Calle 16",
@@ -402,7 +443,9 @@
   {
     "external_id": "2765",
     "name": "San Juan Bosco",
-    "aliases": ["San Juan Bosco 2765"],
+    "aliases": [
+      "San Juan Bosco 2765"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -427,7 +470,9 @@
   {
     "external_id": "2905",
     "name": "Las Brisas",
-    "aliases": ["Las Brisas 2905"],
+    "aliases": [
+      "Las Brisas 2905"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -440,7 +485,9 @@
   {
     "external_id": "2920",
     "name": "Alahambra",
-    "aliases": ["Alhambra"],
+    "aliases": [
+      "Alhambra"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -452,7 +499,9 @@
   {
     "external_id": "2990",
     "name": "Parque Bolívar",
-    "aliases": ["Bolivar"],
+    "aliases": [
+      "Bolivar"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -476,7 +525,10 @@
   {
     "external_id": "3040",
     "name": "Parroquia Fátima",
-    "aliases": ["Iglesia Fátima", "Fátima"],
+    "aliases": [
+      "Iglesia Fátima",
+      "Fátima"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -500,7 +552,9 @@
   {
     "external_id": "3060",
     "name": "Parque Bolívar",
-    "aliases": ["Parque Bolivar 3060"],
+    "aliases": [
+      "Parque Bolivar 3060"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -513,7 +567,9 @@
   {
     "external_id": "3065",
     "name": "Parroquia Fátima",
-    "aliases": ["Parroquia Fátima 3065"],
+    "aliases": [
+      "Parroquia Fátima 3065"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -526,7 +582,9 @@
   {
     "external_id": "3080",
     "name": "Pinal del Río",
-    "aliases": ["Pinal del Rio 3080"],
+    "aliases": [
+      "Pinal del Rio 3080"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -551,7 +609,9 @@
   {
     "external_id": "3100",
     "name": "Caicedonia",
-    "aliases": ["Caicedonia 3100"],
+    "aliases": [
+      "Caicedonia 3100"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -564,7 +624,10 @@
   {
     "external_id": "3110",
     "name": "Hospital Departamental",
-    "aliases": ["Hospital Departamental de Nariño", "Hospital"],
+    "aliases": [
+      "Hospital Departamental de Nariño",
+      "Hospital"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -588,7 +651,10 @@
   {
     "external_id": "3155",
     "name": "Bienestar Familiar",
-    "aliases": ["ICBF", "Instituto Colombiano de Bienestar Familiar"],
+    "aliases": [
+      "ICBF",
+      "Instituto Colombiano de Bienestar Familiar"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -600,7 +666,9 @@
   {
     "external_id": "3160",
     "name": "Santacruz",
-    "aliases": ["Santa Cruz"],
+    "aliases": [
+      "Santa Cruz"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -612,7 +680,9 @@
   {
     "external_id": "3180",
     "name": "Santa Mónica",
-    "aliases": ["Santa Monica 3180"],
+    "aliases": [
+      "Santa Monica 3180"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -649,7 +719,9 @@
   {
     "external_id": "3265",
     "name": "Santa Bárbara Carrera 1E",
-    "aliases": ["Santa Bárbara"],
+    "aliases": [
+      "Santa Bárbara"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Carrera 1E sector Santa Bárbara",
@@ -685,7 +757,9 @@
   {
     "external_id": "3300",
     "name": "Villa Flor II Manzana 12",
-    "aliases": ["Villaflor II Manzana 12"],
+    "aliases": [
+      "Villaflor II Manzana 12"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -709,7 +783,9 @@
   {
     "external_id": "3360",
     "name": "Villa Flor II Carrera 9 Este",
-    "aliases": ["Villa Flor II Carrera 9E"],
+    "aliases": [
+      "Villa Flor II Carrera 9E"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Carrera 9 Este, Villa Flor II",
@@ -721,7 +797,9 @@
   {
     "external_id": "3370",
     "name": "Villa Flor II Carrera 9E",
-    "aliases": ["Villa Flor Carrera 9E 3370"],
+    "aliases": [
+      "Villa Flor Carrera 9E 3370"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Carrera 9E, Villa Flor II",
@@ -734,7 +812,9 @@
   {
     "external_id": "3375",
     "name": "Villa Flor II Manzana 10",
-    "aliases": ["Villaflor II Manzana 10"],
+    "aliases": [
+      "Villaflor II Manzana 10"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -746,7 +826,9 @@
   {
     "external_id": "3400",
     "name": "Villaflor II Manzana 15",
-    "aliases": ["Villa Flor II Manzana 15"],
+    "aliases": [
+      "Villa Flor II Manzana 15"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -758,7 +840,9 @@
   {
     "external_id": "3590",
     "name": "CAI Popular",
-    "aliases": ["CAI Popular 3590"],
+    "aliases": [
+      "CAI Popular 3590"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -770,7 +854,9 @@
   {
     "external_id": "3600",
     "name": "CAI Popular",
-    "aliases": ["CAI Popular 3600"],
+    "aliases": [
+      "CAI Popular 3600"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -783,7 +869,10 @@
   {
     "external_id": "3915",
     "name": "Vía La Laguna",
-    "aliases": ["La Laguna", "Via La Laguna"],
+    "aliases": [
+      "La Laguna",
+      "Via La Laguna"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -795,7 +884,9 @@
   {
     "external_id": "3945",
     "name": "Vía La Laguna",
-    "aliases": ["Via La Laguna 3945"],
+    "aliases": [
+      "Via La Laguna 3945"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -808,7 +899,9 @@
   {
     "external_id": "4020",
     "name": "Dolores",
-    "aliases": ["Corregimiento Dolores"],
+    "aliases": [
+      "Corregimiento Dolores"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -820,7 +913,9 @@
   {
     "external_id": "4105",
     "name": "Dolores",
-    "aliases": ["Dolores 4105"],
+    "aliases": [
+      "Dolores 4105"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -833,7 +928,9 @@
   {
     "external_id": "4230",
     "name": "Dolores",
-    "aliases": ["Dolores 4230"],
+    "aliases": [
+      "Dolores 4230"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -846,7 +943,9 @@
   {
     "external_id": "4350",
     "name": "Iglesia Dolores",
-    "aliases": ["Iglesia de Dolores"],
+    "aliases": [
+      "Iglesia de Dolores"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -858,7 +957,9 @@
   {
     "external_id": "4370",
     "name": "Dolores",
-    "aliases": ["Dolores 4370"],
+    "aliases": [
+      "Dolores 4370"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -871,7 +972,9 @@
   {
     "external_id": "4450",
     "name": "Dolores",
-    "aliases": ["Dolores 4450"],
+    "aliases": [
+      "Dolores 4450"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -907,7 +1010,9 @@
   {
     "external_id": "4635",
     "name": "Variante Daza",
-    "aliases": ["Daza"],
+    "aliases": [
+      "Daza"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -919,7 +1024,9 @@
   {
     "external_id": null,
     "name": "Calle 18 Av. Panamericana",
-    "aliases": ["Av. Panamericana Calle 18"],
+    "aliases": [
+      "Av. Panamericana Calle 18"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Calle 18 con Avenida Panamericana",
@@ -945,7 +1052,9 @@
   {
     "external_id": null,
     "name": "Amorel de la Avenida",
-    "aliases": ["Amorel Avenida"],
+    "aliases": [
+      "Amorel Avenida"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -971,7 +1080,9 @@
   {
     "external_id": null,
     "name": "Calle 17 Av. Las Américas",
-    "aliases": ["Calle 17 Avenida Las Américas"],
+    "aliases": [
+      "Calle 17 Avenida Las Américas"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Calle 17 con Avenida Las Américas",
@@ -1010,7 +1121,9 @@
   {
     "external_id": null,
     "name": "Uniminuto Carrera 27",
-    "aliases": ["Uniminuto"],
+    "aliases": [
+      "Uniminuto"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Carrera 27 frente a Uniminuto",
@@ -1023,7 +1136,9 @@
   {
     "external_id": null,
     "name": "Federación de Cafeteros",
-    "aliases": ["Fed. de Cafeteros"],
+    "aliases": [
+      "Fed. de Cafeteros"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,
@@ -1036,7 +1151,9 @@
   {
     "external_id": null,
     "name": "Avenida de los Estudiantes Carrera 35",
-    "aliases": ["Av. Estudiantes Carrera 35"],
+    "aliases": [
+      "Av. Estudiantes Carrera 35"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Avenida de los Estudiantes, Carrera 35",
@@ -1049,7 +1166,9 @@
   {
     "external_id": "1370",
     "name": "Av. Los Estudiantes - Castilla",
-    "aliases": ["Av Estudiantes Castilla"],
+    "aliases": [
+      "Av Estudiantes Castilla"
+    ],
     "latitude": null,
     "longitude": null,
     "address": "Avenida de los Estudiantes sector Castilla",
