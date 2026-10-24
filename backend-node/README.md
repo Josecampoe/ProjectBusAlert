@@ -170,6 +170,17 @@ curl http://localhost:3000/health
 - Al arrancar ejecuta el seed (idempotente) y luego el servidor. La BD vive en el volumen `/app/var`.
 - Cualquier variable de `.env.example` se puede pasar con `-e`.
 
+### En Render (HTTPS gratis, para el reloj real)
+
+El APK release del reloj exige un backend HTTPS. `render.yaml` (en la raíz del repo) lo deja listo:
+
+1. Sube el repositorio a GitHub y entra a https://render.com → **New → Blueprint** → elige el repositorio.
+2. Render pide `API_KEYS` y `GEMINI_API_KEY`: pega tus claves (solo quedan en el panel de Render).
+3. Al terminar, Render da una URL `https://<nombre>.onrender.com`. Comprueba `https://<nombre>.onrender.com/health`.
+4. En `BusAlertFrontend/local.properties`: `busalert.release.backendUrl=https://<nombre>.onrender.com/` y compila el release.
+
+En el plan gratis el servidor se duerme tras unos minutos sin uso (la primera consulta tarda ~1 min) y el disco no es persistente: no importa, porque el seed recarga la BD al arrancar (D-039).
+
 ### Sin Docker
 
 ```bash

@@ -1,0 +1,22 @@
+# Despliegue del backend en Render (https://render.com) con HTTPS automático.
+# En Render: New → Blueprint → elige este repositorio. Las claves NO van aquí:
+# Render las pide al crear el servicio (sync: false) y quedan solo en su panel.
+# Ver backend-node/README.md → "Despliegue en Render".
+services:
+  - type: web
+    name: busalert-backend
+    runtime: docker
+    rootDir: backend-node
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Render pone un proxy delante del servidor: necesario para el límite por IP.
+      - key: TRUST_PROXY
+        value: "1"
+      - key: API_KEYS
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
