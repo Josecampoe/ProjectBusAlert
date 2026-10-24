@@ -142,3 +142,16 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 
 ## D-042 · Prioridad: app del reloj
 - **Motivo:** el dueño indicó que solo le importa la app del reloj. `mobile` se mantiene compilando y con pruebas, pero la documentación y los APK se centran en `:wear`, que es independiente (`standalone=true`).
+
+## D-043 · Rutas E2–E7 y C1–C16 desde la guía del dueño
+- **Motivo:** el dueño entregó el orden de paradas de las 23 rutas del SETP. Se guardó el texto original (`data/raw/guia_rutas_setp.md`) y se convirtió a los archivos de datos. **E1 no se reemplazó**: los datos de Ruti tienen códigos de parada y más detalle. Las paradas de la guía que ya existían en E1 se enlazan a esas paradas (lista explícita en el script de conversión; si un nombre nuevo coincide con uno de E1 sin estar en la lista, la conversión se detiene). Casos especiales: "Panamericana (Atahualpa, Éxito)" → dos paradas; "Terminal" → "Terminal de Transportes"; "Daza" (C14) → "Alto de Daza", distinta de "Variante Daza" de E1.
+- **Retornos:** la guía no repite las terminales; se agregó la terminal de la ida al inicio y al final del retorno (sin eso no se podía salir desde Obonuco, Catambuco, etc.).
+
+## D-044 · Paradas con el mismo nombre = mismo lugar en el planificador
+- **Motivo:** Ruti tiene una parada por cada lado de la calle con el mismo nombre (dos "Villa del Parque", dos "Udenar Torobajo"). Sin coordenadas, el planificador no podía transbordar entre ellas ni llegar a la del otro sentido. Ahora el origen y el destino incluyen sus homónimas y el transbordo entre homónimas cuenta como 0 m a pie.
+
+## D-045 · Preferir rutas directas (`PLANNER_PREFER_DIRECT=true`)
+- **Motivo:** E1 tiene todas sus paradas y la guía solo las principales, así que la estimación por número de paradas hacía que un transbordo pareciera más rápido que la E1 directa. Para quien viaja, una ruta directa es mejor salvo que sea mucho más larga. Con la opción activa, las directas van primero y las de transbordo quedan como alternativas. Se puede desactivar por entorno.
+
+## D-046 · Origen y destino en una sola frase en el reloj
+- **Motivo:** el dueño quiere decir "estoy en Fátima y voy a la Universidad Cooperativa". `ConnectorTripPhraseParser` separa la frase en el primer conector ("voy a", "quiero ir a", "hasta"…, en español e inglés) que viene de `res/values/trip_phrases.xml`, no del código. Si la respuesta a "¿Dónde estás?" trae los dos, se consulta de una vez; si la respuesta a "¿A dónde vas?" trae un origen, se usa en lugar del GPS. El backend descarta "estoy en", "la", etc. al buscar.

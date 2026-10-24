@@ -86,3 +86,13 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | `./gradlew :wear:assembleDebug :wear:testDebugUnitTest` | OK (sin errores); `wear-debug.apk` apunta a `busalert.debug.backendUrl` (verificado en el dex) |
 | `BUSALERT_RELEASE_BACKEND_URL=https://verificacion.invalid/ ./gradlew :wear:assembleRelease` | OK; `apksigner verify` → `CN=BusAlert`, SHA-256 `367a1ce8…`. El APK de prueba se borró |
 | Búsqueda `AIza…` dentro de los APK | 0 (la clave de Gemini solo está en el `.env` del backend) |
+
+## Fase 8 — Rutas de la guía y frase única (2026-10-24)
+
+| Comando | Resultado |
+|---|---|
+| `python scripts/import_guide.py data` + `npm run data:validate` | 23 rutas, 45 sentidos, 307 paradas, 899 paradas en recorridos: datos válidos |
+| `npm run lint` / `typecheck` / `format:check` / `build` | OK |
+| `npx vitest run` | 136 pruebas OK (planificador: homónimas, preferir directas) |
+| `./gradlew :wear:testDebugUnitTest :wear:lintDebug :wear:assembleRelease` | BUILD SUCCESSFUL; 45 pruebas OK (7 del separador de frases, 3 del ViewModel); lint sin hallazgos |
+| `POST /api/voice` con datos reales (servidor local) | Fátima → Universidad Cooperativa: C5 directa; Parque Bolívar → Udenar: E1 directa; Obonuco → Terminal: C1 directa; Catambuco → Unicentro: C6 + E6 con transbordo en San Andresito; respuestas redactadas por la IA (`source: ai`) |
