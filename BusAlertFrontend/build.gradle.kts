@@ -32,3 +32,9 @@ extra["busalert.release.backendUrl"] = busAlertSetting("busalert.release.backend
 extra["busalert.apiKey"] = busAlertSetting("busalert.apiKey", "BUSALERT_API_KEY")
 extra["busalert.useMock"] = busAlertSetting("busalert.useMock", "BUSALERT_USE_MOCK", "false")
 extra["busalert.mapsApiKey"] = busAlertSetting("busalert.mapsApiKey", "BUSALERT_MAPS_API_KEY")
+
+// Firma de release (keystore fuera de git). Sin estos valores el build release se detiene.
+extra["busalert.release.storeFile"] = busAlertSetting("busalert.release.storeFile", "BUSALERT_RELEASE_STORE_FILE")
+extra["busalert.release.storePassword"] = busAlertSetting("busalert.release.storePassword", "BUSALERT_RELEASE_STORE_PASSWORD")
+extra["busalert.release.keyAlias"] = busAlertSetting("busalert.release.keyAlias", "BUSALERT_RELEASE_KEY_ALIAS")
+extra["busalert.release.keyPassword"] = busAlertSetting("busalert.release.keyPassword", "BUSALERT_RELEASE_KEY_PASSWORD")

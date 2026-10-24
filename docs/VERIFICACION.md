@@ -78,3 +78,11 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | Búsqueda `AIza…`/`generativelanguage` dentro de `wear-debug.apk` y `mobile-debug.apk` | 0 |
 | Auditoría "nada quemado" | ver `docs/AUDITORIA.md` |
 | **No verificable aquí** | Envío real por la Data Layer entre dispositivos emparejados, mapa con clave real, GPS en un reloj físico |
+
+## Fase 7 — APK del reloj (2026-10-24)
+
+| Comando | Resultado |
+|---|---|
+| `./gradlew :wear:assembleDebug :wear:testDebugUnitTest` | OK (sin errores); `wear-debug.apk` apunta a `busalert.debug.backendUrl` (verificado en el dex) |
+| `BUSALERT_RELEASE_BACKEND_URL=https://verificacion.invalid/ ./gradlew :wear:assembleRelease` | OK; `apksigner verify` → `CN=BusAlert`, SHA-256 `367a1ce8…`. El APK de prueba se borró |
+| Búsqueda `AIza…` dentro de los APK | 0 (la clave de Gemini solo está en el `.env` del backend) |

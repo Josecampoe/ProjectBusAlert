@@ -51,6 +51,10 @@ Los valores se leen de variables de entorno o de `local.properties` (que no se s
 | `busalert.release.backendUrl` | `BUSALERT_RELEASE_BACKEND_URL` | URL **HTTPS** en release. Sin ella el build release se detiene. |
 | `busalert.useMock` | `BUSALERT_USE_MOCK` | `true` = datos de demostración sin backend (solo en debug; en release siempre es `false`). |
 | `busalert.mapsApiKey` | `BUSALERT_MAPS_API_KEY` | Clave de Google Maps para el mapa de la app del teléfono (opcional). |
+| `busalert.release.storeFile` | `BUSALERT_RELEASE_STORE_FILE` | Keystore de firma, relativo a `BusAlertFrontend/` (ej. `keystore/busalert-release.jks`). |
+| `busalert.release.storePassword` | `BUSALERT_RELEASE_STORE_PASSWORD` | Contraseña del keystore. |
+| `busalert.release.keyAlias` | `BUSALERT_RELEASE_KEY_ALIAS` | Alias de la clave dentro del keystore. |
+| `busalert.release.keyPassword` | `BUSALERT_RELEASE_KEY_PASSWORD` | Contraseña de la clave. |
 
 Ejemplo de `local.properties`:
 
@@ -60,6 +64,39 @@ busalert.apiKey=<la misma clave que en API_KEYS del backend>
 ```
 
 Si falta la URL o la clave, la app no se cae: muestra "La app no tiene configurado el servidor".
+
+## APK del reloj
+
+La app del reloj es **independiente** (`com.google.android.wearable.standalone=true`): no necesita la app del teléfono. La IA corre en el backend; el APK solo lleva la URL del backend y la clave de aplicación.
+
+| APK | Backend | Comando | Salida |
+|---|---|---|---|
+| Debug (pruebas) | `busalert.debug.backendUrl`, HTTP permitido (PC en la misma red Wi-Fi) | `./gradlew :wear:assembleDebug` | `wear/build/outputs/apk/debug/wear-debug.apk` |
+| Release (uso real) | `busalert.release.backendUrl`, solo HTTPS (ej. Render, ver `render.yaml`) | `./gradlew :wear:assembleRelease` | `wear/build/outputs/apk/release/wear-release.apk` |
+
+El build release se detiene con un mensaje claro si falta la URL HTTPS, la clave de aplicación o algún dato de firma.
+
+### Firma
+
+Crea el keystore una sola vez (guárdalo con copia de seguridad: si se pierde, no se puede actualizar la app instalada):
+
+```bash
+keytool -genkeypair -keystore keystore/busalert-release.jks -storetype PKCS12   -alias busalert -keyalg RSA -keysize 4096 -validity 10000
+```
+
+`keystore/`, `*.jks` y `local.properties` están en `.gitignore`.
+
+### Instalar en un reloj real
+
+1. En el reloj: *Ajustes → Sistema → Acerca de → Versiones* → toca 7 veces *Número de compilación*. Luego *Ajustes → Opciones de desarrollador* → activa **Depuración ADB** y **Depuración inalámbrica**.
+2. En *Depuración inalámbrica* → *Vincular nuevo dispositivo*: verás una IP:puerto y un código.
+3. En la PC (misma red Wi-Fi):
+   ```bash
+   adb pair <ip>:<puerto-de-vinculación>     # pide el código
+   adb connect <ip>:<puerto-de-depuración>   # el que aparece en la pantalla principal de Depuración inalámbrica
+   adb install -r wear/build/outputs/apk/release/wear-release.apk
+   ```
+4. Si antes había otra versión firmada con otra clave (por ejemplo la debug), desinstálala primero: `adb uninstall com.busalert`.
 
 ## Comandos
 

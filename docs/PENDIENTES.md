@@ -6,7 +6,15 @@ Cada punto dice qué falta, en qué formato y dónde va.
 
 - **Rotar la key de Gemini: no hace falta.** En el historial de git no hay ninguna key real (se revisó `git log -p --all` con el patrón `AIza…`, 0 resultados). Si alguna vez pusiste una key real en `GeminiConfig.API_KEY` o en un APK que compartiste, **rótala** en https://aistudio.google.com/apikey.
 
+## Publicar el reloj (lo siguiente que debes hacer)
+
+- **Backend con HTTPS**: el APK release del reloj necesita una URL `https://`. Sube el repo a GitHub y despliega con `render.yaml` (pasos en `backend-node/README.md` → "En Render"). Luego pon `busalert.release.backendUrl=https://<tu-servicio>.onrender.com/` en `BusAlertFrontend/local.properties` y compila con `./gradlew :wear:assembleRelease`.
+- **Copia de seguridad del keystore**: `BusAlertFrontend/keystore/busalert-release.jks` y sus contraseñas (en `local.properties`) se generaron en tu PC. Guárdalos en un lugar seguro: sin ellos no se puede actualizar la app ya instalada.
+- **Mientras no haya HTTPS**: el APK debug (`wear-debug.apk`) apunta a `http://192.168.1.9:3000/` (tu PC en el Wi-Fi). El reloj debe estar en la misma red, el backend corriendo (`npm run dev`) y el Firewall de Windows debe permitir Node.js en redes privadas. Si cambia la IP de tu PC, actualiza `busalert.debug.backendUrl`.
+
 ## Configuración local (tu máquina)
+
+- **Hecho (2026-10-24):** `API_KEYS`, `DB_PATH` y `DATA_DIR` en `backend-node/.env`, y `busalert.apiKey` en `local.properties`. Lo de abajo queda como referencia.
 
 - **`backend-node/.env`**: tu archivo actual solo tiene `PORT` y `GEMINI_API_KEY`. Agrega como mínimo estas variables (ver `.env.example`):
   ```
@@ -48,4 +56,4 @@ Todo va en `backend-node/data/`, siguiendo `backend-node/data/templates/route.te
 
 - **Clave de Google Maps** (opcional): crea una clave para "Maps SDK for Android", restringida al paquete `com.busalert` y a tu huella SHA-1, y ponla en `BusAlertFrontend/local.properties` como `busalert.mapsApiKey=<clave>`. Sin ella, la app funciona pero muestra "Mapa no disponible".
 - **Probar la sincronización en dispositivos reales**: hay pruebas automáticas del formato, los conflictos y la publicación, pero el envío por la Data Layer necesita un reloj y un teléfono emparejados, que no hay en este entorno. Instala las dos apps debug desde la misma máquina (misma firma) y cambia un ajuste en una para verlo en la otra.
-- **Firma de release**: para publicar, las dos apps deben firmarse con la **misma** clave (requisito de la Data Layer). Define dónde se guarda el keystore y cómo se inyecta en la CI.
+- **Firma de release**: el reloj ya se firma con `keystore/busalert-release.jks` (D-040). Si algún día usas la app del teléfono, fírmala con la **misma** clave (requisito de la Data Layer). Para la CI, pasa el keystore y las contraseñas como secretos (`BUSALERT_RELEASE_*`).

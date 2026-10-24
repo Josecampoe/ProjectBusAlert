@@ -8,6 +8,14 @@ fun setting(name: String): String = rootProject.extra[name] as String
 fun quoted(value: String): String = "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\""
 
 val releaseBackendUrl = setting("busalert.release.backendUrl")
+val releaseStoreFile = setting("busalert.release.storeFile")
+val releaseSigningValues = listOf(
+    "busalert.release.storeFile" to releaseStoreFile,
+    "busalert.release.storePassword" to setting("busalert.release.storePassword"),
+    "busalert.release.keyAlias" to setting("busalert.release.keyAlias"),
+    "busalert.release.keyPassword" to setting("busalert.release.keyPassword"),
+)
+val hasReleaseSigning = releaseSigningValues.all { it.second.isNotBlank() }
 
 android {
     namespace = "com.busalert.wear"
@@ -22,6 +30,16 @@ android {
         buildConfigField("String", "BACKEND_API_KEY", quoted(setting("busalert.apiKey")))
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        create("release") {
+            if (hasReleaseSigning) {
+                storeFile = rootProject.file(releaseStoreFile)
+                storePassword = setting("busalert.release.storePassword")
+                keyAlias = setting("busalert.release.keyAlias")
+                keyPassword = setting("busalert.release.keyPassword")
+            }
+        }
+    }
     buildTypes {
         debug {
             buildConfigField("String", "BACKEND_BASE_URL", quoted(setting("busalert.debug.backendUrl")))
@@ -31,6 +49,7 @@ android {
             buildConfigField("String", "BACKEND_BASE_URL", quoted(releaseBackendUrl))
             // La demo nunca se habilita en release.
             buildConfigField("boolean", "USE_MOCK_BACKEND", "false")
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
         }
     }
@@ -65,11 +84,22 @@ android {
     }
 }
 
-// Un APK release sin backend HTTPS no sirve: se detiene el build con un mensaje claro.
+// Un APK release sin backend HTTPS, sin clave de app o sin firma no sirve:
+// se detiene el build con un mensaje claro.
 val validateReleaseConfig by tasks.registering {
     doLast {
         require(releaseBackendUrl.startsWith("https://")) {
             "Define busalert.release.backendUrl (https://...) en local.properties o BUSALERT_RELEASE_BACKEND_URL."
+        }
+        require(setting("busalert.apiKey").isNotBlank()) {
+            "Define busalert.apiKey (una de las claves de API_KEYS del backend) en local.properties o BUSALERT_API_KEY."
+        }
+        val missing = releaseSigningValues.filter { it.second.isBlank() }.map { it.first }
+        require(missing.isEmpty()) {
+            "Faltan datos de firma en local.properties: ${missing.joinToString()}. Ver BusAlertFrontend/README.md → Firma."
+        }
+        require(rootProject.file(releaseStoreFile).exists()) {
+            "No existe el keystore $releaseStoreFile (ruta relativa a BusAlertFrontend/)."
         }
     }
 }
