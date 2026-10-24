@@ -182,6 +182,7 @@ export class AssistantService {
         maxTransfers: this.config.planner.maxTransfers,
         transferPenaltyMin: this.config.planner.transferPenaltyMin,
         transferWalkRadiusM: this.config.planner.transferWalkRadiusM,
+        preferDirect: this.config.planner.preferDirect,
       },
       this.arrival,
       this.now(),
