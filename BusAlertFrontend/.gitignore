@@ -12,3 +12,8 @@ backend-node/
 mobile/build/
 wear/build/
 shared/build/
+
+# Keystores de firma (nunca a git)
+*.jks
+*.keystore
+keystore/
