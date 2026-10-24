@@ -25,5 +25,14 @@
     "last_checked": "2026-10-07",
     "reliability": "high",
     "notes": "Datos de paradas e IDs ingresados manualmente por el equipo del proyecto, extraídos directamente de la app Ruti SETP."
+  },
+  {
+    "id": "guia_rutas_setp",
+    "name": "Guía de rutas SETP Pasto (entregada por el dueño del proyecto)",
+    "url": null,
+    "source_type": "verified_user_input",
+    "last_checked": "2026-10-24",
+    "reliability": "medium",
+    "notes": "Orden de paradas por sentido de las rutas E2–E7 y C1–C16. Sin códigos de parada, coordenadas ni horarios. Texto original en data/raw/guia_rutas_setp.md."
   }
 ]

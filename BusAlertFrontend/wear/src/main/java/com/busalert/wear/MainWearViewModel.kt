@@ -20,6 +20,7 @@ import com.busalert.shared.preferences.QueryHistoryEntry
 import com.busalert.shared.preferences.UserPreferences
 import com.busalert.shared.preferences.recentPlaces
 import com.busalert.wear.location.LocationSource
+import com.busalert.wear.voice.TripPhraseParser
 import com.busalert.wear.voice.VoiceError
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,6 +59,7 @@ class MainWearViewModel(
     private val transitRepository: TransitRepository,
     private val locationSource: LocationSource,
     private val preferencesRepository: PreferencesRepository,
+    private val phraseParser: TripPhraseParser = TripPhraseParser.NONE,
     private val clock: () -> Long = System::currentTimeMillis,
 ) : ViewModel() {
 
@@ -177,6 +179,13 @@ class MainWearViewModel(
     fun onLocationReceived(location: String) {
         val text = location.trim()
         if (text.isEmpty()) return
+        // "Estoy en Fátima y voy a la Cooperativa": se consulta de una vez.
+        phraseParser.split(text)?.let { phrase ->
+            _origin.value = TripOrigin.Named(phrase.origin)
+            _noNearbyStops.value = false
+            onDestinationReceived(phrase.destination)
+            return
+        }
         _origin.value = TripOrigin.Named(text)
         _noNearbyStops.value = false
         _typedText.value = ""
@@ -185,7 +194,10 @@ class MainWearViewModel(
     }
 
     fun onDestinationReceived(destination: String) {
-        val text = destination.trim()
+        // Si la respuesta trae también el origen, manda lo que dijo el usuario sobre el GPS.
+        val phrase = phraseParser.split(destination.trim())
+        if (phrase != null) _origin.value = TripOrigin.Named(phrase.origin)
+        val text = phrase?.destination ?: destination.trim()
         val origin = _origin.value
         if (text.isEmpty()) return
         if (origin == null) {
@@ -312,11 +324,12 @@ class MainWearViewModel(
         private val transitRepository: TransitRepository,
         private val locationSource: LocationSource,
         private val preferencesRepository: PreferencesRepository,
+        private val phraseParser: TripPhraseParser,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             require(modelClass.isAssignableFrom(MainWearViewModel::class.java)) { "ViewModel desconocido: $modelClass" }
-            return MainWearViewModel(repository, transitRepository, locationSource, preferencesRepository) as T
+            return MainWearViewModel(repository, transitRepository, locationSource, preferencesRepository, phraseParser) as T
         }
     }
 }

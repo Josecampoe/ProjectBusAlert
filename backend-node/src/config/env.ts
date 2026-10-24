@@ -81,6 +81,10 @@ const EnvSchema = z.object({
   PLANNER_TRANSFER_PENALTY_MIN: nonNegativeNumber.default(8),
   PLANNER_MINUTES_PER_STOP: z.coerce.number().positive().default(1.5),
   PLANNER_TRANSFER_WALK_RADIUS_M: nonNegativeNumber.default(150),
+  PLANNER_PREFER_DIRECT: z
+    .enum(['true', 'false'])
+    .default('true')
+    .transform((v) => v === 'true'),
   ETA_AVERAGE_BUS_SPEED_KMH: z.coerce.number().positive().default(18),
   ETA_DEFAULT_HEADWAY_MIN: nonNegativeNumber.default(0),
   ETA_WALK_SPEED_KMH: z.coerce.number().positive().default(4.5),
@@ -133,6 +137,7 @@ export interface AppConfig {
     transferPenaltyMin: number;
     minutesPerStop: number;
     transferWalkRadiusM: number;
+    preferDirect: boolean;
   };
   eta: {
     averageBusSpeedKmh: number;
@@ -214,6 +219,7 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       transferPenaltyMin: e.PLANNER_TRANSFER_PENALTY_MIN,
       minutesPerStop: e.PLANNER_MINUTES_PER_STOP,
       transferWalkRadiusM: e.PLANNER_TRANSFER_WALK_RADIUS_M,
+      preferDirect: e.PLANNER_PREFER_DIRECT,
     },
     eta: {
       averageBusSpeedKmh: e.ETA_AVERAGE_BUS_SPEED_KMH,

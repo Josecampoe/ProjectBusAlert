@@ -21,6 +21,7 @@ import com.busalert.shared.preferences.FavoriteKind
 import com.busalert.shared.preferences.QueryHistoryEntry
 import com.busalert.wear.TestData.okPlan
 import com.busalert.wear.location.LocationSource
+import com.busalert.wear.voice.ConnectorTripPhraseParser
 import com.busalert.wear.voice.VoiceError
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -152,6 +153,61 @@ class MainWearViewModelTest {
         assertEquals(TripOrigin.Located(point), repository.queries.single().origin)
         assertEquals(AppState.RESULT, viewModel.appState.value)
         assertNull(preferences.history.value.single().originLabel)
+    }
+
+    private fun withPhraseParser() {
+        viewModel = MainWearViewModel(
+            repository,
+            transit,
+            LocationSource { location() },
+            preferences,
+            phraseParser = ConnectorTripPhraseParser(listOf("y voy a", "voy a")),
+            clock = { NOW },
+        )
+    }
+
+    @Test
+    fun `una sola frase con origen y destino consulta de una vez`() = runTest(dispatcher) {
+        withPhraseParser()
+        viewModel.startQuery()
+        advanceUntilIdle()
+        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+
+        viewModel.onSpeechResult("estoy en Fátima y voy a la Universidad Cooperativa")
+        advanceUntilIdle()
+        assertEquals(
+            TripQuery("la Universidad Cooperativa", TripOrigin.Named("estoy en Fátima"), AppLanguage.SPANISH),
+            repository.queries.single(),
+        )
+        assertEquals(AppState.RESULT, viewModel.appState.value)
+    }
+
+    @Test
+    fun `con GPS, una frase con origen usa el lugar dicho en vez de las coordenadas`() = runTest(dispatcher) {
+        withPhraseParser()
+        location = { GeoPoint(1.2143, -77.2787) }
+        viewModel.startQuery()
+        advanceUntilIdle()
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
+
+        viewModel.onSpeechResult("estoy en Fátima y voy a Udenar")
+        advanceUntilIdle()
+        assertEquals(TripQuery("Udenar", TripOrigin.Named("estoy en Fátima"), AppLanguage.SPANISH), repository.queries.single())
+    }
+
+    @Test
+    fun `una respuesta normal no se separa aunque haya analizador`() = runTest(dispatcher) {
+        withPhraseParser()
+        viewModel.startQuery()
+        advanceUntilIdle()
+        viewModel.onSpeechResult("Fátima")
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
+        viewModel.onSpeechResult("voy a la Universidad Cooperativa")
+        advanceUntilIdle()
+        assertEquals(
+            TripQuery("voy a la Universidad Cooperativa", TripOrigin.Named("Fátima"), AppLanguage.SPANISH),
+            repository.queries.single(),
+        )
     }
 
     @Test

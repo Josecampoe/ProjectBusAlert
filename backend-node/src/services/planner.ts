@@ -3,13 +3,14 @@
  *
  * - Viajes directos: una dirección de ruta que pasa por origen y luego por destino.
  * - Viajes con un transbordo (si PLANNER_MAX_TRANSFERS ≥ 1): se baja de la
- *   ruta A en una parada y se sube a otra ruta B en la misma parada o en una
- *   parada cercana (a pie, dentro de PLANNER_TRANSFER_WALK_RADIUS_M; requiere
- *   coordenadas).
+ *   ruta A en una parada y se sube a otra ruta B en la misma parada, en otra
+ *   parada con el mismo nombre (sin caminar) o en una parada cercana (a pie,
+ *   dentro de PLANNER_TRANSFER_WALK_RADIUS_M; requiere coordenadas).
  *
  * Las alternativas se ordenan por costo = minutos estimados + penalización
- * por transbordo. Los minutos son ESTIMACIONES (ver arrivalTime.ts).
+ * por transbordo; con PLANNER_PREFER_DIRECT las directas van primero. Los minutos son ESTIMACIONES (ver arrivalTime.ts).
  */
+import { normalizeForSearch } from '../lib/text';
 import type {
   NetworkDirection,
   NetworkStop,
@@ -23,6 +24,8 @@ export interface PlannerOptions {
   maxTransfers: number;
   transferPenaltyMin: number;
   transferWalkRadiusM: number;
+  /** true: las rutas directas van primero aunque una con transbordo parezca más rápida. */
+  preferDirect: boolean;
 }
 
 export interface StopRef {
@@ -152,13 +155,43 @@ function firstIndexAfter(dir: NetworkDirection, from: number, targets: Set<numbe
   return -1;
 }
 
-/** Paradas a las que se puede caminar desde cada parada (incluida ella misma). */
+/**
+ * Paradas con el mismo nombre (por ejemplo, una a cada lado de la calle):
+ * cuentan como el mismo lugar aunque no tengan coordenadas.
+ * Devuelve, para cada parada, todas las de su grupo (incluida ella).
+ */
+function sameNameGroups(network: TransitNetwork): Map<number, number[]> {
+  const byName = new Map<string, number[]>();
+  for (const stop of network.stops.values()) {
+    const key = normalizeForSearch(stop.name);
+    byName.set(key, [...(byName.get(key) ?? []), stop.id]);
+  }
+  const result = new Map<number, number[]>();
+  for (const stop of network.stops.values()) {
+    result.set(stop.id, byName.get(normalizeForSearch(stop.name)) ?? [stop.id]);
+  }
+  return result;
+}
+
+/** Agrega a un conjunto de paradas sus homónimas. */
+function withTwins(ids: number[], groups: Map<number, number[]>): Set<number> {
+  return new Set(ids.flatMap((id) => groups.get(id) ?? [id]));
+}
+
+/** Paradas a las que se puede caminar desde cada parada (incluida ella misma y sus homónimas). */
 function walkableStops(
   network: TransitNetwork,
+  groups: Map<number, number[]>,
   radiusM: number,
 ): Map<number, Array<{ id: number; meters: number }>> {
   const result = new Map<number, Array<{ id: number; meters: number }>>();
-  for (const stop of network.stops.values()) result.set(stop.id, [{ id: stop.id, meters: 0 }]);
+  for (const stop of network.stops.values()) {
+    const twins = groups.get(stop.id) ?? [stop.id];
+    result.set(stop.id, [
+      { id: stop.id, meters: 0 },
+      ...twins.filter((id) => id !== stop.id).map((id) => ({ id, meters: 0 })),
+    ]);
+  }
   if (radiusM <= 0) return result;
   const located = [...network.stops.values()].filter(
     (s) => s.latitude !== null && s.longitude !== null,
@@ -172,7 +205,10 @@ function walkableStops(
         b.latitude!,
         b.longitude!,
       );
-      if (meters <= radiusM) result.get(a.id)!.push({ id: b.id, meters });
+      const reachable = result.get(a.id)!;
+      if (meters <= radiusM && !reachable.some((r) => r.id === b.id)) {
+        reachable.push({ id: b.id, meters });
+      }
     }
   }
   return result;
@@ -186,8 +222,9 @@ export function planTrip(
   arrival: ArrivalTimeProvider,
   at: Date = new Date(),
 ): PlanResult {
-  const origins = new Set(originIds);
-  const destinations = new Set(destinationIds);
+  const groups = sameNameGroups(network);
+  const origins = withTwins(originIds, groups);
+  const destinations = withTwins(destinationIds, groups);
   if (originIds.some((id) => destinations.has(id))) return { status: 'same_place', options: [] };
 
   const builder = new PlanBuilder(network, arrival, at);
@@ -216,7 +253,7 @@ export function planTrip(
 
   // ── Un transbordo ──────────────────────────────────────────────────────
   if (options.maxTransfers >= 1) {
-    const walkable = walkableStops(network, options.transferWalkRadiusM);
+    const walkable = walkableStops(network, groups, options.transferWalkRadiusM);
     const bestByPair = new Map<string, PlanOption>();
 
     for (const dirA of originDirs) {
@@ -258,6 +295,7 @@ export function planTrip(
 
   plans.sort(
     (a, b) =>
+      (options.preferDirect ? a.transfers - b.transfers : 0) ||
       a.cost - b.cost ||
       a.transfers - b.transfers ||
       a.legs[0].routeCode.localeCompare(b.legs[0].routeCode),

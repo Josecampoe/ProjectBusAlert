@@ -11,6 +11,7 @@ import com.busalert.wear.location.FusedLocationSource
 import com.busalert.wear.location.hasLocationPermission
 import com.busalert.wear.ui.PermissionGate
 import com.busalert.wear.ui.WearApp
+import com.busalert.wear.voice.ConnectorTripPhraseParser
 import com.busalert.wear.voice.VoiceRecognitionManager
 import com.busalert.wear.voice.VoiceSpeaker
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,7 @@ class MainActivity : ComponentActivity() {
             transitRepository = app.dependencies.transitRepository,
             locationSource = FusedLocationSource(applicationContext),
             preferencesRepository = app.preferencesRepository,
+            phraseParser = ConnectorTripPhraseParser(resources.getStringArray(R.array.trip_destination_connectors).toList()),
         )
     }
 

@@ -1,47 +1,195 @@
 {
-  "_comment": "Orden exacto de paradas por dirección. stop_external_id = código Ruti (null = sin código confirmado). Fuente: Ruti SETP / Avante.",
+  "_comment": "Orden exacto de paradas por dirección. stop_external_id = código Ruti (null = sin código). E1: Ruti SETP. E2–E7 y C1–C16: guía de rutas (data/raw/guia_rutas_setp.md).",
   "E1_D1": {
     "direction_key": "E1_D1",
     "route_code": "E1",
     "name": "Udenar → Dolores",
     "stops": [
-      { "order": 1,  "stop_external_id": "1265", "stop_name": "Udenar - Facultad de Veterinaria" },
-      { "order": 2,  "stop_external_id": "1305", "stop_name": "Udenar Torobajo" },
-      { "order": 3,  "stop_external_id": "1375", "stop_name": "Universidad Cooperativa" },
-      { "order": 4,  "stop_external_id": "1420", "stop_name": "Villa María" },
-      { "order": 5,  "stop_external_id": "1495", "stop_name": "El Dorado" },
-      { "order": 6,  "stop_external_id": null,   "stop_name": "Calle 18 Av. Panamericana" },
-      { "order": 7,  "stop_external_id": null,   "stop_name": "Carrera 37 Calle 18" },
-      { "order": 8,  "stop_external_id": "1510", "stop_name": "Sagrada Familia" },
-      { "order": 9,  "stop_external_id": "1475", "stop_name": "Cedenar" },
-      { "order": 10, "stop_external_id": "1685", "stop_name": "Av. Los Estudiantes Carrera 32B" },
-      { "order": 11, "stop_external_id": null,   "stop_name": "Amorel de la Avenida" },
-      { "order": 12, "stop_external_id": "1800", "stop_name": "Las Cuadras Calle 19" },
-      { "order": 13, "stop_external_id": "2035", "stop_name": "Carmelitas" },
-      { "order": 14, "stop_external_id": null,   "stop_name": "Calle 17 Carrera 25" },
-      { "order": 15, "stop_external_id": "2390", "stop_name": "San Agustín" },
-      { "order": 16, "stop_external_id": "2540", "stop_name": "Calle 17 Amorel" },
-      { "order": 17, "stop_external_id": "2590", "stop_name": "Calle 17 Carrera 20" },
-      { "order": 18, "stop_external_id": "2640", "stop_name": "Calle 17 Carrera 19" },
-      { "order": 19, "stop_external_id": null,   "stop_name": "Calle 17 Av. Las Américas" },
-      { "order": 20, "stop_external_id": "2765", "stop_name": "San Juan Bosco" },
-      { "order": 21, "stop_external_id": null,   "stop_name": "Carrera 14 Calle 18" },
-      { "order": 22, "stop_external_id": "3065", "stop_name": "Parroquia Fátima" },
-      { "order": 23, "stop_external_id": "3060", "stop_name": "Parque Bolívar" },
-      { "order": 24, "stop_external_id": "3160", "stop_name": "Santacruz" },
-      { "order": 25, "stop_external_id": "3295", "stop_name": "Bernal" },
-      { "order": 26, "stop_external_id": "3315", "stop_name": "Las Mercedes" },
-      { "order": 27, "stop_external_id": "3265", "stop_name": "Santa Bárbara Carrera 1E" },
-      { "order": 28, "stop_external_id": "3285", "stop_name": "Calle 21B Carrera 5E" },
-      { "order": 29, "stop_external_id": "3300", "stop_name": "Villa Flor II Manzana 12" },
-      { "order": 30, "stop_external_id": "3375", "stop_name": "Villa Flor II Manzana 10" },
-      { "order": 31, "stop_external_id": "3370", "stop_name": "Villa Flor II Carrera 9E" },
-      { "order": 32, "stop_external_id": "3180", "stop_name": "Santa Mónica" },
-      { "order": 33, "stop_external_id": "3100", "stop_name": "Caicedonia" },
-      { "order": 34, "stop_external_id": "2905", "stop_name": "Las Brisas" },
-      { "order": 35, "stop_external_id": "3055", "stop_name": "Pinal del Río" },
-      { "order": 36, "stop_external_id": "3600", "stop_name": "CAI Popular" },
-      { "order": 37, "stop_external_id": "3915", "stop_name": "Vía La Laguna" }
+      {
+        "order": 1,
+        "stop_external_id": "1265",
+        "stop_name": "Udenar - Facultad de Veterinaria"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "1305",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 3,
+        "stop_external_id": "1375",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 4,
+        "stop_external_id": "1420",
+        "stop_name": "Villa María"
+      },
+      {
+        "order": 5,
+        "stop_external_id": "1495",
+        "stop_name": "El Dorado"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Calle 18 Av. Panamericana"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Carrera 37 Calle 18"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "1510",
+        "stop_name": "Sagrada Familia"
+      },
+      {
+        "order": 9,
+        "stop_external_id": "1475",
+        "stop_name": "Cedenar"
+      },
+      {
+        "order": 10,
+        "stop_external_id": "1685",
+        "stop_name": "Av. Los Estudiantes Carrera 32B"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Amorel de la Avenida"
+      },
+      {
+        "order": 12,
+        "stop_external_id": "1800",
+        "stop_name": "Las Cuadras Calle 19"
+      },
+      {
+        "order": 13,
+        "stop_external_id": "2035",
+        "stop_name": "Carmelitas"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Calle 17 Carrera 25"
+      },
+      {
+        "order": 15,
+        "stop_external_id": "2390",
+        "stop_name": "San Agustín"
+      },
+      {
+        "order": 16,
+        "stop_external_id": "2540",
+        "stop_name": "Calle 17 Amorel"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "2590",
+        "stop_name": "Calle 17 Carrera 20"
+      },
+      {
+        "order": 18,
+        "stop_external_id": "2640",
+        "stop_name": "Calle 17 Carrera 19"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Calle 17 Av. Las Américas"
+      },
+      {
+        "order": 20,
+        "stop_external_id": "2765",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "Carrera 14 Calle 18"
+      },
+      {
+        "order": 22,
+        "stop_external_id": "3065",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 23,
+        "stop_external_id": "3060",
+        "stop_name": "Parque Bolívar"
+      },
+      {
+        "order": 24,
+        "stop_external_id": "3160",
+        "stop_name": "Santacruz"
+      },
+      {
+        "order": 25,
+        "stop_external_id": "3295",
+        "stop_name": "Bernal"
+      },
+      {
+        "order": 26,
+        "stop_external_id": "3315",
+        "stop_name": "Las Mercedes"
+      },
+      {
+        "order": 27,
+        "stop_external_id": "3265",
+        "stop_name": "Santa Bárbara Carrera 1E"
+      },
+      {
+        "order": 28,
+        "stop_external_id": "3285",
+        "stop_name": "Calle 21B Carrera 5E"
+      },
+      {
+        "order": 29,
+        "stop_external_id": "3300",
+        "stop_name": "Villa Flor II Manzana 12"
+      },
+      {
+        "order": 30,
+        "stop_external_id": "3375",
+        "stop_name": "Villa Flor II Manzana 10"
+      },
+      {
+        "order": 31,
+        "stop_external_id": "3370",
+        "stop_name": "Villa Flor II Carrera 9E"
+      },
+      {
+        "order": 32,
+        "stop_external_id": "3180",
+        "stop_name": "Santa Mónica"
+      },
+      {
+        "order": 33,
+        "stop_external_id": "3100",
+        "stop_name": "Caicedonia"
+      },
+      {
+        "order": 34,
+        "stop_external_id": "2905",
+        "stop_name": "Las Brisas"
+      },
+      {
+        "order": 35,
+        "stop_external_id": "3055",
+        "stop_name": "Pinal del Río"
+      },
+      {
+        "order": 36,
+        "stop_external_id": "3600",
+        "stop_name": "CAI Popular"
+      },
+      {
+        "order": 37,
+        "stop_external_id": "3915",
+        "stop_name": "Vía La Laguna"
+      }
     ]
   },
   "E1_D2": {
@@ -49,56 +197,4617 @@
     "route_code": "E1",
     "name": "Dolores → Udenar",
     "stops": [
-      { "order": 1,  "stop_external_id": "3915", "stop_name": "Vía La Laguna" },
-      { "order": 2,  "stop_external_id": "4020", "stop_name": "Dolores" },
-      { "order": 3,  "stop_external_id": "4105", "stop_name": "Dolores" },
-      { "order": 4,  "stop_external_id": "4230", "stop_name": "Dolores" },
-      { "order": 5,  "stop_external_id": "4370", "stop_name": "Dolores" },
-      { "order": 6,  "stop_external_id": "4350", "stop_name": "Iglesia Dolores" },
-      { "order": 7,  "stop_external_id": "4450", "stop_name": "Dolores" },
-      { "order": 8,  "stop_external_id": "4470", "stop_name": "Corpominga" },
-      { "order": 9,  "stop_external_id": "4545", "stop_name": "Mocondino" },
-      { "order": 10, "stop_external_id": "4635", "stop_name": "Variante Daza" },
-      { "order": 11, "stop_external_id": "3945", "stop_name": "Vía La Laguna" },
-      { "order": 12, "stop_external_id": "3590", "stop_name": "CAI Popular" },
-      { "order": 13, "stop_external_id": "3080", "stop_name": "Pinal del Río" },
-      { "order": 14, "stop_external_id": "2875", "stop_name": "Las Brisas" },
-      { "order": 15, "stop_external_id": "3000", "stop_name": "Caicedonia" },
-      { "order": 16, "stop_external_id": "3095", "stop_name": "Santa Mónica" },
-      { "order": 17, "stop_external_id": "3360", "stop_name": "Villa Flor II Carrera 9 Este" },
-      { "order": 18, "stop_external_id": "3400", "stop_name": "Villaflor II Manzana 15" },
-      { "order": 19, "stop_external_id": "3215", "stop_name": "Manzana G Santa Mónica" },
-      { "order": 20, "stop_external_id": "3195", "stop_name": "Mercedario" },
-      { "order": 21, "stop_external_id": "3155", "stop_name": "Bienestar Familiar" },
-      { "order": 22, "stop_external_id": "3120", "stop_name": "La Esmeralda" },
-      { "order": 23, "stop_external_id": "3110", "stop_name": "Hospital Departamental" },
-      { "order": 24, "stop_external_id": "2990", "stop_name": "Parque Bolívar" },
-      { "order": 25, "stop_external_id": "3040", "stop_name": "Parroquia Fátima" },
-      { "order": 26, "stop_external_id": "2920", "stop_name": "Alahambra" },
-      { "order": 27, "stop_external_id": "2740", "stop_name": "San Juan Bosco" },
-      { "order": 28, "stop_external_id": "2670", "stop_name": "Avenida Las Américas Calle 16" },
-      { "order": 29, "stop_external_id": "2635", "stop_name": "María Goretti Calle 14" },
-      { "order": 30, "stop_external_id": "2585", "stop_name": "María Goretti Carrera 21A" },
-      { "order": 31, "stop_external_id": "2495", "stop_name": "Calle 16 Carrera 22" },
-      { "order": 32, "stop_external_id": "2265", "stop_name": "Calle 16 Carrera 25" },
-      { "order": 33, "stop_external_id": null,   "stop_name": "Calle 16 Carrera 27" },
-      { "order": 34, "stop_external_id": null,   "stop_name": "Uniminuto Carrera 27" },
-      { "order": 35, "stop_external_id": "2055", "stop_name": "Calle 18 Carrera 27" },
-      { "order": 36, "stop_external_id": "1930", "stop_name": "Calle 18 Carrera 29" },
-      { "order": 37, "stop_external_id": "1855", "stop_name": "Parque Infantil" },
-      { "order": 38, "stop_external_id": null,   "stop_name": "Federación de Cafeteros" },
-      { "order": 39, "stop_external_id": "1695", "stop_name": "Av. Los Estudiantes Carrera 32" },
-      { "order": 40, "stop_external_id": null,   "stop_name": "Avenida de los Estudiantes Carrera 35" },
-      { "order": 41, "stop_external_id": "1505", "stop_name": "Av. Estudiantes, Carrera 38" },
-      { "order": 42, "stop_external_id": "1370", "stop_name": "Av. Los Estudiantes - Castilla" },
-      { "order": 43, "stop_external_id": "1240", "stop_name": "Morasurco" },
-      { "order": 44, "stop_external_id": "1345", "stop_name": "Clínica Bellatriz" },
-      { "order": 45, "stop_external_id": "1515", "stop_name": "Valle de Atríz" },
-      { "order": 46, "stop_external_id": "1440", "stop_name": "Villa del Parque" },
-      { "order": 47, "stop_external_id": "1410", "stop_name": "Villa María" },
-      { "order": 48, "stop_external_id": "1360", "stop_name": "Universidad Cooperativa" },
-      { "order": 49, "stop_external_id": "1275", "stop_name": "Udenar Torobajo" },
-      { "order": 50, "stop_external_id": "1265", "stop_name": "Udenar - Facultad de Veterinaria" }
+      {
+        "order": 1,
+        "stop_external_id": "3915",
+        "stop_name": "Vía La Laguna"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "4020",
+        "stop_name": "Dolores"
+      },
+      {
+        "order": 3,
+        "stop_external_id": "4105",
+        "stop_name": "Dolores"
+      },
+      {
+        "order": 4,
+        "stop_external_id": "4230",
+        "stop_name": "Dolores"
+      },
+      {
+        "order": 5,
+        "stop_external_id": "4370",
+        "stop_name": "Dolores"
+      },
+      {
+        "order": 6,
+        "stop_external_id": "4350",
+        "stop_name": "Iglesia Dolores"
+      },
+      {
+        "order": 7,
+        "stop_external_id": "4450",
+        "stop_name": "Dolores"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "4470",
+        "stop_name": "Corpominga"
+      },
+      {
+        "order": 9,
+        "stop_external_id": "4545",
+        "stop_name": "Mocondino"
+      },
+      {
+        "order": 10,
+        "stop_external_id": "4635",
+        "stop_name": "Variante Daza"
+      },
+      {
+        "order": 11,
+        "stop_external_id": "3945",
+        "stop_name": "Vía La Laguna"
+      },
+      {
+        "order": 12,
+        "stop_external_id": "3590",
+        "stop_name": "CAI Popular"
+      },
+      {
+        "order": 13,
+        "stop_external_id": "3080",
+        "stop_name": "Pinal del Río"
+      },
+      {
+        "order": 14,
+        "stop_external_id": "2875",
+        "stop_name": "Las Brisas"
+      },
+      {
+        "order": 15,
+        "stop_external_id": "3000",
+        "stop_name": "Caicedonia"
+      },
+      {
+        "order": 16,
+        "stop_external_id": "3095",
+        "stop_name": "Santa Mónica"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "3360",
+        "stop_name": "Villa Flor II Carrera 9 Este"
+      },
+      {
+        "order": 18,
+        "stop_external_id": "3400",
+        "stop_name": "Villaflor II Manzana 15"
+      },
+      {
+        "order": 19,
+        "stop_external_id": "3215",
+        "stop_name": "Manzana G Santa Mónica"
+      },
+      {
+        "order": 20,
+        "stop_external_id": "3195",
+        "stop_name": "Mercedario"
+      },
+      {
+        "order": 21,
+        "stop_external_id": "3155",
+        "stop_name": "Bienestar Familiar"
+      },
+      {
+        "order": 22,
+        "stop_external_id": "3120",
+        "stop_name": "La Esmeralda"
+      },
+      {
+        "order": 23,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 24,
+        "stop_external_id": "2990",
+        "stop_name": "Parque Bolívar"
+      },
+      {
+        "order": 25,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 26,
+        "stop_external_id": "2920",
+        "stop_name": "Alahambra"
+      },
+      {
+        "order": 27,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 28,
+        "stop_external_id": "2670",
+        "stop_name": "Avenida Las Américas Calle 16"
+      },
+      {
+        "order": 29,
+        "stop_external_id": "2635",
+        "stop_name": "María Goretti Calle 14"
+      },
+      {
+        "order": 30,
+        "stop_external_id": "2585",
+        "stop_name": "María Goretti Carrera 21A"
+      },
+      {
+        "order": 31,
+        "stop_external_id": "2495",
+        "stop_name": "Calle 16 Carrera 22"
+      },
+      {
+        "order": 32,
+        "stop_external_id": "2265",
+        "stop_name": "Calle 16 Carrera 25"
+      },
+      {
+        "order": 33,
+        "stop_external_id": null,
+        "stop_name": "Calle 16 Carrera 27"
+      },
+      {
+        "order": 34,
+        "stop_external_id": null,
+        "stop_name": "Uniminuto Carrera 27"
+      },
+      {
+        "order": 35,
+        "stop_external_id": "2055",
+        "stop_name": "Calle 18 Carrera 27"
+      },
+      {
+        "order": 36,
+        "stop_external_id": "1930",
+        "stop_name": "Calle 18 Carrera 29"
+      },
+      {
+        "order": 37,
+        "stop_external_id": "1855",
+        "stop_name": "Parque Infantil"
+      },
+      {
+        "order": 38,
+        "stop_external_id": null,
+        "stop_name": "Federación de Cafeteros"
+      },
+      {
+        "order": 39,
+        "stop_external_id": "1695",
+        "stop_name": "Av. Los Estudiantes Carrera 32"
+      },
+      {
+        "order": 40,
+        "stop_external_id": null,
+        "stop_name": "Avenida de los Estudiantes Carrera 35"
+      },
+      {
+        "order": 41,
+        "stop_external_id": "1505",
+        "stop_name": "Av. Estudiantes, Carrera 38"
+      },
+      {
+        "order": 42,
+        "stop_external_id": "1370",
+        "stop_name": "Av. Los Estudiantes - Castilla"
+      },
+      {
+        "order": 43,
+        "stop_external_id": "1240",
+        "stop_name": "Morasurco"
+      },
+      {
+        "order": 44,
+        "stop_external_id": "1345",
+        "stop_name": "Clínica Bellatriz"
+      },
+      {
+        "order": 45,
+        "stop_external_id": "1515",
+        "stop_name": "Valle de Atríz"
+      },
+      {
+        "order": 46,
+        "stop_external_id": "1440",
+        "stop_name": "Villa del Parque"
+      },
+      {
+        "order": 47,
+        "stop_external_id": "1410",
+        "stop_name": "Villa María"
+      },
+      {
+        "order": 48,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 49,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 50,
+        "stop_external_id": "1265",
+        "stop_name": "Udenar - Facultad de Veterinaria"
+      }
+    ]
+  },
+  "E2_D1": {
+    "direction_key": "E2_D1",
+    "route_code": "E2",
+    "name": "Udenar - Facultad de Veterinaria → Altos de Chapalito",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": "1265",
+        "stop_name": "Udenar - Facultad de Veterinaria"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 3,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 4,
+        "stop_external_id": "1495",
+        "stop_name": "El Dorado"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 7,
+        "stop_external_id": "1855",
+        "stop_name": "Parque Infantil"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "2035",
+        "stop_name": "Carmelitas"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 10,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Calle 18A"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Venecia"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Lorenzo"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Miraflores"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Puertas del Sol"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "La Minga"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Chambú"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Altos de Chapalito"
+      }
+    ]
+  },
+  "E2_D2": {
+    "direction_key": "E2_D2",
+    "route_code": "E2",
+    "name": "Altos de Chapalito → Udenar - Facultad de Veterinaria",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Altos de Chapalito"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Chambú"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "La Minga"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Escuela 12 de Octubre"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Miraflores"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Laureano Gómez"
+      },
+      {
+        "order": 7,
+        "stop_external_id": "3315",
+        "stop_name": "Las Mercedes"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 9,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Amorel"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Clínica Palermo"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "1410",
+        "stop_name": "Villa del Parque"
+      },
+      {
+        "order": 18,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 19,
+        "stop_external_id": "1265",
+        "stop_name": "Udenar - Facultad de Veterinaria"
+      }
+    ]
+  },
+  "E3_D1": {
+    "direction_key": "E3_D1",
+    "route_code": "E3",
+    "name": "Altamira → San Ezequiel",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Altamira"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Altos de las Mercedes"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Tamasagra"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Calle 6 Sur"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Panamericana Éxito"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Capusigra"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Itsim"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "El Obrero"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "San Felipe"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Teatro Imperial"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Uniminuto Carrera 27"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 13,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 14,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 15,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "El Ejido"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "1420",
+        "stop_name": "Villa María"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Gualcalá"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "La Carolina"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Villa Recreo"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "Carlos Pizarro"
+      },
+      {
+        "order": 22,
+        "stop_external_id": null,
+        "stop_name": "San Ezequiel"
+      }
+    ]
+  },
+  "E3_D2": {
+    "direction_key": "E3_D2",
+    "route_code": "E3",
+    "name": "San Ezequiel → Altamira",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "San Ezequiel"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Balcones del Este"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Escuela Kennedy"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Alkosto"
+      },
+      {
+        "order": 5,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Galerías Carrera 27"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 14"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "San Felipe"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Normal"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Inem"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Sumatambo"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Tamasagra"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Altamira"
+      }
+    ]
+  },
+  "E4_D1": {
+    "direction_key": "E4_D1",
+    "route_code": "E4",
+    "name": "Jamondino → Genoy",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Jamondino"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "El Porvenir"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Miraflores"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Laureano Gómez"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Los Elíseos"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Avenida Idema"
+      },
+      {
+        "order": 7,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Galerías"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Calle 16"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Panamericana"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Santa Ana"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Club Colombia"
+      },
+      {
+        "order": 16,
+        "stop_external_id": "1495",
+        "stop_name": "El Dorado"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "1410",
+        "stop_name": "Villa del Parque"
+      },
+      {
+        "order": 18,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 19,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Villa Campestre"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      },
+      {
+        "order": 22,
+        "stop_external_id": null,
+        "stop_name": "Genoy"
+      }
+    ]
+  },
+  "E4_D2": {
+    "direction_key": "E4_D2",
+    "route_code": "E4",
+    "name": "Genoy → Jamondino",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Genoy"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "1420",
+        "stop_name": "Villa María"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "La Colina"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Hospital San Rafael"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "San Juan de Dios"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Torres de Pubenza"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Panamericana Calle 14"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Casa San Ignacio"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 15"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 13,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Las Violetas"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Santa Clara"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Colegio Ciudad de Pasto"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Puertas del Sol"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Miraflores"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Jamondino"
+      }
+    ]
+  },
+  "E5_D1": {
+    "direction_key": "E5_D1",
+    "route_code": "E5",
+    "name": "Catambuco → Briceño",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Catambuco"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Chapal"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Estadio Libertad"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "El Progreso"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Avenida Chile"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Avenida Idema"
+      },
+      {
+        "order": 7,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 9,
+        "stop_external_id": "2585",
+        "stop_name": "María Goretti Carrera 21A"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 16"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Calle 14"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Proinsalud"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Panamericana Calle 14"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Paraná"
+      },
+      {
+        "order": 16,
+        "stop_external_id": "1410",
+        "stop_name": "Villa del Parque"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 18,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Villa Campestre"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      }
+    ]
+  },
+  "E5_D2": {
+    "direction_key": "E5_D2",
+    "route_code": "E5",
+    "name": "Briceño → Catambuco",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "1495",
+        "stop_name": "El Dorado"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Capilla Visitandinas"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "San Ignacio"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "2035",
+        "stop_name": "Carmelitas"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 10,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Las Violetas"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Estadio Libertad"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Chapal"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Catambuco"
+      }
+    ]
+  },
+  "E6_D1": {
+    "direction_key": "E6_D1",
+    "route_code": "E6",
+    "name": "Sindagua → Mariluz II",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Sindagua"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Las Orquídeas"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Carlos Pizarro"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Villa Recreo II"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Balcones del Este"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Alkosto"
+      },
+      {
+        "order": 7,
+        "stop_external_id": "2990",
+        "stop_name": "Parque Bolívar"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Avenida Colombia"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Parque de los Periodistas"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Udenar Centro"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Calle 11 Carrera 24"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "La Aurora"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Unicentro"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "La Castellana"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Liceo Udenar"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Jorge Giraldo"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Sindamanoy"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Mariluz II"
+      }
+    ]
+  },
+  "E6_D2": {
+    "direction_key": "E6_D2",
+    "route_code": "E6",
+    "name": "Mariluz II → Sindagua",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Mariluz II"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "La Cuesta"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Las Margaritas IV"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Panamericana Calle 14"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 7,
+        "stop_external_id": "1855",
+        "stop_name": "Parque Infantil"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "2035",
+        "stop_name": "Carmelitas"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Coliseo"
+      },
+      {
+        "order": 11,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 12,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "El Ejido"
+      },
+      {
+        "order": 14,
+        "stop_external_id": "1420",
+        "stop_name": "Villa María"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Gualcalá"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Villa Recreo"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Las Orquídeas"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Sindagua"
+      }
+    ]
+  },
+  "E7_D1": {
+    "direction_key": "E7_D1",
+    "route_code": "E7",
+    "name": "Sol de Oriente → CAM Anganoy",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Sol de Oriente"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Quillotocto"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Nuevo Sol"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Nueva Aranda"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Terrazas del Norte"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Corazón de Jesús"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Hospital Civil"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Alcázares"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Aquine"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Udenar Centro"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Calle 14"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Calle 16"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Panamericana"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Unicentro"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "La Castellana"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Liceo Udenar"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "San Diego"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Rosales"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "CAM Anganoy"
+      }
+    ]
+  },
+  "E7_D2": {
+    "direction_key": "E7_D2",
+    "route_code": "E7",
+    "name": "CAM Anganoy → Sol de Oriente",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "CAM Anganoy"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Santa María"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Los Andes"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Las Acacias"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Panamericana Calle 14"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Casa San Ignacio"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Calle 15"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Centro Cultural Palatino"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 21"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "La Panadería"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Parque de los Periodistas"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Aquine"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Alcázares"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Hospital Civil"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Santa Matilde"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Nueva Aranda"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Quillotocto"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Sol de Oriente"
+      }
+    ]
+  },
+  "C1_D1": {
+    "direction_key": "C1_D1",
+    "route_code": "C1",
+    "name": "Chambú → Obonuco",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Chambú"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "San Martín"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Villa del Río"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Avenida Chile"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Avenida Idema"
+      },
+      {
+        "order": 6,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 7,
+        "stop_external_id": "2920",
+        "stop_name": "Alahambra"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Carrera 31B"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "San Ignacio"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "La Aurora"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Normal"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Inem"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "El Edén"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Tamasagra"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Altos de las Mercedes"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Empopasto"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Corpoica"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "Obonuco"
+      }
+    ]
+  },
+  "C1_D2": {
+    "direction_key": "C1_D2",
+    "route_code": "C1",
+    "name": "Obonuco → Chambú",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Obonuco"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Tamasagra"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Mijitayo"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Panamericana Carrera 26 y 33"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Las Acacias"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Carrera 27"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Javeriano"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Calle 21"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Plaza del Carnaval"
+      },
+      {
+        "order": 11,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Las Violetas"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Terminal de Transportes"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Madrigal"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Cantarana"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Colegio Ciudad de Pasto"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Chambú"
+      }
+    ]
+  },
+  "C2_D1": {
+    "direction_key": "C2_D1",
+    "route_code": "C2",
+    "name": "Altavista → La Paz",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Altavista"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Altos de la Colina"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Portal de la Colina"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Hospital San Rafael"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Panamericana Calle 14"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Calle 21"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Javeriano"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Parque de los Periodistas"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 11,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Terminal de Transportes"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Lorenzo"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Alto del Campo"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "La Paz"
+      }
+    ]
+  },
+  "C2_D2": {
+    "direction_key": "C2_D2",
+    "route_code": "C2",
+    "name": "La Paz → Altavista",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "La Paz"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Los Elíseos"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Avenida Idema"
+      },
+      {
+        "order": 4,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Calle 16"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Santa Ana"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Club Colombia"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Portal de la Colina"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Laureles"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Altavista"
+      }
+    ]
+  },
+  "C3_D1": {
+    "direction_key": "C3_D1",
+    "route_code": "C3",
+    "name": "Gilberto Pabón → Arnulfo Guerrero",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Gilberto Pabón"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Luis Carlos Galán"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Granada"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Jardines de las Mercedes"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Calle 1A Sur"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Avenida Mijitayo"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Capusigra"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Itsim"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "San Felipe"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Teatro Imperial"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 12,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 13,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 14,
+        "stop_external_id": "2990",
+        "stop_name": "Parque Bolívar"
+      },
+      {
+        "order": 15,
+        "stop_external_id": "3160",
+        "stop_name": "Santacruz"
+      },
+      {
+        "order": 16,
+        "stop_external_id": "3295",
+        "stop_name": "Bernal"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "3315",
+        "stop_name": "Las Mercedes"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Villa Flor II"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Arnulfo Guerrero"
+      }
+    ]
+  },
+  "C3_D2": {
+    "direction_key": "C3_D2",
+    "route_code": "C3",
+    "name": "Arnulfo Guerrero → Gilberto Pabón",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Arnulfo Guerrero"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Éxito Centro"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Calle 16 Carrera 27"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Cresemillas"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Inem"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "El Edén"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Sumatambo"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Agualongo"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Granada"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Gilberto Pabón"
+      }
+    ]
+  },
+  "C4_D1": {
+    "direction_key": "C4_D1",
+    "route_code": "C4",
+    "name": "Jongovito → CAI Miraflores",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Jongovito"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "San Sebastián"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Granada"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Estadio Libertad"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Molinos Nariño"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Atahualpa"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Panamericana Éxito"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Capusigra"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "San Felipe"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Teatro Imperial"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 12,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Las Violetas"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Santa Clara"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "La Minga"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Escuela 12 de Octubre"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "CAI Miraflores"
+      }
+    ]
+  },
+  "C4_D2": {
+    "direction_key": "C4_D2",
+    "route_code": "C4",
+    "name": "CAI Miraflores → Jongovito",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "CAI Miraflores"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Colegio Ciudad de Pasto"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "San Martín"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Villa del Río"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Avenida Chile"
+      },
+      {
+        "order": 6,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 7,
+        "stop_external_id": "2920",
+        "stop_name": "Alahambra"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Avenida Las Américas"
+      },
+      {
+        "order": 9,
+        "stop_external_id": "2585",
+        "stop_name": "María Goretti Carrera 21A"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 16"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Carrera 27"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Cresemillas"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Inem"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Sumatambo"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Jongovito"
+      }
+    ]
+  },
+  "C5_D1": {
+    "direction_key": "C5_D1",
+    "route_code": "C5",
+    "name": "Puente Tabla → Briceño",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Puente Tabla"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Buesaquillo"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "SENA"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Pucalpa 3"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Único"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Villa Adriana María"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Gualcalá"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Villa Recreo"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Balcones del Este"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Alkosto"
+      },
+      {
+        "order": 11,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 12,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 13,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 14,
+        "stop_external_id": "2585",
+        "stop_name": "María Goretti Carrera 21A"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Tamasagra"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Mijitayo"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Las Acacias"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Unicentro"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Paraná"
+      },
+      {
+        "order": 21,
+        "stop_external_id": "1410",
+        "stop_name": "Villa del Parque"
+      },
+      {
+        "order": 22,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 23,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 24,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      }
+    ]
+  },
+  "C5_D2": {
+    "direction_key": "C5_D2",
+    "route_code": "C5",
+    "name": "Briceño → Puente Tabla",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Los Nogales"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Los Hexágonos"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Unicentro"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "La Castellana"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Liceo Udenar"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Inem"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "El Edén"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Sumatambo"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Éxito"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Santiago"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 14,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 15,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "El Ejido"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "1420",
+        "stop_name": "Villa María"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Parque de Baviera"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "SENA"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Buesaquillo"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "Puente Tabla"
+      }
+    ]
+  },
+  "C6_D1": {
+    "direction_key": "C6_D1",
+    "route_code": "C6",
+    "name": "Coba Negra → Liceo Udenar",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Coba Negra"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Catambuco"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Chapal"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Estadio Libertad"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Julián Bucheli"
+      },
+      {
+        "order": 6,
+        "stop_external_id": "2585",
+        "stop_name": "María Goretti Carrera 21A"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Calle 14"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "San Felipe"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Cresemillas"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Inem"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "El Edén"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Mijitayo Alto"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Virgen de Anganoy"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "CAM Anganoy"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Panorámico"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Gualcaloma"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Mariluz III"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Liceo Udenar"
+      }
+    ]
+  },
+  "C6_D2": {
+    "direction_key": "C6_D2",
+    "route_code": "C6",
+    "name": "Liceo Udenar → Coba Negra",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Liceo Udenar"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Las Acacias"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "La Aurora"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Teatro Imperial"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Santiago"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Avenida Las Américas"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Coliseo"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Julián Bucheli"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Estadio Libertad"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Chapal"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Catambuco"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Coba Negra"
+      }
+    ]
+  },
+  "C7_D1": {
+    "direction_key": "C7_D1",
+    "route_code": "C7",
+    "name": "Anganoy → Altos de Chapalito",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Anganoy"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Santa María"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Los Andes"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Liceo Udenar"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Las Acacias"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "San Ignacio"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Calle 15"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 11,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Las Violetas"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Potrerillo"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Santa Clara"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "San Martín"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Chambú"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Altos de Chapalito"
+      }
+    ]
+  },
+  "C7_D2": {
+    "direction_key": "C7_D2",
+    "route_code": "C7",
+    "name": "Altos de Chapalito → Anganoy",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Altos de Chapalito"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "La Rosa"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Colegio Ciudad de Pasto"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "El Pilar"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Chapal"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Estadio Libertad"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Champagnat"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Galerías"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "San Ignacio"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Unicentro"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Liceo Udenar"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "San Diego"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Rosales"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "CAM Anganoy"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Anganoy"
+      }
+    ]
+  },
+  "C8_D1": {
+    "direction_key": "C8_D1",
+    "route_code": "C8",
+    "name": "Puente Tabla → Complejo Bancario",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Puente Tabla"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Cujacal"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Santa Matilde"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Prados del Norte"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Nuevo Horizonte"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Nueva Aranda III"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Terrazas del Norte"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Corazón de Jesús"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Hospital Civil"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "El Calvario"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Belalcázar"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Dos Puentes"
+      },
+      {
+        "order": 13,
+        "stop_external_id": "2390",
+        "stop_name": "San Agustín"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 15,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Potrerillo"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "San Martín"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Villa del Río"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Avenida Chile"
+      },
+      {
+        "order": 20,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 22,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      }
+    ]
+  },
+  "C8_D2": {
+    "direction_key": "C8_D2",
+    "route_code": "C8",
+    "name": "Complejo Bancario → Puente Tabla",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "La Panadería"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Parque de los Periodistas"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Carrera 19 Calle 22"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Corporación"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Villa Elena"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Alcázares"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Hospital Civil"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Santa Matilde"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Nueva Aranda"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Cujacal"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Puente Tabla"
+      }
+    ]
+  },
+  "C9_D1": {
+    "direction_key": "C9_D1",
+    "route_code": "C9",
+    "name": "Briceño → Villa Nueva",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 3,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Hospital Infantil"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Calle 21"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Javeriano"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Bomberos"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Belalcázar"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "El Calvario"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Hospital Civil"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Corazón de Jesús"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Terrazas del Norte"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Nueva Aranda"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Quillotocto"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Sol de Oriente"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Portal de Aranda"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Villa Nueva"
+      }
+    ]
+  },
+  "C9_D2": {
+    "direction_key": "C9_D2",
+    "route_code": "C9",
+    "name": "Villa Nueva → Briceño",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Villa Nueva"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Dos Puentes"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Cristo Rey"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Amorel"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Clínica Palermo"
+      },
+      {
+        "order": 9,
+        "stop_external_id": "1410",
+        "stop_name": "Villa del Parque"
+      },
+      {
+        "order": 10,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 11,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      }
+    ]
+  },
+  "C10_D1": {
+    "direction_key": "C10_D1",
+    "route_code": "C10",
+    "name": "Jamondino → Briceño",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Jamondino"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "El Porvenir"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Miraflores"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Colegio Ciudad de Pasto"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "San Martín"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Chapal"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Estadio Libertad"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Julián Bucheli"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Torre Andina"
+      },
+      {
+        "order": 10,
+        "stop_external_id": "2585",
+        "stop_name": "María Goretti Carrera 21A"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Calle 16"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Uniminuto Carrera 27"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Maridíaz"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 16,
+        "stop_external_id": "1410",
+        "stop_name": "Villa del Parque"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 18,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      }
+    ]
+  },
+  "C10_D2": {
+    "direction_key": "C10_D2",
+    "route_code": "C10",
+    "name": "Briceño → Jamondino",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Hospital Infantil"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Calle 21"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Javeriano"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Parque de los Periodistas"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Plaza del Carnaval"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Atahualpa"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Julián Bucheli"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Chapal"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Puertas del Sol"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Miraflores"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Jamondino"
+      }
+    ]
+  },
+  "C11_D1": {
+    "direction_key": "C11_D1",
+    "route_code": "C11",
+    "name": "Villa Nueva → Variante Daza",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Villa Nueva"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Portal de Aranda"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Quillotocto"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Nueva Aranda"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Bellavista"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "El Carmen"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Javeriano"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Udenar Centro"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 10,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Potrerillo"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Terminal de Transportes"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Lorenzo"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "San Juan de los Pastos"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Betania"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Canchala"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "4545",
+        "stop_name": "Mocondino"
+      },
+      {
+        "order": 18,
+        "stop_external_id": "4635",
+        "stop_name": "Variante Daza"
+      }
+    ]
+  },
+  "C11_D2": {
+    "direction_key": "C11_D2",
+    "route_code": "C11",
+    "name": "Variante Daza → Villa Nueva",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": "4635",
+        "stop_name": "Variante Daza"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Villa Flor II"
+      },
+      {
+        "order": 3,
+        "stop_external_id": "3315",
+        "stop_name": "Las Mercedes"
+      },
+      {
+        "order": 4,
+        "stop_external_id": "3295",
+        "stop_name": "Bernal"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Mercado El Tejar"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Lorenzo"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Los Elíseos"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Terminal de Transportes"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Avenida Chile"
+      },
+      {
+        "order": 10,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Bomberos"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "El Carmen"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Bellavista"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Marquetalia"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Cementerio"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "La Libertad"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Nuevo Sol"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "Portal de Aranda"
+      },
+      {
+        "order": 22,
+        "stop_external_id": null,
+        "stop_name": "Villa Nueva"
+      }
+    ]
+  },
+  "C12_D1": {
+    "direction_key": "C12_D1",
+    "route_code": "C12",
+    "name": "Briceño → Briceño (circular)",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 3,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 4,
+        "stop_external_id": "1495",
+        "stop_name": "El Dorado"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Los Nogales"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Unicentro"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Liceo Udenar"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "San Diego"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Rosales"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Virgen de Anganoy"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Tamasagra"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Sumatambo"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Granada"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Estadio Libertad"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Chapal"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Colegio Ciudad de Pasto"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Puertas del Sol"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "San Juan de los Pastos"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Betania"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Villa Flor II"
+      },
+      {
+        "order": 21,
+        "stop_external_id": "3095",
+        "stop_name": "Santa Mónica"
+      },
+      {
+        "order": 22,
+        "stop_external_id": "3000",
+        "stop_name": "Caicedonia"
+      },
+      {
+        "order": 23,
+        "stop_external_id": null,
+        "stop_name": "Pucalpa 3"
+      },
+      {
+        "order": 24,
+        "stop_external_id": null,
+        "stop_name": "Único"
+      },
+      {
+        "order": 25,
+        "stop_external_id": null,
+        "stop_name": "Gualcalá"
+      },
+      {
+        "order": 26,
+        "stop_external_id": null,
+        "stop_name": "Villa Recreo"
+      },
+      {
+        "order": 27,
+        "stop_external_id": null,
+        "stop_name": "Carlos Pizarro"
+      },
+      {
+        "order": 28,
+        "stop_external_id": null,
+        "stop_name": "Villa Colombia"
+      },
+      {
+        "order": 29,
+        "stop_external_id": null,
+        "stop_name": "Altavista"
+      },
+      {
+        "order": 30,
+        "stop_external_id": null,
+        "stop_name": "Alcázares"
+      },
+      {
+        "order": 31,
+        "stop_external_id": null,
+        "stop_name": "Parque de los Periodistas"
+      },
+      {
+        "order": 32,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 33,
+        "stop_external_id": null,
+        "stop_name": "Avenida Los Estudiantes"
+      },
+      {
+        "order": 34,
+        "stop_external_id": "1240",
+        "stop_name": "Morasurco"
+      },
+      {
+        "order": 35,
+        "stop_external_id": "1345",
+        "stop_name": "Clínica Bellatriz"
+      },
+      {
+        "order": 36,
+        "stop_external_id": "1515",
+        "stop_name": "Valle de Atríz"
+      },
+      {
+        "order": 37,
+        "stop_external_id": "1410",
+        "stop_name": "Villa del Parque"
+      },
+      {
+        "order": 38,
+        "stop_external_id": null,
+        "stop_name": "Briceño"
+      }
+    ]
+  },
+  "C13_D1": {
+    "direction_key": "C13_D1",
+    "route_code": "C13",
+    "name": "Santa Mónica → Santa Rita",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": "3095",
+        "stop_name": "Santa Mónica"
+      },
+      {
+        "order": 2,
+        "stop_external_id": "3000",
+        "stop_name": "Caicedonia"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Villa Flor II"
+      },
+      {
+        "order": 4,
+        "stop_external_id": "3315",
+        "stop_name": "Las Mercedes"
+      },
+      {
+        "order": 5,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 6,
+        "stop_external_id": "2990",
+        "stop_name": "Parque Bolívar"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Avenida Colombia"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Parque de los Periodistas"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Galerías"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 12,
+        "stop_external_id": "1855",
+        "stop_name": "Parque Infantil"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Calle 16"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Panamericana"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Santa Ana"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Club Colombia"
+      },
+      {
+        "order": 17,
+        "stop_external_id": "1495",
+        "stop_name": "El Dorado"
+      },
+      {
+        "order": 18,
+        "stop_external_id": "1420",
+        "stop_name": "Villa María"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Pandiaco"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Santa Rita"
+      }
+    ]
+  },
+  "C13_D2": {
+    "direction_key": "C13_D2",
+    "route_code": "C13",
+    "name": "Santa Rita → Santa Mónica",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Santa Rita"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Chapultepec"
+      },
+      {
+        "order": 3,
+        "stop_external_id": "1345",
+        "stop_name": "Clínica Bellatriz"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Capilla Visitandinas"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "San Ignacio"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Bomboná"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Calle 21"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Javeriano"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "La Panadería"
+      },
+      {
+        "order": 12,
+        "stop_external_id": "2990",
+        "stop_name": "Parque Bolívar"
+      },
+      {
+        "order": 13,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 14,
+        "stop_external_id": "3160",
+        "stop_name": "Santacruz"
+      },
+      {
+        "order": 15,
+        "stop_external_id": "3295",
+        "stop_name": "Bernal"
+      },
+      {
+        "order": 16,
+        "stop_external_id": "3315",
+        "stop_name": "Las Mercedes"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Betania"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Villa Flor II"
+      },
+      {
+        "order": 19,
+        "stop_external_id": "3095",
+        "stop_name": "Santa Mónica"
+      }
+    ]
+  },
+  "C14_D1": {
+    "direction_key": "C14_D1",
+    "route_code": "C14",
+    "name": "Alto de Daza → Parroquia Fátima",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Alto de Daza"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Chimayoy"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Pinasaco"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Santa Rita"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Chapultepec"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Los Sauces"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Pandiaco"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "1360",
+        "stop_name": "Universidad Cooperativa"
+      },
+      {
+        "order": 9,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 10,
+        "stop_external_id": "1420",
+        "stop_name": "Villa María"
+      },
+      {
+        "order": 11,
+        "stop_external_id": "1495",
+        "stop_name": "El Dorado"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Federación de Cafeteros"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Caracol"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Javeriano"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Calle 21"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Parque de los Periodistas"
+      },
+      {
+        "order": 19,
+        "stop_external_id": "2990",
+        "stop_name": "Parque Bolívar"
+      },
+      {
+        "order": 20,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 21,
+        "stop_external_id": "3295",
+        "stop_name": "Bernal"
+      },
+      {
+        "order": 22,
+        "stop_external_id": null,
+        "stop_name": "El Tejar"
+      },
+      {
+        "order": 23,
+        "stop_external_id": null,
+        "stop_name": "Lorenzo"
+      },
+      {
+        "order": 24,
+        "stop_external_id": null,
+        "stop_name": "Los Elíseos"
+      },
+      {
+        "order": 25,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      }
+    ]
+  },
+  "C14_D2": {
+    "direction_key": "C14_D2",
+    "route_code": "C14",
+    "name": "Parroquia Fátima → Alto de Daza",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Champagnat"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Coliseo"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Torre Andina"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "San Francisco de Asís"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Calle 16"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Uniminuto Carrera 27"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Calle 18"
+      },
+      {
+        "order": 9,
+        "stop_external_id": "1855",
+        "stop_name": "Parque Infantil"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Universidad Mariana"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Clínica Palermo"
+      },
+      {
+        "order": 12,
+        "stop_external_id": "1410",
+        "stop_name": "Villa del Parque"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Pandiaco"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Los Sauces"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Chimayoy"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Alto de Daza"
+      }
+    ]
+  },
+  "C15_D1": {
+    "direction_key": "C15_D1",
+    "route_code": "C15",
+    "name": "Villa Nueva → Obonuco",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Villa Nueva"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Portal de Aranda"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Quillotocto"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Nueva Aranda"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Terrazas del Norte"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Hospital Civil"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "El Calvario"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Belalcázar"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Dos Puentes"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Cristo Rey"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Cresemillas"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Inem"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "El Edén"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Tamasagra"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "La Palma"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Patinódromo"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Obonuco"
+      }
+    ]
+  },
+  "C15_D2": {
+    "direction_key": "C15_D2",
+    "route_code": "C15",
+    "name": "Obonuco → Villa Nueva",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Obonuco"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Patinódromo"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Tamasagra II"
+      },
+      {
+        "order": 4,
+        "stop_external_id": null,
+        "stop_name": "Sumatambo"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Panamericana Éxito"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "Capusigra"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "El Obrero"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "San Felipe"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "Teatro Imperial"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Santiago"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 14,
+        "stop_external_id": null,
+        "stop_name": "Bomberos"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Belalcázar"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Hospital Civil"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Nueva Aranda"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Portal de Aranda"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Villa Nueva"
+      }
+    ]
+  },
+  "C16_D1": {
+    "direction_key": "C16_D1",
+    "route_code": "C16",
+    "name": "Cabrera → Anganoy",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Cabrera"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Colegio Británico"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "San Fernando"
+      },
+      {
+        "order": 4,
+        "stop_external_id": "3590",
+        "stop_name": "CAI Popular"
+      },
+      {
+        "order": 5,
+        "stop_external_id": "3055",
+        "stop_name": "Pinal del Río"
+      },
+      {
+        "order": 6,
+        "stop_external_id": "2875",
+        "stop_name": "Las Brisas"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Nuevo Santa Mónica"
+      },
+      {
+        "order": 8,
+        "stop_external_id": "3195",
+        "stop_name": "Mercedario"
+      },
+      {
+        "order": 9,
+        "stop_external_id": "3110",
+        "stop_name": "Hospital Departamental"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Salomón"
+      },
+      {
+        "order": 11,
+        "stop_external_id": null,
+        "stop_name": "Terminal Mixto"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Potrerillo"
+      },
+      {
+        "order": 13,
+        "stop_external_id": null,
+        "stop_name": "Avenida Chile"
+      },
+      {
+        "order": 14,
+        "stop_external_id": "3040",
+        "stop_name": "Parroquia Fátima"
+      },
+      {
+        "order": 15,
+        "stop_external_id": null,
+        "stop_name": "Alcaldía"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Complejo Bancario"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Calle 20"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Carrera 27"
+      },
+      {
+        "order": 19,
+        "stop_external_id": null,
+        "stop_name": "Cresemillas"
+      },
+      {
+        "order": 20,
+        "stop_external_id": null,
+        "stop_name": "Panamericana"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "Liceo Udenar"
+      },
+      {
+        "order": 22,
+        "stop_external_id": null,
+        "stop_name": "Jorge Giraldo"
+      },
+      {
+        "order": 23,
+        "stop_external_id": null,
+        "stop_name": "Sindamanoy"
+      },
+      {
+        "order": 24,
+        "stop_external_id": null,
+        "stop_name": "Gualcaloma"
+      },
+      {
+        "order": 25,
+        "stop_external_id": null,
+        "stop_name": "Anganoy"
+      }
+    ]
+  },
+  "C16_D2": {
+    "direction_key": "C16_D2",
+    "route_code": "C16",
+    "name": "Anganoy → Cabrera",
+    "stops": [
+      {
+        "order": 1,
+        "stop_external_id": null,
+        "stop_name": "Anganoy"
+      },
+      {
+        "order": 2,
+        "stop_external_id": null,
+        "stop_name": "Panorámico"
+      },
+      {
+        "order": 3,
+        "stop_external_id": null,
+        "stop_name": "Mariluz III"
+      },
+      {
+        "order": 4,
+        "stop_external_id": "1275",
+        "stop_name": "Udenar Torobajo"
+      },
+      {
+        "order": 5,
+        "stop_external_id": null,
+        "stop_name": "Capusigra"
+      },
+      {
+        "order": 6,
+        "stop_external_id": null,
+        "stop_name": "San Felipe"
+      },
+      {
+        "order": 7,
+        "stop_external_id": null,
+        "stop_name": "Teatro Imperial"
+      },
+      {
+        "order": 8,
+        "stop_external_id": null,
+        "stop_name": "Santiago"
+      },
+      {
+        "order": 9,
+        "stop_external_id": null,
+        "stop_name": "San Andresito"
+      },
+      {
+        "order": 10,
+        "stop_external_id": null,
+        "stop_name": "Calle 17"
+      },
+      {
+        "order": 11,
+        "stop_external_id": "2740",
+        "stop_name": "San Juan Bosco"
+      },
+      {
+        "order": 12,
+        "stop_external_id": null,
+        "stop_name": "Avenida Chile"
+      },
+      {
+        "order": 13,
+        "stop_external_id": "3160",
+        "stop_name": "Santacruz"
+      },
+      {
+        "order": 14,
+        "stop_external_id": "3295",
+        "stop_name": "Bernal"
+      },
+      {
+        "order": 15,
+        "stop_external_id": "3315",
+        "stop_name": "Las Mercedes"
+      },
+      {
+        "order": 16,
+        "stop_external_id": null,
+        "stop_name": "Villa Flor I"
+      },
+      {
+        "order": 17,
+        "stop_external_id": null,
+        "stop_name": "Santa Catalina"
+      },
+      {
+        "order": 18,
+        "stop_external_id": null,
+        "stop_name": "Nuevo Santa Mónica"
+      },
+      {
+        "order": 19,
+        "stop_external_id": "2875",
+        "stop_name": "Las Brisas"
+      },
+      {
+        "order": 20,
+        "stop_external_id": "3590",
+        "stop_name": "CAI Popular"
+      },
+      {
+        "order": 21,
+        "stop_external_id": null,
+        "stop_name": "San Fernando"
+      },
+      {
+        "order": 22,
+        "stop_external_id": null,
+        "stop_name": "Cabrera"
+      }
     ]
   }
 }
