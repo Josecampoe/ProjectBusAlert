@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Español (idioma por defecto). Toda cadena visible o leída por TalkBack está aquí. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="es">
+    <string name="app_name">BusAlert</string>
+    <string name="home_city">Pasto</string>
+
+    <!-- Inicio -->
+    <string name="home_hint">Toca para consultar</string>
+    <string name="home_start_query">Iniciar consulta</string>
+    <string name="action_settings">Ajustes</string>
+
+    <!-- Ajustes -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_language_value">Español</string>
+    <string name="settings_dark_theme">Tema oscuro</string>
+    <string name="settings_speak_results">Leer respuestas en voz alta</string>
+    <string name="settings_clear_history">Borrar historial</string>
+    <string name="action_back">Volver</string>
+
+    <!-- Preguntas del flujo -->
+    <string name="prompt_location">¿Dónde estás?</string>
+    <string name="prompt_destination">¿A dónde vas?</string>
+    <string name="prompt_destination_from">Desde %1$s, ¿a dónde vas?</string>
+    <string name="prompt_location_no_nearby_stops">No hay paradas ubicadas cerca. ¿Dónde estás?</string>
+
+    <!-- Escucha -->
+    <string name="listening_speak_now">Habla ahora…</string>
+    <string name="listening_partial">“%1$s”</string>
+    <string name="listening_in_progress">Escuchando</string>
+    <string name="action_use_keyboard">Escribir</string>
+    <string name="action_retry_voice">Repetir</string>
+    <string name="action_cancel">Cancelar</string>
+
+    <!-- Escritura -->
+    <string name="typing_hint">Escribe un lugar o una parada</string>
+    <string name="typing_input_label">Lugar</string>
+    <string name="action_type">Escribir</string>
+    <string name="action_edit">Cambiar texto</string>
+    <string name="action_use_voice">Usar voz</string>
+    <string name="action_send">Buscar</string>
+    <string name="recent_title">Recientes</string>
+
+    <!-- Voz: errores del reconocedor -->
+    <string name="voice_error_no_match">No entendí. Intenta de nuevo.</string>
+    <string name="voice_error_timeout">No escuché nada.</string>
+    <string name="voice_error_audio">El micrófono tuvo un problema.</string>
+    <string name="voice_error_permission">Sin permiso de micrófono. Puedes escribir.</string>
+    <string name="voice_error_network">Sin conexión para reconocer la voz.</string>
+    <string name="voice_error_busy">El micrófono está ocupado.</string>
+    <string name="voice_error_unavailable">El reconocimiento de voz no está disponible. Puedes escribir.</string>
+    <string name="voice_error_generic">No pude reconocer la voz.</string>
+
+    <!-- Procesando / ubicación -->
+    <string name="processing_title">Consultando ruta…</string>
+    <string name="processing_subtitle">Buscando la mejor opción</string>
+    <string name="locating_title">Buscando tu ubicación…</string>
+    <string name="action_say_location">Decir dónde estoy</string>
+    <string name="location_rationale_title">Tu ubicación</string>
+    <string name="location_rationale_body">BusAlert usa tu ubicación para encontrar la parada más cercana. Si prefieres, puedes decir dónde estás.</string>
+    <string name="action_continue">Continuar</string>
+    <string name="action_not_now">Ahora no</string>
+
+    <!-- Resultado (cuando el backend no trae texto redactado por la IA) -->
+    <string name="result_route_title">Ruta %1$s</string>
+    <string name="result_board_at">Sube en %1$s</string>
+    <string name="result_alight_with_stops">Baja en %1$s · %2$s</string>
+    <plurals name="result_stops_count">
+        <item quantity="one">%1$d parada</item>
+        <item quantity="many">%1$d paradas</item>
+        <item quantity="other">%1$d paradas</item>
+    </plurals>
+    <string name="result_spoken_template">Toma la ruta %1$s. Súbete en %2$s y bájate en %3$s.</string>
+    <string name="result_spoken_transfer_template">Toma la ruta %1$s en %2$s y bájate en %3$s. Luego toma la ruta %4$s hasta %5$s.</string>
+    <string name="result_estimate">≈ %1$d min (estimado)</string>
+    <string name="result_transfer_at">Transbordo en %1$s</string>
+    <string name="result_walk_transfer">Camina %1$d m hasta %2$s</string>
+    <string name="result_nearest_stop">Parada a %1$d m</string>
+    <string name="result_out_of_service">Fuera del horario de servicio</string>
+    <string name="result_demo_badge">Datos de demostración</string>
+    <string name="action_stop_voice">Detener voz</string>
+    <string name="action_repeat_voice">Repetir</string>
+
+    <!-- Sin resultados -->
+    <string name="no_result_title">Sin resultados</string>
+    <string name="no_result_no_route">No encontré una ruta entre esos lugares.</string>
+    <string name="no_result_same_place">El origen y el destino son el mismo lugar.</string>
+    <string name="no_result_origin_not_found">No reconozco ese lugar de origen. Prueba con el nombre de una parada.</string>
+    <string name="no_result_destination_not_found">No reconozco ese destino. Prueba con el nombre de una parada.</string>
+    <string name="no_result_no_nearby_stops">No hay paradas registradas cerca de ti. Di o escribe dónde estás.</string>
+    <string name="action_new_query">Nueva consulta</string>
+
+    <!-- Errores (por código estable del backend o del cliente) -->
+    <string name="error_title">Algo salió mal</string>
+    <string name="error_network">Sin conexión. Revisa el internet del reloj.</string>
+    <string name="error_timeout">El servidor tardó demasiado. Intenta de nuevo.</string>
+    <string name="error_unauthorized">La app no está autorizada en el servidor.</string>
+    <string name="error_rate_limited">Demasiadas consultas. Espera un momento.</string>
+    <string name="error_invalid_request">No pude procesar la consulta. Intenta decirlo de otra forma.</string>
+    <string name="error_not_found">No encontré esa información.</string>
+    <string name="error_ai_unavailable">El asistente no está disponible ahora.</string>
+    <string name="error_server">El servidor tuvo un problema. Intenta más tarde.</string>
+    <string name="error_configuration">La app no tiene configurado el servidor.</string>
+    <string name="error_unknown">Ocurrió un error inesperado.</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="action_home">Inicio</string>
+
+    <!-- Descripciones para TalkBack -->
+    <string name="cd_route_badge">Ruta %1$s</string>
+    <string name="cd_warning">Aviso</string>
+    <string name="cd_location">Ubicación</string>
+</resources>

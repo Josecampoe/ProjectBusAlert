@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BusAlert</string>
+    <string name="home_city">Pasto</string>
+
+    <string name="home_hint">Tap to ask</string>
+    <string name="home_start_query">Start a query</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_value">English</string>
+    <string name="settings_dark_theme">Dark theme</string>
+    <string name="settings_speak_results">Read answers aloud</string>
+    <string name="settings_clear_history">Clear history</string>
+    <string name="action_back">Back</string>
+
+    <string name="prompt_location">Where are you?</string>
+    <string name="prompt_destination">Where to?</string>
+    <string name="prompt_destination_from">From %1$s, where to?</string>
+    <string name="prompt_location_no_nearby_stops">No mapped stops nearby. Where are you?</string>
+
+    <string name="listening_speak_now">Speak now…</string>
+    <string name="listening_partial">“%1$s”</string>
+    <string name="listening_in_progress">Listening</string>
+    <string name="action_use_keyboard">Type</string>
+    <string name="action_retry_voice">Retry</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="typing_hint">Type a place or a stop</string>
+    <string name="typing_input_label">Place</string>
+    <string name="action_type">Type</string>
+    <string name="action_edit">Edit text</string>
+    <string name="action_use_voice">Use voice</string>
+    <string name="action_send">Search</string>
+    <string name="recent_title">Recent</string>
+
+    <string name="voice_error_no_match">I didn\'t catch that. Try again.</string>
+    <string name="voice_error_timeout">I didn\'t hear anything.</string>
+    <string name="voice_error_audio">The microphone had a problem.</string>
+    <string name="voice_error_permission">No microphone permission. You can type instead.</string>
+    <string name="voice_error_network">No connection for speech recognition.</string>
+    <string name="voice_error_busy">The microphone is busy.</string>
+    <string name="voice_error_unavailable">Speech recognition is not available. You can type instead.</string>
+    <string name="voice_error_generic">I couldn\'t recognize your voice.</string>
+
+    <string name="processing_title">Finding your route…</string>
+    <string name="processing_subtitle">Looking for the best option</string>
+    <string name="locating_title">Finding your location…</string>
+    <string name="action_say_location">Say where I am</string>
+    <string name="location_rationale_title">Your location</string>
+    <string name="location_rationale_body">BusAlert uses your location to find the nearest stop. If you prefer, you can say where you are.</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_not_now">Not now</string>
+
+    <string name="result_route_title">Route %1$s</string>
+    <string name="result_board_at">Board at %1$s</string>
+    <string name="result_alight_with_stops">Get off at %1$s · %2$s</string>
+    <plurals name="result_stops_count">
+        <item quantity="one">%1$d stop</item>
+        <item quantity="other">%1$d stops</item>
+    </plurals>
+    <string name="result_spoken_template">Take route %1$s. Board at %2$s and get off at %3$s.</string>
+    <string name="result_spoken_transfer_template">Take route %1$s at %2$s and get off at %3$s. Then take route %4$s to %5$s.</string>
+    <string name="result_estimate">≈ %1$d min (estimate)</string>
+    <string name="result_transfer_at">Transfer at %1$s</string>
+    <string name="result_walk_transfer">Walk %1$d m to %2$s</string>
+    <string name="result_nearest_stop">Stop %1$d m away</string>
+    <string name="result_out_of_service">Outside service hours</string>
+    <string name="result_demo_badge">Demo data</string>
+    <string name="action_stop_voice">Stop voice</string>
+    <string name="action_repeat_voice">Repeat</string>
+
+    <string name="no_result_title">No results</string>
+    <string name="no_result_no_route">I couldn\'t find a route between those places.</string>
+    <string name="no_result_same_place">Origin and destination are the same place.</string>
+    <string name="no_result_origin_not_found">I don\'t recognize that origin. Try a stop name.</string>
+    <string name="no_result_destination_not_found">I don\'t recognize that destination. Try a stop name.</string>
+    <string name="no_result_no_nearby_stops">There are no registered stops near you. Say or type where you are.</string>
+    <string name="action_new_query">New query</string>
+
+    <string name="error_title">Something went wrong</string>
+    <string name="error_network">No connection. Check the watch\'s internet.</string>
+    <string name="error_timeout">The server took too long. Try again.</string>
+    <string name="error_unauthorized">The app is not authorized on the server.</string>
+    <string name="error_rate_limited">Too many requests. Please wait a moment.</string>
+    <string name="error_invalid_request">I couldn\'t process that. Try saying it differently.</string>
+    <string name="error_not_found">I couldn\'t find that information.</string>
+    <string name="error_ai_unavailable">The assistant is not available right now.</string>
+    <string name="error_server">The server had a problem. Try again later.</string>
+    <string name="error_configuration">The app has no server configured.</string>
+    <string name="error_unknown">An unexpected error occurred.</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_home">Home</string>
+
+    <string name="cd_route_badge">Route %1$s</string>
+    <string name="cd_warning">Warning</string>
+    <string name="cd_location">Location</string>
+</resources>

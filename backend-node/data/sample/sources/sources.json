@@ -1,0 +1,11 @@
+[
+  {
+    "id": "demo_sample",
+    "name": "Datos de demostración BusAlert (NO reales)",
+    "url": null,
+    "source_type": "demo_sample",
+    "last_checked": null,
+    "reliability": "unknown",
+    "notes": "Rutas y paradas ficticias para probar la app. Coordenadas aproximadas."
+  }
+]

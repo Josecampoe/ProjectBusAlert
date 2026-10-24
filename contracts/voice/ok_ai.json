@@ -1,0 +1,71 @@
+{
+  "source": "ai",
+  "message": {
+    "spokenText": "Toma la FX1 en Udenar Torobajo y bájate en Parque Bolívar.",
+    "displayTitle": "FX1",
+    "displaySubtitle": "Udenar Torobajo"
+  },
+  "recommended": {
+    "legs": [
+      {
+        "routeCode": "FX1",
+        "routeName": "FX1 — Udenar / Centro",
+        "routeColor": "#1565C0",
+        "directionKey": "FX1_D1",
+        "directionName": "Udenar → Centro",
+        "board": {
+          "id": 1,
+          "externalId": "T01",
+          "name": "Udenar Torobajo",
+          "latitude": 1.2335,
+          "longitude": -77.2925
+        },
+        "alight": {
+          "id": 3,
+          "externalId": "T03",
+          "name": "Parque Bolívar",
+          "latitude": 1.22,
+          "longitude": -77.283
+        },
+        "stopsCount": 2,
+        "estimate": {
+          "rideMinutes": 7,
+          "waitMinutes": 5,
+          "totalMinutes": 12,
+          "basis": "distance",
+          "headwaySource": "schedule",
+          "withinServiceHours": true,
+          "isEstimate": true
+        }
+      }
+    ],
+    "transfers": 0,
+    "transferSteps": [],
+    "totalStops": 2,
+    "estimatedMinutes": 12,
+    "isEstimate": true,
+    "isDemo": true
+  },
+  "alternatives": [],
+  "originCandidates": [
+    {
+      "id": 1,
+      "externalId": "T01",
+      "name": "Udenar Torobajo",
+      "latitude": 1.2335,
+      "longitude": -77.2925,
+      "distanceMeters": null
+    }
+  ],
+  "destinationCandidates": [
+    {
+      "id": 3,
+      "externalId": "T03",
+      "name": "Parque Bolívar",
+      "latitude": 1.22,
+      "longitude": -77.283
+    }
+  ],
+  "isDemoData": true,
+  "status": "ok"
+}

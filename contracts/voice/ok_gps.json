@@ -1,0 +1,75 @@
+{
+  "source": "planner",
+  "message": null,
+  "recommended": {
+    "legs": [
+      {
+        "routeCode": "FX1",
+        "routeName": "FX1 — Udenar / Centro",
+        "routeColor": "#1565C0",
+        "directionKey": "FX1_D2",
+        "directionName": "Centro → Udenar",
+        "board": {
+          "id": 4,
+          "externalId": "T04",
+          "name": "Parque Nariño",
+          "latitude": 1.214,
+          "longitude": -77.2785
+        },
+        "alight": {
+          "id": 1,
+          "externalId": "T01",
+          "name": "Udenar Torobajo",
+          "latitude": 1.2335,
+          "longitude": -77.2925
+        },
+        "stopsCount": 3,
+        "estimate": {
+          "rideMinutes": 10,
+          "waitMinutes": 5,
+          "totalMinutes": 15,
+          "basis": "distance",
+          "headwaySource": "schedule",
+          "withinServiceHours": true,
+          "isEstimate": true
+        }
+      }
+    ],
+    "transfers": 0,
+    "transferSteps": [],
+    "totalStops": 3,
+    "estimatedMinutes": 15,
+    "isEstimate": true,
+    "isDemo": true
+  },
+  "alternatives": [],
+  "originCandidates": [
+    {
+      "id": 4,
+      "externalId": "T04",
+      "name": "Parque Nariño",
+      "latitude": 1.214,
+      "longitude": -77.2785,
+      "distanceMeters": 40
+    },
+    {
+      "id": 8,
+      "externalId": "T08",
+      "name": "Plazuela San Andrés",
+      "latitude": 1.2147,
+      "longitude": -77.2791,
+      "distanceMeters": 63
+    }
+  ],
+  "destinationCandidates": [
+    {
+      "id": 1,
+      "externalId": "T01",
+      "name": "Udenar Torobajo",
+      "latitude": 1.2335,
+      "longitude": -77.2925
+    }
+  ],
+  "isDemoData": true,
+  "status": "ok"
+}

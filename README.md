@@ -1,94 +1,99 @@
-# BusAlert - Smart Transit Alert & Navigation System
+# BusAlert
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.0-blue.svg)](https://kotlinlang.org)
-[![Wear OS](https://img.shields.io/badge/Wear%20OS-Compose-brightgreen.svg)](https://developer.android.com/wear)
-[![Node.js](https://img.shields.io/badge/Node.js-Express%20%7C%20TypeScript-green.svg)](https://nodejs.org)
-[![SQLite](https://img.shields.io/badge/SQLite-Spatial-lightgrey.svg)](https://sqlite.org)
-[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-Direct%20API-orange.svg)](https://ai.google.dev)
+Asistente de transporte público para **San Juan de Pasto (Colombia)**, pensado para relojes **Wear OS**. El usuario dice o escribe a dónde va (el origen sale del GPS o de lo que diga), y el reloj responde qué bus del SETP tomar, dónde subir y dónde bajar, en pantalla y en voz alta. Una app de teléfono permite consultar rutas y paradas y se sincroniza con el reloj.
+
+[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue.svg)](.github/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-BusAlert es una solución integral de asistencia al viajero y alertas inteligentes de transporte público diseñada especialmente para relojes inteligentes con **Wear OS** y dispositivos móviles Android, sincronizada con un backend de alto rendimiento en **Node.js/TypeScript** y potenciada por **Google Gemini AI**.
+## Componentes
 
----
+| Carpeta | Qué es |
+|---|---|
+| [`backend-node/`](backend-node/README.md) | API en Node.js + TypeScript + SQLite. Fuente única de rutas y paradas, planificador, estimación de tiempos e integración con Gemini. |
+| [`BusAlertFrontend/`](BusAlertFrontend/README.md) | Proyecto Android: app del reloj (`wear`), app del teléfono (`mobile`) y módulo compartido (`shared`). |
+| `contracts/` | Respuestas JSON reales del backend, usadas por las pruebas de los dos lados. |
+| `docs/` | Estado (`ESTADO.md`), decisiones (`DECISIONES.md`), pendientes del dueño (`PENDIENTES.md`), auditoría (`AUDITORIA.md`) y verificación (`VERIFICACION.md`). |
 
-## 🌟 Características Principales
+## Arquitectura
 
-### ⌚ Wear OS App (`BusAlertfrotend/wear`)
-- **Diseño Ergonómico Circular**: Interfaz Jetpack Compose Wear OS adaptada con curvaturas y ergonomía táctil para pantallas redondas de 390px, 450px y 454px.
-- **Asistente por Voz In-App**: Reconocimiento de voz continuo con `SpeechRecognizer`, transcripción en vivo en tiempo real, ondas de audio animadas y botones circulares de cancelación rápida (`✕`) y reintento (`🔄`).
-- **Teclado Táctil Integrado**: Teclado numérico/alfanumérico circular con soporte adaptativo para **Modo Claro** y **Modo Oscuro**, garantizando contraste óptimo y alternancia instantánea entre voz y teclado.
-- **Sintetizador de Voz (TTS)**: Respuestas leídas en voz alta para accesibilidad mientras el usuario camina o viaja en autobús.
-- **Tarjetas de Tránsito Inteligentes**: Indicación de ruta recomendada, parada de transbordo, tiempo estimado y alerta visual de llegada.
+```mermaid
+flowchart LR
+    subgraph Android["BusAlertFrontend"]
+        W["wear<br/>app del reloj"]
+        M["mobile<br/>app del teléfono"]
+        S["shared<br/>Retrofit · DTOs · DataStore · sync"]
+        W --> S
+        M --> S
+        W <-. "Data Layer API<br/>/busalert/sync" .-> M
+    end
 
-### 🌐 Backend Node.js / TypeScript (`backend-node`)
-- **API REST de Transporte**: Endpoints de consulta de rutas, paradas, direcciones y frecuencias calculadas.
-- **Búsqueda Geoespacial**: Algoritmo Haversine para identificación de paradas cercanas por radio en metros.
-- **Integración con Google Gemini**: Asistente conversacional con inyección de contexto geográfico y de transporte en tiempo real.
-- **Base de Datos SQLite**: Modelado relacional optimizado con índices compuestos en latitud/longitud y secuencias de parada.
+    subgraph Backend["backend-node"]
+        API["Express<br/>helmet · CORS · rate limit · X-API-Key · zod"]
+        AS["assistantService"]
+        PR["placeResolver"]
+        PL["planner<br/>directas + 1 transbordo"]
+        ETA["ArrivalTimeProvider<br/>estimación determinista"]
+        REPO["TransitRepository<br/>+ caché TTL"]
+        DB[("SQLite<br/>migraciones versionadas")]
+        AI["GeminiClient<br/>principal + respaldo"]
+        API --> AS
+        API --> REPO
+        AS --> PR --> REPO
+        AS --> PL --> ETA
+        AS -. "solo elige y redacta<br/>(salida validada)" .-> AI
+        REPO --> DB
+    end
 
-### 🔄 Módulo Compartido (`BusAlertfrotend/shared`)
-- Arquitectura limpia con separación de capas (`domain`, `data`, `di`).
-- Conexión directa con Google Gemini REST API o mediante backend Node.js.
-- Conmutador dinámico entre modo de producción y modo simulado (`MockTransitRepositoryImpl`, `MockAIAssistantRepositoryImpl`).
-
----
-
-## 📂 Estructura del Monorepo
-
-```
-c:/ProyectoBusAlert/
-├── README.md                      # Documentación global del sistema
-├── LICENSE                        # Licencia de código abierto MIT
-├── .gitignore                     # Reglas de exclusión de compilación y secretos
-├── backend-node/                  # Backend Node.js / TypeScript
-│   ├── package.json               # Dependencias y scripts
-│   ├── tsconfig.json              # Configuración del compilador TypeScript
-│   ├── .env.example               # Plantilla de variables de entorno
-│   ├── data/                      # Datasets JSON de rutas, paradas y horarios
-│   └── src/
-│       ├── index.ts               # Servidor Express y middleware
-│       ├── controllers/           # Controladores de rutas, paradas y voz
-│       ├── db/                    # Conexión, esquemas y migración seed.ts
-│       ├── services/              # Servicio de Google Gemini AI y caché
-│       └── utils/                 # Cálculo haversine y geofencing
-└── BusAlertfrotend/               # Proyecto Android multi-módulo
-    ├── settings.gradle.kts        # Definición de módulos compartidos
-    ├── build.gradle.kts           # Configuración raíz de Gradle
-    ├── setup.ps1                  # Automatización de emuladores Wear OS
-    ├── shared/                    # Módulo Kotlin multi-plataforma
-    │   └── src/main/java/...      # Modelos de dominio y clientes Gemini
-    ├── wear/                      # Aplicación Wear OS Jetpack Compose
-    │   └── src/main/java/...      # Pantallas circulares, voz y tema visual
-    └── mobile/                    # Aplicación Android Mobile complementaria
+    DATA["data/*.json<br/>npm run seed"] --> DB
+    S -- "HTTPS + X-API-Key" --> API
+    AI -- "@google/genai" --> G[("Gemini API")]
 ```
 
----
+- La **base de datos es la única fuente de verdad**. Los datos se cargan desde `backend-node/data/` con `npm run seed` (idempotente y validado).
+- La **IA es opcional**: si no hay `GEMINI_API_KEY` o la IA falla, responde el planificador. La IA solo elige una de las alternativas calculadas y redacta el texto; no puede inventar rutas.
+- El **reloj nunca habla con Gemini**: solo con el backend.
 
-## 🚀 Puesta en Marcha
+## Puesta en marcha desde cero
 
-### 1. Requisitos Previos
-- **Node.js**: v18.0.0 o superior y npm.
-- **Android Studio**: Ladybug / Meerkat o superior con SDK Android 34 (Wear OS 4 / 5).
-- **Gemini API Key**: Obtenida en [Google AI Studio](https://aistudio.google.com).
+Requisitos: Node.js ≥ 22.13 (probado con 24), JDK 17, Android SDK 34.
 
-### 2. Backend Node.js
+```bash
+# 1. Backend
+cd backend-node
+npm ci
+cp .env.example .env        # define API_KEYS (16+ caracteres) y, si quieres IA, GEMINI_API_KEY
+npm run seed                # crea la BD e importa data/
+npm run dev                 # http://localhost:3000/health
+
+# 2. Android
+cd ../BusAlertFrontend
+# en local.properties:
+#   busalert.apiKey=<una de las claves de API_KEYS>
+#   busalert.debug.backendUrl=http://<IP-de-tu-PC>:3000/   (opcional; por defecto el emulador: 10.0.2.2)
+./gradlew :wear:installDebug :mobile:installDebug
+```
+
+Variables de entorno del backend: [`backend-node/.env.example`](backend-node/.env.example) (todas documentadas). Propiedades de Android: [`BusAlertFrontend/README.md`](BusAlertFrontend/README.md#configuración).
+
+## Despliegue del backend
+
 ```bash
 cd backend-node
-npm install
-cp .env.example .env
-# Configura tu GEMINI_API_KEY en .env
-npm run seed     # Poblar base de datos SQLite
-npm run dev      # Iniciar servidor en http://localhost:3000
+docker build -t busalert-backend .
+docker run -d -p 3000:3000 \
+  -e API_KEYS=<clave> -e GEMINI_API_KEY=<clave-opcional> \
+  -v busalert-db:/app/var busalert-backend
 ```
 
-### 3. Frontend Android Wear OS
-```bash
-cd BusAlertfrotend
-# Compilar e instalar en emulador o reloj conectado
-./gradlew :wear:installDebug
-```
+La imagen ejecuta el seed al arrancar (idempotente) y expone `/health`. Detalles y despliegue sin Docker en [`backend-node/README.md`](backend-node/README.md#despliegue). En producción el backend debe ir detrás de HTTPS: el build release de Android exige una URL `https://`.
 
----
+## Calidad
 
-## 👨‍💻 Autor
-Desarrollado por **Jose Campoe** y el equipo de BusAlert.
+La CI (`.github/workflows/ci.yml`) ejecuta en cada push a `main`/`mejoras-profesionales` y en cada pull request:
+
+- **Backend:** `npm run lint`, `format:check`, `typecheck`, `test`, `build` e importación de los datos reales.
+- **Android:** `assembleDebug`, `testDebugUnitTest` y `lintDebug`.
+
+## Licencia
+
+MIT. Ver [LICENSE](LICENSE).

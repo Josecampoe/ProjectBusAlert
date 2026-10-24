@@ -1,0 +1,63 @@
+{
+  "radiusMeters": 300,
+  "count": 2,
+  "stopsWithoutCoordinates": 1,
+  "stops": [
+    {
+      "id": 4,
+      "externalId": "T04",
+      "name": "Parque Nariño",
+      "neighborhood": null,
+      "address": null,
+      "latitude": 1.214,
+      "longitude": -77.2785,
+      "verified": false,
+      "isDemo": true,
+      "distanceMeters": 40,
+      "routes": [
+        {
+          "routeCode": "FX1",
+          "routeName": "FX1 — Udenar / Centro",
+          "directionKey": "FX1_D1",
+          "directionName": "Udenar → Centro",
+          "stopOrder": 4
+        },
+        {
+          "routeCode": "FX1",
+          "routeName": "FX1 — Udenar / Centro",
+          "directionKey": "FX1_D2",
+          "directionName": "Centro → Udenar",
+          "stopOrder": 1
+        },
+        {
+          "routeCode": "FX2",
+          "routeName": "FX2 — Centro / Terminal",
+          "directionKey": "FX2_D1",
+          "directionName": "Centro → Terminal",
+          "stopOrder": 1
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "externalId": "T08",
+      "name": "Plazuela San Andrés",
+      "neighborhood": null,
+      "address": null,
+      "latitude": 1.2147,
+      "longitude": -77.2791,
+      "verified": false,
+      "isDemo": true,
+      "distanceMeters": 63,
+      "routes": [
+        {
+          "routeCode": "FX3",
+          "routeName": "FX3 — San Andrés / Obrero",
+          "directionKey": "FX3_D1",
+          "directionName": "San Andrés → Obrero",
+          "stopOrder": 1
+        }
+      ]
+    }
+  ]
+}

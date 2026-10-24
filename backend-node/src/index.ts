@@ -1,68 +1,39 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+/**
+ * Punto de entrada del servidor.
+ */
+import 'dotenv/config';
+import { createApp } from './app';
+import { ConfigError, loadConfig } from './config/env';
+import { buildContainer } from './container';
+import { createLogger } from './lib/logger';
 
-// Controladores existentes
-import { voiceRouter } from './controllers/voiceController';
+function main(): void {
+  let config;
+  try {
+    config = loadConfig();
+  } catch (err) {
+    if (err instanceof ConfigError) {
+      console.error(`${err.message}\nRevisa tu archivo .env (plantilla: .env.example).`);
+      process.exit(1);
+    }
+    throw err;
+  }
 
-// Controladores de transporte SETP
-import { routesRouter }      from './controllers/transit/routesController';
-import { stopsRouter }       from './controllers/transit/stopsController';
-import { plannerRouter }     from './controllers/transit/plannerController';
-import { aiTransportRouter } from './controllers/transit/aiTransportController';
+  const logger = createLogger(config.logLevel);
+  const { repo, assistant } = buildContainer(config, logger);
+  const app = createApp({ config, logger, repo, assistant });
 
-// Inicializar base de datos al arrancar
-import { getDb } from './db/db';
-
-dotenv.config();
-
-const app  = express();
-const port = process.env.PORT || 3000;
-
-app.use(cors());
-app.use(express.json());
-
-// ─── API existente (smartwatch / voz) ─────────────────────────────────────────
-app.use('/api/voice', voiceRouter);
-
-// ─── API de transporte SETP ───────────────────────────────────────────────────
-app.use('/api/routes',        routesRouter);
-app.use('/api/stops',         stopsRouter);
-app.use('/api/route-planner', plannerRouter);
-app.use('/api/ai/transport-query', aiTransportRouter);
-
-// ─── Health check ─────────────────────────────────────────────────────────────
-app.get('/health', (_req, res) => {
-    res.json({
-        status:  'ok',
-        message: 'BusAlert Backend is running!',
-        version: '2.0.0',
-        endpoints: [
-            'POST /api/voice',
-            'GET  /api/routes',
-            'GET  /api/routes/:code',
-            'GET  /api/routes/:code/stops',
-            'GET  /api/routes/:code/directions',
-            'GET  /api/routes/search?q=',
-            'GET  /api/stops',
-            'GET  /api/stops/search?q=',
-            'GET  /api/stops/:id',
-            'GET  /api/stops/:id/routes',
-            'GET  /api/route-planner?origin=&destination=',
-            'POST /api/ai/transport-query',
-        ],
+  app.listen(config.server.port, config.server.host, () => {
+    logger.info('server_started', {
+      host: config.server.host,
+      port: config.server.port,
+      aiEnabled: assistant.aiEnabled,
+      routes: repo.listRoutes().length,
     });
-});
-
-// ─── Inicializar DB ────────────────────────────────────────────────────────────
-try {
-    getDb();
-} catch (err) {
-    console.error('[DB] Error al inicializar la base de datos:', err);
-    process.exit(1);
+    if (repo.listRoutes().length === 0) {
+      logger.warn('database_empty', { hint: 'Ejecuta "npm run seed" para cargar los datos.' });
+    }
+  });
 }
 
-app.listen(port, () => {
-    console.log(`[Server]: BusAlert API v2.0 escuchando en http://localhost:${port}`);
-    console.log(`[Server]: DB activa — ejecuta 'npx ts-node src/db/seed.ts' para cargar datos.`);
-});
+main();

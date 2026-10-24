@@ -1,0 +1,6 @@
+[
+  { "route_code": "DEMO-1", "direction_key": "DEMO-1_D1", "name": "Demo Torobajo → Demo Centro", "source": "demo_sample" },
+  { "route_code": "DEMO-1", "direction_key": "DEMO-1_D2", "name": "Demo Centro → Demo Torobajo", "source": "demo_sample" },
+  { "route_code": "DEMO-2", "direction_key": "DEMO-2_D1", "name": "Demo Centro → Demo Terminal", "source": "demo_sample" },
+  { "route_code": "DEMO-2", "direction_key": "DEMO-2_D2", "name": "Demo Terminal → Demo Centro", "source": "demo_sample" }
+]

@@ -1,14 +1,46 @@
-import { calculateHaversineDistance, isWithinRadius } from './geoUtils';
+import { describe, expect, it } from 'vitest';
+import { calculateHaversineDistance } from './geoUtils';
 
-describe('GeoUtils Haversine Tests', () => {
-  it('debe calcular la distancia en metros entre dos puntos conocidos', () => {
-    const dist = calculateHaversineDistance(7.119349, -73.122741, 7.1215, -73.124);
-    expect(dist).toBeGreaterThan(0);
-    expect(dist).toBeLessThan(1000);
+// Puntos de referencia aproximados en San Juan de Pasto (solo para probar el cálculo).
+const PARQUE_NARINO = { lat: 1.2141, lng: -77.2786 };
+const UDENAR_TOROBAJO = { lat: 1.2335, lng: -77.2925 };
+
+describe('calculateHaversineDistance', () => {
+  it('es cero para el mismo punto', () => {
+    expect(
+      calculateHaversineDistance(
+        PARQUE_NARINO.lat,
+        PARQUE_NARINO.lng,
+        PARQUE_NARINO.lat,
+        PARQUE_NARINO.lng,
+      ),
+    ).toBe(0);
   });
 
-  it('debe validar si un punto se encuentra dentro del radio especificado', () => {
-    const inside = isWithinRadius(7.119349, -73.122741, 7.1194, -73.1228, 500);
-    expect(inside).toBe(true);
+  it('calcula la distancia entre el centro y Udenar (~2,6 km)', () => {
+    const d = calculateHaversineDistance(
+      PARQUE_NARINO.lat,
+      PARQUE_NARINO.lng,
+      UDENAR_TOROBAJO.lat,
+      UDENAR_TOROBAJO.lng,
+    );
+    expect(d).toBeGreaterThan(2_500);
+    expect(d).toBeLessThan(2_800);
+  });
+
+  it('es simétrica', () => {
+    const a = calculateHaversineDistance(
+      PARQUE_NARINO.lat,
+      PARQUE_NARINO.lng,
+      UDENAR_TOROBAJO.lat,
+      UDENAR_TOROBAJO.lng,
+    );
+    const b = calculateHaversineDistance(
+      UDENAR_TOROBAJO.lat,
+      UDENAR_TOROBAJO.lng,
+      PARQUE_NARINO.lat,
+      PARQUE_NARINO.lng,
+    );
+    expect(a).toBeCloseTo(b, 6);
   });
 });

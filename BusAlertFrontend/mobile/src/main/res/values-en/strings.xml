@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BusAlert</string>
+
+    <string name="tab_routes">Routes</string>
+    <string name="tab_stops">Stops</string>
+    <string name="tab_history">History</string>
+    <string name="tab_settings">Settings</string>
+    <string name="action_back">Back</string>
+
+    <string name="routes_search_hint">Search a route by code or name</string>
+    <string name="routes_empty">There are no routes loaded on the server.</string>
+    <string name="routes_no_match">No route matches your search.</string>
+    <string name="route_endpoints">%1$s → %2$s</string>
+    <plurals name="route_directions_count">
+        <item quantity="one">%1$d direction</item>
+        <item quantity="other">%1$d directions</item>
+    </plurals>
+    <string name="route_unverified">Unverified</string>
+
+    <string name="route_detail_stops">Stops</string>
+    <string name="route_stop_order">%1$d</string>
+    <string name="map_not_configured">Map unavailable: the Google Maps key is missing.</string>
+    <string name="map_no_coordinates">The stops of this route don\'t have coordinates yet.</string>
+    <plurals name="map_partial_coordinates">
+        <item quantity="one">%1$d of %2$d stop has coordinates.</item>
+        <item quantity="other">%1$d of %2$d stops have coordinates.</item>
+    </plurals>
+    <string name="route_no_stops">This direction has no stops loaded.</string>
+
+    <string name="stops_search_hint">Search a stop or place</string>
+    <plurals name="stops_prompt">
+        <item quantity="one">Type at least %1$d letter to search.</item>
+        <item quantity="other">Type at least %1$d letters to search.</item>
+    </plurals>
+    <string name="stops_empty">I couldn\'t find stops with that name.</string>
+    <string name="stop_routes">Routes: %1$s</string>
+    <string name="list_separator">", "</string>
+
+    <string name="history_title">History</string>
+    <string name="history_empty">No queries yet. The ones you make on the watch will show up here.</string>
+    <string name="history_from_to">%1$s → %2$s</string>
+    <string name="history_to">→ %1$s</string>
+    <string name="history_clear">Clear history</string>
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_empty">Star routes or stops to keep them here.</string>
+    <string name="action_add_favorite">Add to favorites</string>
+    <string name="action_remove_favorite">Remove from favorites</string>
+
+    <string name="settings_language">Language</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_english">English</string>
+    <string name="settings_dark_theme">Dark theme</string>
+    <string name="settings_speak_results">Read answers aloud on the watch</string>
+    <string name="settings_sync_note">Settings, history and favorites sync with the watch.</string>
+    <string name="settings_backend">Server</string>
+    <string name="settings_backend_demo">Demo mode (fictional data)</string>
+    <string name="settings_backend_missing">Not configured</string>
+
+    <string name="loading">Loading…</string>
+    <string name="demo_badge">Demo</string>
+    <string name="demo_notice">Demo data: this is not real SETP information.</string>
+    <string name="action_retry">Retry</string>
+
+    <string name="error_network">No internet connection.</string>
+    <string name="error_timeout">The server took too long. Try again.</string>
+    <string name="error_unauthorized">The app is not authorized on the server.</string>
+    <string name="error_rate_limited">Too many requests. Please wait a moment.</string>
+    <string name="error_invalid_request">The request is not valid.</string>
+    <string name="error_not_found">I couldn\'t find that information.</string>
+    <string name="error_ai_unavailable">The assistant is not available right now.</string>
+    <string name="error_server">The server had a problem. Try again later.</string>
+    <string name="error_configuration">The app has no server configured.</string>
+    <string name="error_unknown">An unexpected error occurred.</string>
+</resources>

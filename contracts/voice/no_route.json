@@ -1,0 +1,27 @@
+{
+  "source": "planner",
+  "message": null,
+  "recommended": null,
+  "alternatives": [],
+  "originCandidates": [
+    {
+      "id": 4,
+      "externalId": "T04",
+      "name": "Parque Nariño",
+      "latitude": 1.214,
+      "longitude": -77.2785,
+      "distanceMeters": null
+    }
+  ],
+  "destinationCandidates": [
+    {
+      "id": 7,
+      "externalId": "T07",
+      "name": "Barrio Sin Rutas",
+      "latitude": null,
+      "longitude": null
+    }
+  ],
+  "isDemoData": true,
+  "status": "no_route"
+}

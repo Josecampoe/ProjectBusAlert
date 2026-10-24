@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bus estilizado, centrado en la zona segura de 72dp del ícono adaptable. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,34h32a6,6 0,0 1,6 6v28a4,4 0,0 1,-4 4h-2v4a3,3 0,0 1,-6 0v-4h-20v4a3,3 0,0 1,-6 0v-4h-2a4,4 0,0 1,-4 -4v-28a6,6 0,0 1,6 -6z" />
+    <path
+        android:fillColor="#7B0D2A"
+        android:pathData="M38,42h32v12h-32z M40,62a3,3 0,1 0,6 0a3,3 0,1 0,-6 0z M62,62a3,3 0,1 0,6 0a3,3 0,1 0,-6 0z" />
+</vector>
