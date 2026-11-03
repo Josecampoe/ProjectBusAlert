@@ -27,6 +27,7 @@ import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.TimeText
+import androidx.wear.compose.material.TimeTextDefaults
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
 import com.busalert.wear.theme.BusAlertTheme
@@ -39,12 +40,16 @@ fun ScreenScaffold(
     showTime: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    val colors = BusAlertTheme.colors
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(BusAlertTheme.colors.backgroundBrush),
-        timeText = { if (showTime) TimeText() },
-        vignette = { Vignette(vignettePosition = VignettePosition.TopAndBottom) },
+            .background(colors.backgroundBrush),
+        timeText = {
+            if (showTime) TimeText(timeTextStyle = TimeTextDefaults.timeTextStyle(color = colors.onSurface))
+        },
+        // La viñeta de Wear es una sombra negra: en el tema claro taparía el texto de los bordes.
+        vignette = { if (colors.isDark) Vignette(vignettePosition = VignettePosition.TopAndBottom) },
         positionIndicator = { listState?.let { PositionIndicator(scalingLazyListState = it) } },
     ) {
         content()

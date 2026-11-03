@@ -32,7 +32,7 @@ private const val LIGHT_BACKGROUND_LUMINANCE = 0.5f
 fun RouteBadge(code: String, colorHex: String?, modifier: Modifier = Modifier) {
     val background = routeColor(colorHex)
     val colors = BusAlertTheme.colors
-    val content = if (background.luminance() > LIGHT_BACKGROUND_LUMINANCE) colors.background else colors.onPrimary
+    val content = if (background.luminance() > LIGHT_BACKGROUND_LUMINANCE) colors.onBrightFill else colors.onPrimary
     val description = stringResource(R.string.cd_route_badge, code)
     Row(
         modifier = modifier

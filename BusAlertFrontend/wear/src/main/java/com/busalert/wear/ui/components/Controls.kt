@@ -20,8 +20,10 @@ import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Switch
+import androidx.wear.compose.material.SwitchDefaults
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.ToggleChip
+import androidx.wear.compose.material.ToggleChipDefaults
 import com.busalert.wear.theme.BusAlertTheme
 
 enum class ChipStyle { PRIMARY, SECONDARY }
@@ -114,7 +116,30 @@ fun SettingToggle(
         modifier = Modifier.fillMaxWidth(),
         label = { Text(text = label, maxLines = CHIP_LABEL_MAX_LINES, overflow = TextOverflow.Ellipsis) },
         appIcon = { Icon(painter = painterResource(icon), contentDescription = null, tint = colors.accent) },
-        toggleControl = { Switch(checked = checked, onCheckedChange = null) },
+        toggleControl = {
+            Switch(
+                checked = checked,
+                onCheckedChange = null,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = colors.accent,
+                    checkedTrackColor = colors.accent,
+                    uncheckedThumbColor = colors.onSurfaceMuted,
+                    uncheckedTrackColor = colors.outline,
+                ),
+            )
+        },
+        colors = ToggleChipDefaults.toggleChipColors(
+            checkedStartBackgroundColor = colors.surfaceVariant,
+            checkedEndBackgroundColor = colors.surfaceVariant,
+            checkedContentColor = colors.onSurface,
+            checkedSecondaryContentColor = colors.onSurfaceVariant,
+            checkedToggleControlColor = colors.accent,
+            uncheckedStartBackgroundColor = colors.surfaceVariant,
+            uncheckedEndBackgroundColor = colors.surfaceVariant,
+            uncheckedContentColor = colors.onSurface,
+            uncheckedSecondaryContentColor = colors.onSurfaceVariant,
+            uncheckedToggleControlColor = colors.onSurfaceMuted,
+        ),
     )
 }
 
