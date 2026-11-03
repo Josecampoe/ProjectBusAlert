@@ -36,7 +36,11 @@ class ThemeTest {
                 assertReadable("$theme/$name sobre fondo", fg, c.background)
                 assertReadable("$theme/$name sobre superficie", fg, c.surface)
             }
+            // Chips secundarios e interruptores usan surfaceVariant de fondo.
+            assertReadable("$theme/onSurface sobre surfaceVariant", c.onSurface, c.surfaceVariant)
+            assertReadable("$theme/onSurfaceVariant sobre surfaceVariant", c.onSurfaceVariant, c.surfaceVariant)
             assertReadable("$theme/onPrimary sobre primary", c.onPrimary, c.primary)
+            assertReadable("$theme/onBrightFill sobre blanco", c.onBrightFill, Palette.White)
         }
     }
 
