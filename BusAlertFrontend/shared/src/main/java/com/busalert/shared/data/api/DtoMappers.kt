@@ -99,6 +99,8 @@ fun TripResponseDto.toDomain(): TripPlan {
         recommended = recommendedOption,
         alternatives = alternatives.orEmpty().map { it.toDomain() },
         nearestStopDistanceMeters = nearest?.distanceMeters,
+        originPlace = originPlace?.takeIf { it.isNotBlank() },
+        destinationPlace = destinationPlace?.takeIf { it.isNotBlank() },
         isDemoData = isDemoData ?: false,
     )
 }

@@ -113,6 +113,8 @@ class RemoteTripAssistantRepositoryTest {
         assertTrue(!body.has("currentLocationName"))
         assertEquals("Parque Nariño", plan.recommended?.firstLeg?.board?.name)
         assertEquals(40, plan.nearestStopDistanceMeters)
+        assertNull(plan.originPlace)
+        assertNull(plan.destinationPlace)
     }
 
     @Test

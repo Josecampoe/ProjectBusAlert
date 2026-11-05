@@ -66,6 +66,8 @@
     <string name="result_transfer_at">Transfer at %1$s</string>
     <string name="result_walk_transfer">Walk %1$d m to %2$s</string>
     <string name="result_nearest_stop">Stop %1$d m away</string>
+    <string name="result_walk_to_place">Walk to %1$s</string>
+    <string name="result_board_near_place">Stop near %1$s</string>
     <string name="result_out_of_service">Outside service hours</string>
     <string name="result_demo_badge">Demo data</string>
     <string name="action_stop_voice">Stop voice</string>

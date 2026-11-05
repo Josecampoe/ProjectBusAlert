@@ -85,6 +85,10 @@ data class TripPlan(
     /** Distancia del usuario a la parada de origen más cercana (solo con GPS). */
     val nearestStopDistanceMeters: Int?,
     val isDemoData: Boolean,
+    /** Lugar (no parada) desde donde sale el usuario: sube en una parada cercana. */
+    val originPlace: String? = null,
+    /** Lugar (no parada) al que va el usuario: se baja en una parada cercana y camina. */
+    val destinationPlace: String? = null,
 )
 
 /** Desde dónde sale el usuario: lo que dijo/escribió o su ubicación GPS. */
