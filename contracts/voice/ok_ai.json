@@ -66,6 +66,8 @@
       "longitude": -77.283
     }
   ],
+  "originPlace": null,
+  "destinationPlace": null,
   "isDemoData": true,
   "status": "ok"
 }

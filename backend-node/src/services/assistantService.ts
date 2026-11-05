@@ -30,7 +30,7 @@ import {
 import type { ArrivalEstimate, ArrivalTimeProvider } from './arrivalTime';
 import { findNearbyStops, type GeoPoint } from './nearby';
 import { planTrip, toStopRef, type PlanOption, type StopRef, type TransferStep } from './planner';
-import { resolvePlace } from './placeResolver';
+import { placeResolverOptions, resolvePlace } from './placeResolver';
 
 export type TripStatus =
   | 'ok'
@@ -92,6 +92,12 @@ export interface TripResponse {
   alternatives: OptionDto[];
   originCandidates: OriginCandidate[];
   destinationCandidates: StopRef[];
+  /**
+   * Lugar de referencia que dijo el usuario cuando no es una parada
+   * (p. ej. un colegio): se sube o se baja en una parada cercana y camina.
+   */
+  originPlace: string | null;
+  destinationPlace: string | null;
   isDemoData: boolean;
 }
 
@@ -135,23 +141,26 @@ export class AssistantService {
   }
 
   private resolve(network: TransitNetwork, text: string) {
-    return resolvePlace(text, network, {
-      minTermLength: this.config.input.searchMinTermLength,
-      maxResults: this.config.input.searchMaxResults,
-    });
+    return resolvePlace(text, network, placeResolverOptions(this.config));
   }
 
   private resolveOrigin(
     network: TransitNetwork,
     origin: TripOrigin,
-  ): { stops: NetworkStop[]; candidates: OriginCandidate[]; textForAi: string } {
+  ): {
+    stops: NetworkStop[];
+    candidates: OriginCandidate[];
+    textForAi: string;
+    landmark: string | null;
+  } {
     if (origin.kind === 'text') {
       const text = this.sanitize(origin.text);
-      const stops = this.resolve(network, text).stops;
+      const { stops, landmark } = this.resolve(network, text);
       return {
         stops,
         candidates: stops.map((s) => ({ ...toStopRef(s), distanceMeters: null })),
         textForAi: text,
+        landmark,
       };
     }
     const nearby = findNearbyStops(
@@ -168,6 +177,7 @@ export class AssistantService {
       })),
       // A la IA no se le envían las coordenadas del usuario: solo la parada más cercana.
       textForAi: nearby[0]?.stop.name ?? '',
+      landmark: null,
     };
   }
 
@@ -201,6 +211,8 @@ export class AssistantService {
       alternatives: [],
       originCandidates: origin.candidates,
       destinationCandidates: destination.stops.map(toStopRef),
+      originPlace: origin.landmark,
+      destinationPlace: destination.landmark,
       isDemoData: [...origin.stops, ...destination.stops].some((s) => s.isDemo),
     };
 
@@ -221,6 +233,7 @@ export class AssistantService {
     const isDemoData = base.isDemoData || options.some((o) => o.isDemo);
     const aiResult = await this.composeWithAi(
       options,
+      { originPlace: origin.landmark, destinationPlace: destination.landmark },
       origin.textForAi,
       destinationText,
       request.language,
@@ -240,6 +253,7 @@ export class AssistantService {
 
   private async composeWithAi(
     options: OptionDto[],
+    places: { originPlace: string | null; destinationPlace: string | null },
     originText: string,
     destinationText: string,
     language: Language,
@@ -258,6 +272,9 @@ export class AssistantService {
           stopsCount: l.stopsCount,
         })),
       })),
+      // Lugares que no son parada: el usuario camina desde/hasta la parada.
+      ...(places.originPlace ? { userStartsAtPlace: places.originPlace } : {}),
+      ...(places.destinationPlace ? { userGoesToPlace: places.destinationPlace } : {}),
     };
     try {
       const raw = await this.ai.generateJson({

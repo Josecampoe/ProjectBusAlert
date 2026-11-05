@@ -205,3 +205,40 @@ describe('POST /api/ai/transport-query', () => {
     expect(ai.requests).toHaveLength(0);
   });
 });
+
+describe('POST /api/voice con lugares que no son parada', () => {
+  it('lleva a la parada cercana e informa el lugar', async () => {
+    const { app } = createTestContext();
+    const res = await request(app)
+      .post('/api/voice')
+      .set(auth)
+      .send(voice('coperativa san vicente', 'udenar'));
+    expect(res.body).toMatchObject({
+      status: 'ok',
+      originPlace: null,
+      destinationPlace: 'Cooperativa San Vicente',
+      recommended: { legs: [{ routeCode: 'FX1', alight: { name: 'Parque Bolívar' } }] },
+    });
+  });
+
+  it('el lugar también sirve como origen', async () => {
+    const { app } = createTestContext();
+    const res = await request(app)
+      .post('/api/voice')
+      .set(auth)
+      .send(voice('udenar', 'cooperativa san vicente'));
+    expect(res.body).toMatchObject({
+      originPlace: 'Cooperativa San Vicente',
+      destinationPlace: null,
+      originCandidates: [{ name: 'Parque Bolívar' }],
+    });
+  });
+
+  it('la IA recibe el lugar como contexto para indicar dónde bajarse', async () => {
+    const ai = new FakeAiClient(() => validTrip());
+    const { app } = createTestContext({ ai });
+    await request(app).post('/api/voice').set(auth).send(voice('san vicente', 'udenar'));
+    expect(ai.requests[0].userContent).toContain('"userGoesToPlace":"Cooperativa San Vicente"');
+    expect(ai.requests[0].userContent).not.toContain('userStartsAtPlace');
+  });
+});

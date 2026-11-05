@@ -15,7 +15,7 @@ import { AppError, ErrorCode } from '../errors/AppError';
 import type { TransitRepository } from '../repositories/transitRepository';
 import type { AssistantService } from '../services/assistantService';
 import { countStopsWithoutCoordinates, findNearbyStops } from '../services/nearby';
-import { resolvePlace } from '../services/placeResolver';
+import { placeResolverOptions, resolvePlace } from '../services/placeResolver';
 import { toStopRef } from '../services/planner';
 import { validate } from '../middleware/validate';
 import type { Schemas } from './schemas';
@@ -27,10 +27,7 @@ export function createTransitRouter(
   config: AppConfig,
 ): Router {
   const router = Router();
-  const resolverOptions = {
-    minTermLength: config.input.searchMinTermLength,
-    maxResults: config.input.searchMaxResults,
-  };
+  const resolverOptions = placeResolverOptions(config);
 
   const findRoute = (code: string) => {
     const route = repo.getRouteByCode(code);
@@ -87,12 +84,12 @@ export function createTransitRouter(
 
   router.get('/stops/search', validate('query', schemas.searchQuery), (_req, res) => {
     const { q } = res.locals.query as { q: string };
-    const { stops, matchKind } = resolvePlace(q, repo.getNetwork(), resolverOptions);
+    const { stops, matchKind, landmark } = resolvePlace(q, repo.getNetwork(), resolverOptions);
     const enriched = stops.map(({ searchNames: _names, ...stop }) => ({
       ...stop,
       routes: repo.getRoutesAtStop(stop.id),
     }));
-    res.json({ query: q, matchKind, count: enriched.length, stops: enriched });
+    res.json({ query: q, matchKind, landmark, count: enriched.length, stops: enriched });
   });
 
   router.get('/stops/nearby', validate('query', schemas.nearbyQuery), (_req, res) => {

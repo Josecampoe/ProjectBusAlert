@@ -1,6 +1,7 @@
 {
   "query": "parque",
   "matchKind": "query_in_name",
+  "landmark": null,
   "count": 2,
   "stops": [
     {

@@ -45,7 +45,8 @@ export function tripSystemInstruction(language: Language, cityName: string): str
     '4. No menciones minutos de espera ni horarios, porque no tienes datos en tiempo real.',
     `5. Escribe "spokenText", "displayTitle" y "displaySubtitle" en ${LANGUAGE_NAME[language]}, con tono amable y claro.`,
     `6. "spokenText": máximo 2 oraciones para leer en voz alta. "displayTitle": el código de ruta. "displaySubtitle": la parada donde subir.`,
-    '7. Responde solo con JSON que cumpla el esquema.',
+    '7. Si <context> trae "userGoesToPlace", ese lugar no es una parada: di que se baje en la parada "alightAt" del último tramo porque queda cerca de ese lugar. Si trae "userStartsAtPlace", di que suba en la parada "boardAt" del primer tramo, que queda cerca de donde está.',
+    '8. Responde solo con JSON que cumpla el esquema.',
   ].join('\n');
 }
 
