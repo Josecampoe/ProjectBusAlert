@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Cooperativa San Vicente",
+    "aliases": ["San Vicente"],
+    "nearby_stops": [{ "stop_external_id": null, "stop_name": "Liceo Udenar" }],
+    "source": "lugares_dueno",
+    "verified": true,
+    "notes": "El dueño indicó (2026-11-05) que queda cerca del Liceo de la Universidad de Nariño."
+  }
+]

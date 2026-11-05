@@ -170,6 +170,7 @@ function buildNetwork(
     stops: new Map(
       Object.entries(names).map(([key, name]) => [Number(key), stop(Number(key), name)]),
     ),
+    places: [],
     directionsByStop,
   };
 }

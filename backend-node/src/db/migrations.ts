@@ -133,4 +133,36 @@ CREATE TABLE IF NOT EXISTS route_changes (
     name: 'color_de_ruta',
     sql: `ALTER TABLE routes ADD COLUMN color TEXT;`,
   },
+  {
+    version: 3,
+    name: 'lugares_de_referencia',
+    sql: `
+-- Lugares que no son parada (colegios, barrios, negocios) con las paradas que les quedan cerca.
+CREATE TABLE IF NOT EXISTS places (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    name        TEXT NOT NULL UNIQUE,
+    active      INTEGER NOT NULL DEFAULT 1,
+    source      TEXT REFERENCES sources(id),
+    verified    INTEGER NOT NULL DEFAULT 0,
+    notes       TEXT,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS place_aliases (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    place_id    INTEGER NOT NULL REFERENCES places(id) ON DELETE CASCADE,
+    alias       TEXT NOT NULL,
+    UNIQUE(place_id, alias)
+);
+
+CREATE TABLE IF NOT EXISTS place_stops (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    place_id    INTEGER NOT NULL REFERENCES places(id) ON DELETE CASCADE,
+    stop_id     INTEGER NOT NULL REFERENCES stops(id),
+    UNIQUE(place_id, stop_id)
+);
+CREATE INDEX IF NOT EXISTS idx_place_stops_place ON place_stops(place_id);
+`,
+  },
 ];

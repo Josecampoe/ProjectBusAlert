@@ -108,10 +108,21 @@ export interface NetworkStop extends StopSummary {
   searchNames: string[];
 }
 
+/** Lugar que no es parada (colegio, barrio...) con las paradas que le quedan cerca. */
+export interface NetworkPlace {
+  id: number;
+  name: string;
+  /** Nombre y alias normalizados para búsqueda. */
+  searchNames: string[];
+  /** Paradas cercanas (solo las activas). */
+  stopIds: number[];
+}
+
 export interface TransitNetwork {
   routes: Map<number, NetworkRoute>;
   directions: NetworkDirection[];
   stops: Map<number, NetworkStop>;
+  places: NetworkPlace[];
   /** Direcciones que pasan por cada parada. */
   directionsByStop: Map<number, NetworkDirection[]>;
 }
@@ -399,7 +410,34 @@ export class TransitRepository {
       }
     }
 
-    return { routes, directions, stops, directionsByStop };
+    return { routes, directions, stops, places: this.loadPlaces(stops), directionsByStop };
+  }
+
+  private loadPlaces(stops: Map<number, NetworkStop>): NetworkPlace[] {
+    const placeRows = this.db
+      .prepare('SELECT id, name FROM places WHERE active = 1 ORDER BY id')
+      .all() as Array<{ id: number; name: string }>;
+    const aliasRows = this.db
+      .prepare('SELECT place_id, alias FROM place_aliases ORDER BY id')
+      .all() as Array<{ place_id: number; alias: string }>;
+    const stopRows = this.db
+      .prepare('SELECT place_id, stop_id FROM place_stops ORDER BY id')
+      .all() as Array<{ place_id: number; stop_id: number }>;
+    return placeRows
+      .map((p) => {
+        const names = [p.name, ...aliasRows.filter((a) => a.place_id === p.id).map((a) => a.alias)]
+          .map(normalizeForSearch)
+          .filter((n) => n.length > 0);
+        return {
+          id: p.id,
+          name: p.name,
+          searchNames: [...new Set(names)],
+          stopIds: stopRows
+            .filter((r) => r.place_id === p.id && stops.has(r.stop_id))
+            .map((r) => r.stop_id),
+        };
+      })
+      .filter((p) => p.stopIds.length > 0);
   }
 
   private queryRoutes(extraWhere: string, params: string[]): RouteSummary[] {

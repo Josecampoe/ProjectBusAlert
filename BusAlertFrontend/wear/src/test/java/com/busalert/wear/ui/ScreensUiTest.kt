@@ -100,6 +100,19 @@ class ScreensUiTest {
     }
 
     @Test
+    fun resultado_hacia_un_lugar_que_no_es_parada_indica_caminar() {
+        result(TestData.okPlan.copy(destinationPlace = "Cooperativa San Vicente"))
+        show("Baja en Parque Bolívar · 2 paradas")
+        show("Camina hasta Cooperativa San Vicente")
+    }
+
+    @Test
+    fun resultado_desde_un_lugar_que_no_es_parada_indica_la_parada_cercana() {
+        result(TestData.okPlan.copy(originPlace = "Cooperativa San Vicente"))
+        show("Parada cerca de Cooperativa San Vicente")
+    }
+
+    @Test
     fun resultado_usa_el_texto_de_la_ia_cuando_existe() {
         result(
             TestData.okPlan.copy(

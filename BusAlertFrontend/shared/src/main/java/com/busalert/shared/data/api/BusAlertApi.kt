@@ -97,6 +97,8 @@ data class TripResponseDto(
     val recommended: OptionDto?,
     val alternatives: List<OptionDto>?,
     val originCandidates: List<OriginCandidateDto>?,
+    val originPlace: String?,
+    val destinationPlace: String?,
     val isDemoData: Boolean?,
 )
 

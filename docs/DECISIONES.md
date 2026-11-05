@@ -155,3 +155,13 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 
 ## D-046 · Origen y destino en una sola frase en el reloj
 - **Motivo:** el dueño quiere decir "estoy en Fátima y voy a la Universidad Cooperativa". `ConnectorTripPhraseParser` separa la frase en el primer conector ("voy a", "quiero ir a", "hasta"…, en español e inglés) que viene de `res/values/trip_phrases.xml`, no del código. Si la respuesta a "¿Dónde estás?" trae los dos, se consulta de una vez; si la respuesta a "¿A dónde vas?" trae un origen, se usa en lugar del GPS. El backend descarta "estoy en", "la", etc. al buscar.
+
+## D-047 · Lugares de referencia que no son parada (`data/places/`)
+- **Problema:** "Cooperativa San Vicente" no es parada, así que la consulta daba "no encontré el destino" o, peor, se confundía con la Universidad Cooperativa por compartir una palabra. Sin coordenadas no se puede calcular qué parada queda cerca.
+- **Decisión:** un archivo de lugares (`data/places/places.json`) donde el dueño anota cada lugar y su(s) parada(s) cercana(s). El buscador compite lugares y paradas por el mismo puntaje (gana el nombre más completo); si gana un lugar, se planifica hacia sus paradas y la respuesta trae `destinationPlace`/`originPlace`. La IA recibe el lugar en el contexto y dice "bájate en X, que queda cerca de Y"; el reloj muestra "Camina hasta Y" aunque no haya texto de la IA.
+- **Por qué no geocodificar:** inventaría ubicaciones (regla de no inventar datos) y además ninguna parada tiene coordenadas. Cuando existan, se puede agregar un cálculo por distancia sin cambiar el contrato.
+- **Datos iniciales:** solo lo que indicó el dueño: Cooperativa San Vicente → Liceo Udenar (fuente `lugares_dueno`). La parada Liceo Udenar recibió los alias "Liceo de la Universidad de Nariño", "Colegio Liceo Udenar" y "Colegio Liceo" desde `scripts/import_guide.py`.
+
+## D-048 · Corrección de errores de tipeo en la búsqueda
+- **Motivo:** "coperativa" no encontraba nada. Antes de buscar, cada palabra que no existe en el vocabulario de paradas y lugares se cambia por la única palabra del vocabulario a 1 edición (letra de más, de menos, cambiada o dos invertidas). Si hay empate, no se corrige. No se tocan palabras vacías ni palabras de menos de 5 letras. Configurable con `SEARCH_TYPO_MAX_EDITS` (0 la desactiva) y `SEARCH_TYPO_MIN_TERM_LENGTH`.
+

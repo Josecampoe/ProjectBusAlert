@@ -69,6 +69,12 @@ fun ResultScreen(
                         pluralStringResource(R.plurals.result_stops_count, option.totalStops, option.totalStops),
                     ),
                 )
+                plan.destinationPlace?.let {
+                    DetailLine(stringResource(R.string.result_walk_to_place, it), iconRes = R.drawable.ic_walk)
+                }
+                plan.originPlace?.let {
+                    DetailLine(stringResource(R.string.result_board_near_place, it), iconRes = R.drawable.ic_location)
+                }
                 plan.nearestStopDistanceMeters?.let {
                     DetailLine(stringResource(R.string.result_nearest_stop, it), iconRes = R.drawable.ic_location)
                 }

@@ -4,6 +4,7 @@ import { createTestContext } from '../test/helpers';
 import { resolvePlace } from './placeResolver';
 
 const OPTIONS = { minTermLength: 4, maxResults: 20 };
+const WITH_SPELLING = { ...OPTIONS, spelling: { maxEdits: 1, minTermLength: 5 } };
 let network: TransitNetwork;
 
 beforeAll(() => {
@@ -40,5 +41,52 @@ describe('resolvePlace', () => {
     expect(names('quiero ir a la luna')).toEqual([]);
     expect(names('para el de la')).toEqual([]);
     expect(names('   ')).toEqual([]);
+  });
+});
+
+describe('resolvePlace — lugares de referencia', () => {
+  it('un lugar que no es parada devuelve sus paradas cercanas y su nombre', () => {
+    const result = resolvePlace('voy a la cooperativa san vicente', network, OPTIONS);
+    expect(result.stops.map((s) => s.name)).toEqual(['Parque Bolívar']);
+    expect(result.landmark).toBe('Cooperativa San Vicente');
+  });
+
+  it('no confunde el lugar con la parada que comparte una palabra', () => {
+    // "Universidad Cooperativa" también tiene "cooperativa"; gana el nombre más completo.
+    expect(resolvePlace('cooperativa san vicente', network, OPTIONS).landmark).toBe(
+      'Cooperativa San Vicente',
+    );
+  });
+
+  it('una parada se devuelve sin lugar de referencia', () => {
+    const result = resolvePlace('parque bolivar', network, OPTIONS);
+    expect(result.landmark).toBeNull();
+  });
+});
+
+describe('resolvePlace — errores de tipeo', () => {
+  const typo = (text: string) =>
+    resolvePlace(text, network, WITH_SPELLING).stops.map((s) => s.name);
+
+  it('corrige una letra de menos, de más o cambiada', () => {
+    expect(typo('universidad coperativa')).toEqual(['Universidad Cooperativa']);
+    expect(typo('termminal')).toEqual(['Terminal de Transportes']);
+    expect(typo('parque bolivr')).toEqual(['Parque Bolívar']);
+  });
+
+  it('corrige el nombre de un lugar de referencia', () => {
+    const result = resolvePlace('coperativa san vicnte', network, WITH_SPELLING);
+    expect(result.landmark).toBe('Cooperativa San Vicente');
+  });
+
+  it('sin corrección configurada no adivina', () => {
+    expect(names('coperativa')).toEqual([]);
+    // Sin corregir, "universidad" sola empata entre varias universidades.
+    expect(names('universidad coperativa')).toContain('Udenar Torobajo');
+  });
+
+  it('no corrige palabras cortas ni lugares inexistentes', () => {
+    expect(typo('quiero ir a la luna')).toEqual([]);
+    expect(typo('montaña inexistente')).toEqual([]);
   });
 });

@@ -1682,7 +1682,11 @@
   {
     "external_id": null,
     "name": "Liceo Udenar",
-    "aliases": [],
+    "aliases": [
+      "Liceo de la Universidad de Nariño",
+      "Colegio Liceo Udenar",
+      "Colegio Liceo"
+    ],
     "latitude": null,
     "longitude": null,
     "address": null,

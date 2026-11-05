@@ -10,6 +10,7 @@ La base de datos se arma **solo** desde estos archivos con `npm run seed`. Ni el
 | `routes/route_stops.json` | Orden de paradas por sentido. |
 | `stops/*.json` | Paradas (con alias y, si se tienen, coordenadas). |
 | `schedules/*.json` | Horarios y frecuencias por tipo de día. |
+| `places/*.json` | Lugares que no son parada (colegios, barrios…) y las paradas que les quedan cerca. |
 | `templates/route.template.json` | Plantilla comentada para agregar una ruta nueva. |
 | `sample/` | Datos de **demostración** (no reales), marcados como demo. |
 | `raw/guia_rutas_setp.md` | Texto original de la guía de rutas entregada por el dueño (fuente de E2–E7 y C1–C16). |
@@ -29,6 +30,7 @@ La base de datos se arma **solo** desde estos archivos con `npm run seed`. Ni el
   - En los retornos se agregó la terminal de la ida al inicio y al final cuando la guía no la repite (queda anotado en la descripción del sentido).
 - **Ninguna parada tiene coordenadas** todavía, así que la búsqueda por cercanía (GPS) solo funciona con los datos de `sample/`. El reloj pide el lugar por voz o texto.
 - Nombres genéricos de la guía (`Calle 17`, `Calle 18`, `Panamericana`…) son **una sola parada** compartida por varias rutas hasta tener coordenadas; los transbordos ahí son aproximados.
+- **1 lugar de referencia**: Cooperativa San Vicente, cerca de Liceo Udenar (indicado por el dueño). Para agregar otro, copia el bloque en `places/places.json` con el nombre del lugar, alias opcionales y `nearby_stops` (código o nombre de la parada).
 - Los horarios de E1 están sin verificar (sin frecuencia), así que las estimaciones no suman tiempo de espera. Las demás rutas no tienen horario.
 
 Lo que falta está detallado en `docs/PENDIENTES.md` (en la raíz del repo).

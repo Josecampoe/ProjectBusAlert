@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Cooperativa San Vicente",
+    "aliases": ["San Vicente"],
+    "nearby_stops": [{ "stop_external_id": "T03", "stop_name": "Parque Bolívar" }],
+    "source": "test_fixture",
+    "verified": true,
+    "notes": "Lugar de prueba: no es parada; la parada cercana es Parque Bolívar."
+  }
+]

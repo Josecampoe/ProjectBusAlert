@@ -34,5 +34,14 @@
     "last_checked": "2026-10-24",
     "reliability": "medium",
     "notes": "Orden de paradas por sentido de las rutas E2–E7 y C1–C16. Sin códigos de parada, coordenadas ni horarios. Texto original en data/raw/guia_rutas_setp.md."
+  },
+  {
+    "id": "lugares_dueno",
+    "name": "Lugares de referencia indicados por el dueño del proyecto",
+    "url": null,
+    "source_type": "verified_user_input",
+    "last_checked": "2026-11-05",
+    "reliability": "medium",
+    "notes": "Lugares que no son parada (colegios, barrios, negocios) y la parada que les queda cerca, según el dueño. Archivo: data/places/places.json."
   }
 ]

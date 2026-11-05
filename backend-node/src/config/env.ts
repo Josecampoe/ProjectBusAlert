@@ -66,6 +66,8 @@ const EnvSchema = z.object({
   MAX_QUERY_LENGTH: positiveInt.default(300),
   SEARCH_MIN_TERM_LENGTH: positiveInt.default(4),
   SEARCH_MAX_RESULTS: positiveInt.default(20),
+  SEARCH_TYPO_MAX_EDITS: z.coerce.number().int().min(0).default(1),
+  SEARCH_TYPO_MIN_TERM_LENGTH: positiveInt.default(5),
 
   // ── IA (opcional: sin clave se usa solo el planificador) ─────────────
   GEMINI_API_KEY: optionalSecret,
@@ -121,6 +123,9 @@ export interface AppConfig {
     maxQueryLength: number;
     searchMinTermLength: number;
     searchMaxResults: number;
+    /** Corrección de tipeo: 0 ediciones la desactiva. */
+    typoMaxEdits: number;
+    typoMinTermLength: number;
   };
   ai: {
     apiKey: string | undefined;
@@ -203,6 +208,8 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       maxQueryLength: e.MAX_QUERY_LENGTH,
       searchMinTermLength: e.SEARCH_MIN_TERM_LENGTH,
       searchMaxResults: e.SEARCH_MAX_RESULTS,
+      typoMaxEdits: e.SEARCH_TYPO_MAX_EDITS,
+      typoMinTermLength: e.SEARCH_TYPO_MIN_TERM_LENGTH,
     },
     ai: {
       apiKey: e.GEMINI_API_KEY,

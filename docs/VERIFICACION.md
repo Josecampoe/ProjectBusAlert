@@ -96,3 +96,14 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | `npx vitest run` | 136 pruebas OK (planificador: homónimas, preferir directas) |
 | `./gradlew :wear:testDebugUnitTest :wear:lintDebug :wear:assembleRelease` | BUILD SUCCESSFUL; 45 pruebas OK (7 del separador de frases, 3 del ViewModel); lint sin hallazgos |
 | `POST /api/voice` con datos reales (servidor local) | Fátima → Universidad Cooperativa: C5 directa; Parque Bolívar → Udenar: E1 directa; Obonuco → Terminal: C1 directa; Catambuco → Unicentro: C6 + E6 con transbordo en San Andresito; respuestas redactadas por la IA (`source: ai`) |
+
+## Fase 10 — Lugares de referencia y errores de tipeo (2026-11-05)
+
+| Comando | Resultado |
+|---|---|
+| `npm test` (backend) | 152 pruebas OK (lugares, tipeo, importador, contratos regenerados) |
+| `npm run lint` / `typecheck` / `format:check` | OK |
+| `npm run data:validate` | OK: 23 rutas, 307 paradas, 1 lugar |
+| `./gradlew :shared:testDebugUnitTest :wear:testDebugUnitTest :mobile:testDebugUnitTest :wear:lintDebug :wear:assembleRelease` | OK: shared 33, wear 47, mobile 12; lint sin hallazgos |
+| Servidor local con datos reales y Gemini | Fátima → "coperativa san vicente": C16, bajar en Liceo Udenar, "queda cerca de Cooperativa San Vicente". Origen "cooperativa san vicente" → Fátima: C5 desde Liceo Udenar. "la universidad coperativa" → C5 a Universidad Cooperativa. "colegio liceo de la universidad de nariño" desde Parque Bolívar → E6 |
+

@@ -30,22 +30,37 @@ describe('importDataset', () => {
     const first = importDataset(db, FIXTURES_DIR);
     expect(first.ok).toBe(true);
     expect(first.errors).toEqual([]);
-    const snapshot = [
+    const tables = [
       'routes',
       'stops',
       'route_directions',
       'route_stops',
       'stop_aliases',
       'schedules',
-    ].map((t) => count(db, t));
+      'places',
+      'place_aliases',
+      'place_stops',
+    ];
+    const snapshot = tables.map((t) => count(db, t));
     expect(importDataset(db, FIXTURES_DIR).ok).toBe(true);
-    expect(
-      ['routes', 'stops', 'route_directions', 'route_stops', 'stop_aliases', 'schedules'].map((t) =>
-        count(db, t),
-      ),
-    ).toEqual(snapshot);
+    expect(tables.map((t) => count(db, t))).toEqual(snapshot);
+    expect(count(db, 'places')).toBe(1);
+    expect(count(db, 'place_stops')).toBe(1);
     expect(count(db, 'routes')).toBe(3);
     expect(first.summary.stopsWithoutCoordinates).toBe(1);
+  });
+
+  it('rechaza un lugar cuya parada cercana no existe', () => {
+    const dir = copyFixtures();
+    const file = path.join(dir, 'places', 'places.json');
+    const places = JSON.parse(fs.readFileSync(file, 'utf-8'));
+    places[0].nearby_stops = [{ stop_external_id: null, stop_name: 'Parada que no existe' }];
+    fs.writeFileSync(file, JSON.stringify(places));
+    const db = openDatabase(IN_MEMORY_DB);
+    const report = importDataset(db, dir);
+    expect(report.ok).toBe(false);
+    expect(report.errors[0]).toMatchObject({ file: 'places', location: 'Cooperativa San Vicente' });
+    expect(count(db, 'places')).toBe(0);
   });
 
   it('actualiza datos existentes en vez de duplicarlos', () => {

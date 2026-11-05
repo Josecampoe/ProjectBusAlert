@@ -22,6 +22,8 @@
       "longitude": null
     }
   ],
+  "originPlace": null,
+  "destinationPlace": null,
   "isDemoData": true,
   "status": "no_route"
 }

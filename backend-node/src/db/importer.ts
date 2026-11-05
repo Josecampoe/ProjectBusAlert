@@ -11,6 +11,7 @@
  *   routes/routes.json, routes/route_directions.json, routes/route_stops.json
  *   stops/*.json       → arreglo de paradas
  *   schedules/*.json   → arreglo de horarios
+ *   places/*.json      → lugares que no son parada, con sus paradas cercanas (opcional)
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -89,6 +90,23 @@ export const StopSchema = z
     message: 'latitude y longitude deben venir juntas o ambas en null',
   });
 
+/** Referencia a una parada existente: por código Ruti o, si no tiene, por nombre. */
+const StopRefSchema = z.strictObject({
+  stop_external_id: nullableText,
+  stop_name: z.string().trim().min(1),
+});
+
+export const PlaceSchema = z.strictObject({
+  name: z.string().trim().min(1),
+  aliases: z.array(z.string().trim().min(1)).default([]),
+  /** Paradas donde conviene subir o bajar para llegar a pie a este lugar. */
+  nearby_stops: z.array(StopRefSchema).min(1),
+  active: z.boolean().default(true),
+  source: z.string().trim().min(1),
+  verified: z.boolean().default(false),
+  notes: nullableText,
+});
+
 const RouteStopEntrySchema = z.strictObject({
   order: z.number().int().positive(),
   stop_external_id: nullableText,
@@ -125,6 +143,7 @@ type Route = z.infer<typeof RouteSchema>;
 type Direction = z.infer<typeof DirectionSchema>;
 type Stop = z.infer<typeof StopSchema>;
 type Schedule = z.infer<typeof ScheduleSchema>;
+type Place = z.infer<typeof PlaceSchema>;
 type RouteStopsDirection = Exclude<z.infer<typeof RouteStopsFileSchema>[string], string>;
 
 // ─── Reporte ───────────────────────────────────────────────────────────────
@@ -138,7 +157,14 @@ export interface ImportIssue {
 export interface ImportReport {
   ok: boolean;
   counts: Record<
-    'sources' | 'routes' | 'directions' | 'stops' | 'aliases' | 'routeStops' | 'schedules',
+    | 'sources'
+    | 'routes'
+    | 'directions'
+    | 'stops'
+    | 'aliases'
+    | 'routeStops'
+    | 'schedules'
+    | 'places',
     number
   >;
   errors: ImportIssue[];
@@ -157,6 +183,7 @@ interface Dataset {
   stops: Stop[];
   routeStops: RouteStopsDirection[];
   schedules: Schedule[];
+  places: Place[];
 }
 
 // ─── Lectura y validación ──────────────────────────────────────────────────
@@ -221,6 +248,7 @@ export function loadDataset(dataDir: string, errors: ImportIssue[]): Dataset {
       (v): v is RouteStopsDirection => typeof v !== 'string',
     ),
     schedules: arr('schedules', ScheduleSchema),
+    places: arr('places', PlaceSchema),
   };
 }
 
@@ -278,6 +306,11 @@ function crossValidate(data: Dataset, errors: ImportIssue[]): void {
         location: s.route_code,
         message: `ruta "${s.route_code}" no existe`,
       });
+  });
+  for (const name of new Set(dupes(data.places.map((p) => p.name.toLowerCase()))))
+    errors.push({ file: 'places', location: name, message: 'lugar duplicado' });
+  data.places.forEach((p) => {
+    checkSource('places', p.name, p.source);
   });
   data.routeStops.forEach((d) => {
     if (!directionKeys.has(d.direction_key))
@@ -421,17 +454,19 @@ function writeDataset(db: Db, data: Dataset, report: ImportReport): void {
   const insertRouteStop = db.prepare(
     'INSERT INTO route_stops (route_direction_id, stop_id, stop_order) VALUES (?, ?, ?)',
   );
+  /** Parada por código; sin código, por nombre (si el nombre es único). */
+  const findStopRef = (externalId: string | null, name: string): { id: number } | undefined => {
+    if (externalId) return findByExternal.get(externalId) as { id: number } | undefined;
+    const uncoded = findUncoded.get(name) as { id: number } | undefined;
+    if (uncoded) return uncoded;
+    const matches = findAnyByName.all(name) as Array<{ id: number }>;
+    return matches.length === 1 ? matches[0] : undefined;
+  };
   for (const d of data.routeStops) {
     const dirId = directionId(d.direction_key);
     deleteRouteStops.run(dirId);
     for (const entry of d.stops) {
-      let stop = entry.stop_external_id
-        ? (findByExternal.get(entry.stop_external_id) as { id: number } | undefined)
-        : (findUncoded.get(entry.stop_name) as { id: number } | undefined);
-      if (!stop && !entry.stop_external_id) {
-        const matches = findAnyByName.all(entry.stop_name) as Array<{ id: number }>;
-        if (matches.length === 1) stop = matches[0];
-      }
+      const stop = findStopRef(entry.stop_external_id, entry.stop_name);
       if (!stop) {
         report.errors.push({
           file: 'routes/route_stops.json',
@@ -442,6 +477,45 @@ function writeDataset(db: Db, data: Dataset, report: ImportReport): void {
       }
       insertRouteStop.run(dirId, stop.id, entry.order);
       c.routeStops++;
+    }
+  }
+
+  // Lugares: se reemplazan sus alias y paradas cercanas en cada importación.
+  const findPlace = db.prepare('SELECT id FROM places WHERE lower(name) = lower(?)');
+  const insertPlace = db.prepare(
+    'INSERT INTO places (name, active, source, verified, notes) VALUES (?, ?, ?, ?, ?)',
+  );
+  const updatePlace = db.prepare(`
+        UPDATE places SET name=?, active=?, source=?, verified=?, notes=?, updated_at=datetime('now')
+        WHERE id = ?`);
+  const deletePlaceAliases = db.prepare('DELETE FROM place_aliases WHERE place_id = ?');
+  const insertPlaceAlias = db.prepare(
+    'INSERT OR IGNORE INTO place_aliases (place_id, alias) VALUES (?, ?)',
+  );
+  const deletePlaceStops = db.prepare('DELETE FROM place_stops WHERE place_id = ?');
+  const insertPlaceStop = db.prepare(
+    'INSERT OR IGNORE INTO place_stops (place_id, stop_id) VALUES (?, ?)',
+  );
+  for (const p of data.places) {
+    const values = [p.name, bool(p.active), p.source, bool(p.verified), p.notes] as const;
+    const existing = findPlace.get(p.name) as { id: number } | undefined;
+    const id = existing ? existing.id : Number(insertPlace.run(...values).lastInsertRowid);
+    if (existing) updatePlace.run(...values, existing.id);
+    c.places++;
+    deletePlaceAliases.run(id);
+    for (const alias of new Set(p.aliases)) insertPlaceAlias.run(id, alias);
+    deletePlaceStops.run(id);
+    for (const ref of p.nearby_stops) {
+      const stop = findStopRef(ref.stop_external_id, ref.stop_name);
+      if (!stop) {
+        report.errors.push({
+          file: 'places',
+          location: p.name,
+          message: `parada cercana "${ref.stop_name}" (código ${ref.stop_external_id ?? 'sin código'}) no existe o es ambigua`,
+        });
+        continue;
+      }
+      insertPlaceStop.run(id, stop.id);
     }
   }
 
@@ -490,6 +564,7 @@ export function importDataset(db: Db, dataDir: string): ImportReport {
       aliases: 0,
       routeStops: 0,
       schedules: 0,
+      places: 0,
     },
     errors: [],
     warnings: [],
@@ -514,6 +589,7 @@ export function importDataset(db: Db, dataDir: string): ImportReport {
       aliases: 0,
       routeStops: 0,
       schedules: 0,
+      places: 0,
     };
     return report;
   }

@@ -56,6 +56,10 @@ E1_EXTRA_ALIASES = {
     '1265': ['Veterinaria'], '1360': ['U. Cooperativa'], '1375': ['U. Cooperativa'],
     '2585': ['María Goretti'], '2635': ['María Goretti'],
 }
+# Alias extra para paradas nuevas de la guía (nombres con que la gente las conoce).
+GUIDE_EXTRA_ALIASES = {
+    'Liceo Udenar': ['Liceo de la Universidad de Nariño', 'Colegio Liceo Udenar', 'Colegio Liceo'],
+}
 # Casos especiales de la guía: un texto → una o varias paradas (nombre, alias).
 SPECIAL = {
     'Panamericana (Éxito)': [('Panamericana Éxito', ['Panamericana (Éxito)'])],
@@ -104,7 +108,7 @@ def resolve(raw):
     name = raw
     for pattern, repl in ABBREVIATIONS:
         name = re.sub(pattern, repl, name)
-    return [new_stop(name, [raw])]
+    return [new_stop(name, [raw, *GUIDE_EXTRA_ALIASES.get(name, [])])]
 
 
 text = open(f'{DATA}/raw/guia_rutas_setp.md', encoding='utf8').read()

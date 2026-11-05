@@ -76,6 +76,8 @@
     <string name="result_transfer_at">Transbordo en %1$s</string>
     <string name="result_walk_transfer">Camina %1$d m hasta %2$s</string>
     <string name="result_nearest_stop">Parada a %1$d m</string>
+    <string name="result_walk_to_place">Camina hasta %1$s</string>
+    <string name="result_board_near_place">Parada cerca de %1$s</string>
     <string name="result_out_of_service">Fuera del horario de servicio</string>
     <string name="result_demo_badge">Datos de demostración</string>
     <string name="action_stop_voice">Detener voz</string>
