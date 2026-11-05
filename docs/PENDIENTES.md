@@ -48,8 +48,9 @@ Todo va en `backend-node/data/`, siguiendo `backend-node/data/templates/route.te
 2. **Revisar la conversión de la guía (2026-10-24)**: E2–E7 y C1–C16 se cargaron desde tu guía (`data/raw/guia_rutas_setp.md`). Revisa en `data/routes/route_stops.json` que el orden y los enlaces con paradas de E1 sean correctos (D-043), sobre todo las terminales agregadas a los retornos. Faltan rutas P y T si existen.
 3. **Horarios y frecuencias de la E1** (`data/schedules/schedules.json`): hoy `start_time`, `end_time` y `frequency_minutes` están en `null`. Con la frecuencia, las estimaciones suman el tiempo de espera; con el horario, se avisa si la consulta está fuera de servicio.
 4. **Color oficial de cada ruta** (opcional): campo `color` (`#RRGGBB`) en `routes/routes.json`. El reloj y la app móvil lo usan para identificar la ruta.
-5. **Calendario de festivos** (decisión): hoy los festivos se tratan como día hábil. Si se necesita, hay que definir la fuente del calendario de festivos de Colombia.
-6. **Tiempo real** (decisión): si Avante/Ruti ofrece una API de buses en tiempo real, se conecta con una nueva implementación de `ArrivalTimeProvider` (`backend-node/src/services/arrivalTime.ts`). Hace falta acceso o credenciales del operador.
+5. **Lugares de referencia** (`data/places/places.json`): sitios que no son parada (colegios, barrios, negocios) con la parada que les queda cerca. Hoy solo está "Cooperativa San Vicente → Liceo Udenar". Agrega los que la gente suele pedir copiando ese bloque (D-047); `npm run data:validate` avisa si la parada no existe.
+6. **Calendario de festivos** (decisión): hoy los festivos se tratan como día hábil. Si se necesita, hay que definir la fuente del calendario de festivos de Colombia.
+7. **Tiempo real** (decisión): si Avante/Ruti ofrece una API de buses en tiempo real, se conecta con una nueva implementación de `ArrivalTimeProvider` (`backend-node/src/services/arrivalTime.ts`). Hace falta acceso o credenciales del operador.
 
 ## App del teléfono
 
