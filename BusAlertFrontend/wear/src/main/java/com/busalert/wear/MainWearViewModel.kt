@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.domain.ErrorCode
+import com.busalert.shared.domain.GeoPoint
 import com.busalert.shared.domain.NearbyStop
 import com.busalert.shared.domain.Outcome
 import com.busalert.shared.domain.TransitRepository
@@ -22,7 +23,9 @@ import com.busalert.shared.preferences.recentPlaces
 import com.busalert.wear.location.LocationSource
 import com.busalert.wear.voice.TripPhraseParser
 import com.busalert.wear.voice.VoiceError
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,12 +35,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * Pantallas/estados del flujo del reloj:
+ * Pantallas/estados del flujo del reloj. Hay una sola pregunta: el GPS se busca
+ * en segundo plano mientras el usuario habla.
  *
- * IDLE ─► LOCATING (GPS + /api/stops/nearby) ──────────┐ hay parada cercana
- *      └► ASKING_LOCATION (voz) ⇄ TYPING_LOCATION         │ sin permiso / sin GPS / sin paradas cerca
- *          └────────────► ASKING_DESTINATION ⇄ TYPING_DESTINATION ◄┘
- *                              └► PROCESSING ─► RESULT | NO_RESULT | ERROR
+ * IDLE ─► ASKING_DESTINATION ⇄ TYPING_DESTINATION   (GPS + /api/stops/nearby en paralelo)
+ *            │ "estoy en X y voy a Y" ─────────────────────────────┐
+ *            │ "voy a Y" + GPS listo ──────────────────────────────┤
+ *            │ "voy a Y" + GPS sin terminar ─► LOCATING ───────────┤ hay ubicación
+ *            │                                  └─► ASKING_LOCATION ⇄ TYPING_LOCATION ─┤
+ *            │                                      (sin GPS / sin paradas cerca)      │
+ *            └──────────────────────────────────────────► PROCESSING ◄────────────────┘
+ *                                                            └► RESULT | NO_RESULT | ERROR
  * IDLE ⇄ SETTINGS
  */
 enum class AppState {
@@ -108,6 +116,12 @@ class MainWearViewModel(
     private var lastQuery: TripQuery? = null
     private var requestJob: Job? = null
 
+    /** Búsqueda de la ubicación GPS que corre mientras el usuario habla. */
+    private var gpsJob: Deferred<GpsFix>? = null
+
+    /** Destino ya dicho que espera el origen (GPS o lugar dicho). */
+    private var pendingDestination: String? = null
+
     // ── Preferencias y ajustes ────────────────────────────────────────────
 
     fun openSettings() {
@@ -138,39 +152,39 @@ class MainWearViewModel(
     // ── Flujo de consulta ─────────────────────────────────────────────────
 
     /**
-     * Inicia una consulta: primero intenta el GPS y busca la parada más cercana
-     * con `/api/stops/nearby`. Si no hay permiso, señal, respuesta a tiempo o
-     * ninguna parada ubicable cerca, pide el lugar por voz (y teclado como alternativa).
+     * Inicia una consulta: pregunta de una vez "¿a dónde vas?" y, mientras el usuario
+     * habla, busca la ubicación GPS y la parada más cercana (`/api/stops/nearby`).
      */
     fun startQuery() {
         cancelRequest()
+        cancelGps()
         clearQuery()
-        _appState.value = AppState.LOCATING
-        requestJob = viewModelScope.launch {
-            val point = locationSource.currentLocation()
-            if (_appState.value != AppState.LOCATING) return@launch
-            if (point == null) {
-                _appState.value = AppState.ASKING_LOCATION
-                return@launch
-            }
-            val nearby = transitRepository.nearbyStops(point)
-            if (_appState.value != AppState.LOCATING) return@launch
-            if (nearby is Outcome.Success && nearby.value.nearest == null) {
-                _noNearbyStops.value = true
-                _appState.value = AppState.ASKING_LOCATION
-                return@launch
-            }
-            // Si la consulta falla (red), se sigue con las coordenadas: el backend
-            // vuelve a resolver la parada al planificar y reporta el error si persiste.
-            _nearestStop.value = (nearby as? Outcome.Success)?.value?.nearest
-            _origin.value = TripOrigin.Located(point)
-            _appState.value = AppState.ASKING_DESTINATION
-        }
+        _appState.value = AppState.ASKING_DESTINATION
+        gpsJob = viewModelScope.async { locate() }
     }
 
-    /** El usuario prefiere decir dónde está en lugar de usar el GPS. */
+    /**
+     * Busca la ubicación GPS. Si funciona y hay paradas cerca, la deja como origen
+     * (a menos que el usuario ya haya dicho dónde está).
+     */
+    private suspend fun locate(): GpsFix {
+        val point = locationSource.currentLocation() ?: return GpsFix.Unavailable
+        val nearby = transitRepository.nearbyStops(point)
+        if (nearby is Outcome.Success && nearby.value.nearest == null) {
+            _noNearbyStops.value = true
+            return GpsFix.NoStops
+        }
+        // Si la consulta falla (red), se sigue con las coordenadas: el backend
+        // vuelve a resolver la parada al planificar y reporta el error si persiste.
+        _nearestStop.value = (nearby as? Outcome.Success)?.value?.nearest
+        if (_origin.value == null) _origin.value = TripOrigin.Located(point)
+        return GpsFix.Found(point)
+    }
+
+    /** El usuario prefiere decir dónde está en lugar de esperar el GPS. */
     fun useSpokenLocation() {
         cancelRequest()
+        cancelGps()
         _origin.value = null
         _nearestStop.value = null
         _appState.value = AppState.ASKING_LOCATION
@@ -183,31 +197,62 @@ class MainWearViewModel(
         phraseParser.split(text)?.let { phrase ->
             _origin.value = TripOrigin.Named(phrase.origin)
             _noNearbyStops.value = false
-            onDestinationReceived(phrase.destination)
+            submitDestination(phrase.destination, TripOrigin.Named(phrase.origin))
             return
         }
-        _origin.value = TripOrigin.Named(text)
+        val origin = TripOrigin.Named(text)
+        _origin.value = origin
         _noNearbyStops.value = false
         _typedText.value = ""
         _voiceNotice.value = null
-        _appState.value = AppState.ASKING_DESTINATION
+        val pending = pendingDestination
+        if (pending != null) {
+            submitDestination(pending, origin)
+        } else {
+            _appState.value = AppState.ASKING_DESTINATION
+        }
     }
 
     fun onDestinationReceived(destination: String) {
-        // Si la respuesta trae también el origen, manda lo que dijo el usuario sobre el GPS.
-        val phrase = phraseParser.split(destination.trim())
-        if (phrase != null) _origin.value = TripOrigin.Named(phrase.origin)
-        val text = phrase?.destination ?: destination.trim()
-        val origin = _origin.value
+        val text = destination.trim()
         if (text.isEmpty()) return
-        if (origin == null) {
-            // Sin origen se vuelve a preguntar en vez de suponer uno.
+        _typedText.value = ""
+        _voiceNotice.value = null
+        // "Estoy en X y voy a Y": lo dicho manda sobre el GPS.
+        phraseParser.split(text)?.let { phrase ->
+            val origin = TripOrigin.Named(phrase.origin)
+            _origin.value = origin
+            submitDestination(phrase.destination, origin)
+            return
+        }
+        _origin.value?.let { origin ->
+            submitDestination(text, origin)
+            return
+        }
+        // Solo dijo el destino y el GPS aún no responde: se espera sin volver a preguntar.
+        pendingDestination = text
+        val gps = gpsJob
+        if (gps == null) {
             _appState.value = AppState.ASKING_LOCATION
             return
         }
-        _typedText.value = ""
-        _voiceNotice.value = null
-        submit(TripQuery(destination = text, origin = origin, language = preferences.value.language))
+        _appState.value = AppState.LOCATING
+        cancelRequest()
+        requestJob = viewModelScope.launch {
+            val fix = gps.await()
+            if (_appState.value != AppState.LOCATING) return@launch
+            if (fix is GpsFix.Found) {
+                submitDestination(text, _origin.value ?: TripOrigin.Located(fix.point))
+            } else {
+                // Sin GPS o sin paradas cerca: ahora sí se pregunta dónde está.
+                _appState.value = AppState.ASKING_LOCATION
+            }
+        }
+    }
+
+    private fun submitDestination(destination: String, origin: TripOrigin) {
+        pendingDestination = null
+        submit(TripQuery(destination = destination, origin = origin, language = preferences.value.language))
     }
 
     /** Reintenta la última consulta (por ejemplo tras un error de red). */
@@ -219,6 +264,7 @@ class MainWearViewModel(
     /** Cancela lo que esté en curso y vuelve al inicio. */
     fun resetToIdle() {
         cancelRequest()
+        cancelGps()
         clearQuery()
         lastQuery = null
         _appState.value = AppState.IDLE
@@ -262,7 +308,13 @@ class MainWearViewModel(
         requestJob = null
     }
 
+    private fun cancelGps() {
+        gpsJob?.cancel()
+        gpsJob = null
+    }
+
     private fun clearQuery() {
+        pendingDestination = null
         _origin.value = null
         _nearestStop.value = null
         _noNearbyStops.value = false
@@ -332,4 +384,15 @@ class MainWearViewModel(
             return MainWearViewModel(repository, transitRepository, locationSource, preferencesRepository, phraseParser) as T
         }
     }
+}
+
+/** Resultado de la búsqueda GPS en segundo plano. */
+private sealed interface GpsFix {
+    data class Found(val point: GeoPoint) : GpsFix
+
+    /** Hay ubicación, pero ninguna parada con coordenadas cerca. */
+    data object NoStops : GpsFix
+
+    /** Sin permiso, sin señal o sin respuesta a tiempo. */
+    data object Unavailable : GpsFix
 }
