@@ -1,0 +1,2827 @@
+{
+  "source": "openstreetmap",
+  "attribution": "© colaboradores de OpenStreetMap (ODbL)",
+  "generated_at": "2026-11-09T19:57:46.529Z",
+  "osm_fetched_at": "2026-11-09T19:45:41.362Z",
+  "note": "Archivo generado por `npm run osm:geocode`. No lo edites a mano: corrige en data/stops/ (las coordenadas escritas ahí ganan).",
+  "coordinates": [
+    {
+      "external_id": "1265",
+      "name": "Udenar - Facultad de Veterinaria",
+      "latitude": 1.23047,
+      "longitude": -77.293772,
+      "method": "place",
+      "matched": "udenar (building=university)",
+      "osm_ids": [
+        "way/1372232354"
+      ]
+    },
+    {
+      "external_id": "1275",
+      "name": "Udenar Torobajo",
+      "latitude": 1.23047,
+      "longitude": -77.293772,
+      "method": "place",
+      "matched": "udenar (building=university)",
+      "osm_ids": [
+        "way/1372232354"
+      ]
+    },
+    {
+      "external_id": "1240",
+      "name": "Morasurco",
+      "latitude": 1.233341,
+      "longitude": -77.284697,
+      "method": "place",
+      "matched": "Morasurco (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225802997"
+      ]
+    },
+    {
+      "external_id": "1345",
+      "name": "Clínica Bellatriz",
+      "latitude": 1.230117,
+      "longitude": -77.285776,
+      "method": "place",
+      "matched": "Clínica Bellatriz (amenity=hospital)",
+      "osm_ids": [
+        "way/571380400"
+      ]
+    },
+    {
+      "external_id": "1360",
+      "name": "Universidad Cooperativa",
+      "latitude": 1.229758,
+      "longitude": -77.289898,
+      "method": "place",
+      "matched": "Universidad Cooperativa de Colombia (amenity=university)",
+      "osm_ids": [
+        "node/613326076"
+      ]
+    },
+    {
+      "external_id": "1375",
+      "name": "Universidad Cooperativa",
+      "latitude": 1.229758,
+      "longitude": -77.289898,
+      "method": "place",
+      "matched": "Universidad Cooperativa de Colombia (amenity=university)",
+      "osm_ids": [
+        "node/613326076"
+      ]
+    },
+    {
+      "external_id": "1495",
+      "name": "El Dorado",
+      "latitude": 1.224834,
+      "longitude": -77.287258,
+      "method": "place",
+      "matched": "Dorado (place=neighbourhood)",
+      "osm_ids": [
+        "node/638963395"
+      ]
+    },
+    {
+      "external_id": "1505",
+      "name": "Av. Estudiantes, Carrera 38",
+      "latitude": 1.22773,
+      "longitude": -77.282949,
+      "method": "intersection",
+      "matched": "Avenida de Los Estudiantes con Carrera 38",
+      "osm_ids": [
+        "way/48376975",
+        "way/48205266"
+      ]
+    },
+    {
+      "external_id": "1515",
+      "name": "Valle de Atríz",
+      "latitude": 1.229209,
+      "longitude": -77.28634,
+      "method": "place",
+      "matched": "Condominio Valle de Atriz (place=neighbourhood)",
+      "osm_ids": [
+        "node/13338995211",
+        "relation/19895505"
+      ]
+    },
+    {
+      "external_id": "1475",
+      "name": "Cedenar",
+      "latitude": 1.227368,
+      "longitude": -77.281771,
+      "method": "place",
+      "matched": "CEDENAR (landuse=industrial)",
+      "osm_ids": [
+        "way/654328360"
+      ]
+    },
+    {
+      "external_id": "1685",
+      "name": "Av. Los Estudiantes Carrera 32B",
+      "latitude": 1.223433,
+      "longitude": -77.280878,
+      "method": "intersection",
+      "matched": "Avenida de Los Estudiantes con Carrera 32 B",
+      "osm_ids": [
+        "way/48376975",
+        "way/48205256"
+      ]
+    },
+    {
+      "external_id": "1695",
+      "name": "Av. Los Estudiantes Carrera 32",
+      "latitude": 1.222617,
+      "longitude": -77.280476,
+      "method": "intersection",
+      "matched": "Avenida de Los Estudiantes con Carrera 32",
+      "osm_ids": [
+        "way/48376975",
+        "way/633036935"
+      ]
+    },
+    {
+      "external_id": "1800",
+      "name": "Las Cuadras Calle 19",
+      "latitude": 1.218592,
+      "longitude": -77.279501,
+      "method": "place_on_street",
+      "matched": "Las Cuadras (place=neighbourhood) sobre Calle 19",
+      "osm_ids": [
+        "node/1225803072",
+        "way/1445665873"
+      ]
+    },
+    {
+      "external_id": "1855",
+      "name": "Parque Infantil",
+      "latitude": 1.219465,
+      "longitude": -77.281777,
+      "method": "place",
+      "matched": "Parque infantil (leisure=park)",
+      "osm_ids": [
+        "way/160067636"
+      ]
+    },
+    {
+      "external_id": "1930",
+      "name": "Calle 18 Carrera 29",
+      "latitude": 1.218291,
+      "longitude": -77.280365,
+      "method": "intersection",
+      "matched": "Calle 18 con Carrera 29",
+      "osm_ids": [
+        "way/74918635",
+        "way/48395935"
+      ]
+    },
+    {
+      "external_id": "2035",
+      "name": "Carmelitas",
+      "latitude": 1.20904,
+      "longitude": -77.283743,
+      "method": "place",
+      "matched": "Conjunto Carmelitas (building=house)",
+      "osm_ids": [
+        "way/537019467"
+      ]
+    },
+    {
+      "external_id": "2055",
+      "name": "Calle 18 Carrera 27",
+      "latitude": 1.216587,
+      "longitude": -77.279659,
+      "method": "intersection",
+      "matched": "Calle 18 con Avenida Carrera 27",
+      "osm_ids": [
+        "way/74918635",
+        "way/1005561393"
+      ]
+    },
+    {
+      "external_id": "2265",
+      "name": "Calle 16 Carrera 25",
+      "latitude": 1.214135,
+      "longitude": -77.280582,
+      "method": "intersection",
+      "matched": "Calle 16 con Carrera 25",
+      "osm_ids": [
+        "way/48135803",
+        "way/48357657"
+      ]
+    },
+    {
+      "external_id": "2390",
+      "name": "San Agustín",
+      "latitude": 1.213224,
+      "longitude": -77.279451,
+      "method": "place",
+      "matched": "Parroquia de San Agustín (building=church)",
+      "osm_ids": [
+        "way/1445643306"
+      ]
+    },
+    {
+      "external_id": "2495",
+      "name": "Calle 16 Carrera 22",
+      "latitude": 1.210982,
+      "longitude": -77.27917,
+      "method": "intersection",
+      "matched": "Calle 16 con Carrera 22",
+      "osm_ids": [
+        "way/788613106",
+        "way/48398783"
+      ]
+    },
+    {
+      "external_id": "2540",
+      "name": "Calle 17 Amorel",
+      "latitude": 1.211153,
+      "longitude": -77.278323,
+      "method": "place_on_street",
+      "matched": "Centro Comercial Amorel (shop=mall) sobre Calle 17",
+      "osm_ids": [
+        "way/958446135",
+        "way/74918639"
+      ]
+    },
+    {
+      "external_id": "2585",
+      "name": "María Goretti Carrera 21A",
+      "latitude": 1.209885,
+      "longitude": -77.279098,
+      "method": "place_on_street",
+      "matched": "Colegio María Goretti (amenity=school) sobre Carrera 21A",
+      "osm_ids": [
+        "way/115235261",
+        "way/435252694"
+      ]
+    },
+    {
+      "external_id": "2590",
+      "name": "Calle 17 Carrera 20",
+      "latitude": 1.209356,
+      "longitude": -77.277432,
+      "method": "intersection",
+      "matched": "Calle 17 con Carrera 20",
+      "osm_ids": [
+        "way/74918639",
+        "way/419628717"
+      ]
+    },
+    {
+      "external_id": "2635",
+      "name": "María Goretti Calle 14",
+      "latitude": 1.208062,
+      "longitude": -77.279148,
+      "method": "place_on_street",
+      "matched": "Colegio María Goretti (amenity=school) sobre Calle 14",
+      "osm_ids": [
+        "way/115235261",
+        "way/74842967"
+      ]
+    },
+    {
+      "external_id": "2670",
+      "name": "Avenida Las Américas Calle 16",
+      "latitude": 1.207792,
+      "longitude": -77.277657,
+      "method": "intersection",
+      "matched": "Avenida de Las Américas con Calle 16",
+      "osm_ids": [
+        "way/893392721",
+        "way/79091667"
+      ]
+    },
+    {
+      "external_id": "2740",
+      "name": "San Juan Bosco",
+      "latitude": 1.206645,
+      "longitude": -77.275742,
+      "method": "place",
+      "matched": "Colegio San Juan Bosco (amenity=school)",
+      "osm_ids": [
+        "way/115232136",
+        "way/1453119165"
+      ]
+    },
+    {
+      "external_id": "2765",
+      "name": "San Juan Bosco",
+      "latitude": 1.206645,
+      "longitude": -77.275742,
+      "method": "place",
+      "matched": "Colegio San Juan Bosco (amenity=school)",
+      "osm_ids": [
+        "way/115232136",
+        "way/1453119165"
+      ]
+    },
+    {
+      "external_id": "2875",
+      "name": "Las Brisas",
+      "latitude": 1.204078,
+      "longitude": -77.251097,
+      "method": "place",
+      "matched": "Las Brisas (place=neighbourhood)",
+      "osm_ids": [
+        "node/13265916578",
+        "relation/19779838"
+      ]
+    },
+    {
+      "external_id": "2905",
+      "name": "Las Brisas",
+      "latitude": 1.204078,
+      "longitude": -77.251097,
+      "method": "place",
+      "matched": "Las Brisas (place=neighbourhood)",
+      "osm_ids": [
+        "node/13265916578",
+        "relation/19779838"
+      ]
+    },
+    {
+      "external_id": "2920",
+      "name": "Alahambra",
+      "latitude": 1.205267,
+      "longitude": -77.274187,
+      "method": "place",
+      "matched": "La Alhambra (place=neighbourhood)",
+      "osm_ids": [
+        "node/13271731329"
+      ]
+    },
+    {
+      "external_id": "2990",
+      "name": "Parque Bolívar",
+      "latitude": 1.205525,
+      "longitude": -77.270272,
+      "method": "place",
+      "matched": "Parque Bolívar (leisure=park)",
+      "osm_ids": [
+        "way/567220095"
+      ]
+    },
+    {
+      "external_id": "3000",
+      "name": "Caicedonia",
+      "latitude": 1.20422,
+      "longitude": -77.252961,
+      "method": "place",
+      "matched": "Caicedonia (place=neighbourhood)",
+      "osm_ids": [
+        "node/13265916579"
+      ]
+    },
+    {
+      "external_id": "3040",
+      "name": "Parroquia Fátima",
+      "latitude": 1.202985,
+      "longitude": -77.273352,
+      "method": "place",
+      "matched": "Fátima (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225825138",
+        "relation/19739908"
+      ]
+    },
+    {
+      "external_id": "3060",
+      "name": "Parque Bolívar",
+      "latitude": 1.205525,
+      "longitude": -77.270272,
+      "method": "place",
+      "matched": "Parque Bolívar (leisure=park)",
+      "osm_ids": [
+        "way/567220095"
+      ]
+    },
+    {
+      "external_id": "3065",
+      "name": "Parroquia Fátima",
+      "latitude": 1.202985,
+      "longitude": -77.273352,
+      "method": "place",
+      "matched": "Fátima (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225825138",
+        "relation/19739908"
+      ]
+    },
+    {
+      "external_id": "3095",
+      "name": "Santa Mónica",
+      "latitude": 1.203857,
+      "longitude": -77.256068,
+      "method": "place",
+      "matched": "Santa Mónica (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270730519",
+        "relation/19871404"
+      ]
+    },
+    {
+      "external_id": "3100",
+      "name": "Caicedonia",
+      "latitude": 1.20422,
+      "longitude": -77.252961,
+      "method": "place",
+      "matched": "Caicedonia (place=neighbourhood)",
+      "osm_ids": [
+        "node/13265916579"
+      ]
+    },
+    {
+      "external_id": "3110",
+      "name": "Hospital Departamental",
+      "latitude": 1.204898,
+      "longitude": -77.268158,
+      "method": "place",
+      "matched": "Hospital Departamental de Nariño (amenity=hospital)",
+      "osm_ids": [
+        "way/115232215"
+      ]
+    },
+    {
+      "external_id": "3180",
+      "name": "Santa Mónica",
+      "latitude": 1.203857,
+      "longitude": -77.256068,
+      "method": "place",
+      "matched": "Santa Mónica (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270730519",
+        "relation/19871404"
+      ]
+    },
+    {
+      "external_id": "3195",
+      "name": "Mercedario",
+      "latitude": 1.204329,
+      "longitude": -77.261817,
+      "method": "place",
+      "matched": "Mercedario (place=neighbourhood)",
+      "osm_ids": [
+        "node/13272239681"
+      ]
+    },
+    {
+      "external_id": "3215",
+      "name": "Manzana G Santa Mónica",
+      "latitude": 1.202826,
+      "longitude": -77.256098,
+      "method": "place",
+      "matched": "Santa Mónica Mz. G (place=city_block)",
+      "osm_ids": [
+        "way/894730028"
+      ]
+    },
+    {
+      "external_id": "3265",
+      "name": "Santa Bárbara Carrera 1E",
+      "latitude": 1.202161,
+      "longitude": -77.260037,
+      "method": "place",
+      "matched": "Santa Bárbara (place=neighbourhood)",
+      "osm_ids": [
+        "node/13272239682"
+      ]
+    },
+    {
+      "external_id": "3295",
+      "name": "Bernal",
+      "latitude": 1.201312,
+      "longitude": -77.266368,
+      "method": "place",
+      "matched": "Bernal (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291402335",
+        "relation/19815744"
+      ]
+    },
+    {
+      "external_id": "3300",
+      "name": "Villa Flor II Manzana 12",
+      "latitude": 1.201831,
+      "longitude": -77.256997,
+      "method": "place",
+      "matched": "Villaflor II Mz. 12 (place=city_block)",
+      "osm_ids": [
+        "way/894730019"
+      ]
+    },
+    {
+      "external_id": "3315",
+      "name": "Las Mercedes",
+      "latitude": 1.201666,
+      "longitude": -77.26395,
+      "method": "place",
+      "matched": "Las Mercedes (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291402334"
+      ]
+    },
+    {
+      "external_id": "3360",
+      "name": "Villa Flor II Carrera 9 Este",
+      "latitude": 1.200908,
+      "longitude": -77.255452,
+      "method": "place_on_street",
+      "matched": "Villaflor II (place=neighbourhood) sobre Carrera 9 Este",
+      "osm_ids": [
+        "node/13270730518",
+        "relation/19871405",
+        "way/79536734"
+      ]
+    },
+    {
+      "external_id": "3370",
+      "name": "Villa Flor II Carrera 9E",
+      "latitude": 1.200908,
+      "longitude": -77.256216,
+      "method": "place",
+      "matched": "Villaflor II (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270730518",
+        "relation/19871405"
+      ]
+    },
+    {
+      "external_id": "3375",
+      "name": "Villa Flor II Manzana 10",
+      "latitude": 1.201338,
+      "longitude": -77.256087,
+      "method": "place",
+      "matched": "Villaflor II Mz. 10 (place=city_block)",
+      "osm_ids": [
+        "way/894730016"
+      ]
+    },
+    {
+      "external_id": "3400",
+      "name": "Villaflor II Manzana 15",
+      "latitude": 1.201958,
+      "longitude": -77.255806,
+      "method": "place",
+      "matched": "Villaflor II Mz. 15 (place=city_block)",
+      "osm_ids": [
+        "way/894730025"
+      ]
+    },
+    {
+      "external_id": "4020",
+      "name": "Dolores",
+      "latitude": 1.193837,
+      "longitude": -77.240468,
+      "method": "place",
+      "matched": "Dolores (place=hamlet)",
+      "osm_ids": [
+        "node/703480025"
+      ]
+    },
+    {
+      "external_id": "4105",
+      "name": "Dolores",
+      "latitude": 1.193837,
+      "longitude": -77.240468,
+      "method": "place",
+      "matched": "Dolores (place=hamlet)",
+      "osm_ids": [
+        "node/703480025"
+      ]
+    },
+    {
+      "external_id": "4230",
+      "name": "Dolores",
+      "latitude": 1.193837,
+      "longitude": -77.240468,
+      "method": "place",
+      "matched": "Dolores (place=hamlet)",
+      "osm_ids": [
+        "node/703480025"
+      ]
+    },
+    {
+      "external_id": "4350",
+      "name": "Iglesia Dolores",
+      "latitude": 1.193837,
+      "longitude": -77.240468,
+      "method": "place",
+      "matched": "Dolores (place=hamlet)",
+      "osm_ids": [
+        "node/703480025"
+      ]
+    },
+    {
+      "external_id": "4370",
+      "name": "Dolores",
+      "latitude": 1.193837,
+      "longitude": -77.240468,
+      "method": "place",
+      "matched": "Dolores (place=hamlet)",
+      "osm_ids": [
+        "node/703480025"
+      ]
+    },
+    {
+      "external_id": "4450",
+      "name": "Dolores",
+      "latitude": 1.193837,
+      "longitude": -77.240468,
+      "method": "place",
+      "matched": "Dolores (place=hamlet)",
+      "osm_ids": [
+        "node/703480025"
+      ]
+    },
+    {
+      "external_id": "4545",
+      "name": "Mocondino",
+      "latitude": 1.193898,
+      "longitude": -77.24955,
+      "method": "place",
+      "matched": "Mocondino (place=hamlet)",
+      "osm_ids": [
+        "node/703480031"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Calle 18 Av. Panamericana",
+      "latitude": 1.2253,
+      "longitude": -77.285848,
+      "method": "intersection",
+      "matched": "Calle 18 con Avenida Panamericana",
+      "osm_ids": [
+        "way/430660463",
+        "way/445512533"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Carrera 37 Calle 18",
+      "latitude": 1.22494,
+      "longitude": -77.285189,
+      "method": "intersection",
+      "matched": "Carrera 37 con Calle 18",
+      "osm_ids": [
+        "way/48205267",
+        "way/48268365"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Calle 17 Carrera 25",
+      "latitude": 1.214496,
+      "longitude": -77.279738,
+      "method": "intersection",
+      "matched": "Calle 17 con Carrera 25",
+      "osm_ids": [
+        "way/74918639",
+        "way/48357657"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Calle 17 Av. Las Américas",
+      "latitude": 1.20816,
+      "longitude": -77.276749,
+      "method": "intersection",
+      "matched": "Calle 17 con Avenida de Las Américas",
+      "osm_ids": [
+        "way/633036940",
+        "way/893392721"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Carrera 14 Calle 18",
+      "latitude": 1.204345,
+      "longitude": -77.274437,
+      "method": "intersection",
+      "matched": "Carrera 14 con Calle 18",
+      "osm_ids": [
+        "way/48399847",
+        "way/91387725"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Calle 16 Carrera 27",
+      "latitude": 1.215836,
+      "longitude": -77.281329,
+      "method": "intersection",
+      "matched": "Calle 16 con Avenida Carrera 27",
+      "osm_ids": [
+        "way/48135803",
+        "way/1005561392"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Avenida de los Estudiantes Carrera 35",
+      "latitude": 1.225641,
+      "longitude": -77.281947,
+      "method": "intersection",
+      "matched": "Avenida de Los Estudiantes con Carrera 35",
+      "osm_ids": [
+        "way/48376975",
+        "way/48205268"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Agualongo",
+      "latitude": 1.202143,
+      "longitude": -77.287649,
+      "method": "place",
+      "matched": "Agualongo (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225802991"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Alcázares",
+      "latitude": 1.217541,
+      "longitude": -77.269274,
+      "method": "place",
+      "matched": "Los Alcázares (place=neighbourhood)",
+      "osm_ids": [
+        "node/13271731333"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Altamira",
+      "latitude": 1.199196,
+      "longitude": -77.296115,
+      "method": "place",
+      "matched": "Altamira (place=neighbourhood)",
+      "osm_ids": [
+        "node/5448367158"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Alto de Daza",
+      "latitude": 1.266416,
+      "longitude": -77.27691,
+      "method": "place",
+      "matched": "Alto de Daza (place=hamlet)",
+      "osm_ids": [
+        "node/703480066"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Altos de Chapalito",
+      "latitude": 1.185493,
+      "longitude": -77.272898,
+      "method": "place",
+      "matched": "Altos de Chapalito IV (place=neighbourhood)",
+      "osm_ids": [
+        "node/12143377364",
+        "node/12143398806",
+        "node/12143398826",
+        "node/12143398843",
+        "relation/17985080",
+        "relation/17985081",
+        "relation/17985082",
+        "relation/17985083"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Altos de la Colina",
+      "latitude": 1.226307,
+      "longitude": -77.294623,
+      "method": "place",
+      "matched": "Altos de la Colina (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225802973",
+        "node/13248935249",
+        "relation/19740423"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Altos de las Mercedes",
+      "latitude": 1.198909,
+      "longitude": -77.294878,
+      "method": "place",
+      "matched": "Altos de Las Mercedes (place=neighbourhood)",
+      "osm_ids": [
+        "node/13265904630",
+        "relation/19767330"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Amorel",
+      "latitude": 1.210982,
+      "longitude": -77.278696,
+      "method": "place",
+      "matched": "Centro Comercial Amorel (shop=mall)",
+      "osm_ids": [
+        "way/958446135"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Anganoy",
+      "latitude": 1.214151,
+      "longitude": -77.301194,
+      "method": "place",
+      "matched": "Anganoy (place=village)",
+      "osm_ids": [
+        "node/10141936121",
+        "node/5457695568"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Arnulfo Guerrero",
+      "latitude": 1.200807,
+      "longitude": -77.251985,
+      "method": "place",
+      "matched": "Arnulfo Guerrero (place=neighbourhood)",
+      "osm_ids": [
+        "node/13265916598",
+        "relation/19767396"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Atahualpa",
+      "latitude": 1.205418,
+      "longitude": -77.281765,
+      "method": "place",
+      "matched": "Atahualpa (place=neighbourhood)",
+      "osm_ids": [
+        "node/13271731335"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Balcones del Este",
+      "latitude": 1.208252,
+      "longitude": -77.262314,
+      "method": "place",
+      "matched": "Conjunto Residencial Balcones del Este (place=neighbourhood)",
+      "osm_ids": [
+        "node/13343085789"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Belalcázar",
+      "latitude": 1.216781,
+      "longitude": -77.271652,
+      "method": "place",
+      "matched": "Belalcázar (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270584106"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Betania",
+      "latitude": 1.199238,
+      "longitude": -77.261468,
+      "method": "place",
+      "matched": "Betania (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291402331"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Bomboná",
+      "latitude": 1.216932,
+      "longitude": -77.283421,
+      "method": "place",
+      "matched": "Parque Bomboná (leisure=park)",
+      "osm_ids": [
+        "way/91859789"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Buesaquillo",
+      "latitude": 1.209069,
+      "longitude": -77.24164,
+      "method": "place",
+      "matched": "Buesaquillo (place=hamlet)",
+      "osm_ids": [
+        "node/703480034"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Cabrera",
+      "latitude": 1.215091,
+      "longitude": -77.21458,
+      "method": "place",
+      "matched": "Cabrera (place=hamlet)",
+      "osm_ids": [
+        "node/10141933498"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Calle 11 Carrera 24",
+      "latitude": 1.211404,
+      "longitude": -77.284411,
+      "method": "intersection",
+      "matched": "Calle 11 con Carrera 24",
+      "osm_ids": [
+        "way/95533936",
+        "way/633072642"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Canchala",
+      "latitude": 1.199259,
+      "longitude": -77.253322,
+      "method": "place",
+      "matched": "Canchala (place=hamlet)",
+      "osm_ids": [
+        "node/10141933499"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Cantarana",
+      "latitude": 1.197421,
+      "longitude": -77.267611,
+      "method": "place",
+      "matched": "Cantarana (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291348980"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Capilla Visitandinas",
+      "latitude": 1.220049,
+      "longitude": -77.283046,
+      "method": "place",
+      "matched": "Capilla de las Visitandinas (amenity=place_of_worship)",
+      "osm_ids": [
+        "way/91859831"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Capusigra",
+      "latitude": 1.208217,
+      "longitude": -77.287919,
+      "method": "place",
+      "matched": "Capusigra (place=neighbourhood)",
+      "osm_ids": [
+        "node/703893175",
+        "relation/19766085"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Carlos Pizarro",
+      "latitude": 1.216423,
+      "longitude": -77.264401,
+      "method": "place",
+      "matched": "Carlos Pizarro (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270584114",
+        "relation/19895506"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Catambuco",
+      "latitude": 1.166369,
+      "longitude": -77.299296,
+      "method": "place",
+      "matched": "Catambuco (place=village)",
+      "osm_ids": [
+        "node/703480006"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Cementerio",
+      "latitude": 1.221728,
+      "longitude": -77.274206,
+      "method": "place",
+      "matched": "Cementerio (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291255074"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Chambú",
+      "latitude": 1.189332,
+      "longitude": -77.27461,
+      "method": "place",
+      "matched": "Chambú (place=neighbourhood)",
+      "osm_ids": [
+        "node/12143394039",
+        "relation/17985107"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Chapal",
+      "latitude": 1.192929,
+      "longitude": -77.281484,
+      "method": "place",
+      "matched": "Chapal (place=locality)",
+      "osm_ids": [
+        "node/703480017",
+        "way/894432147"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Chapultepec",
+      "latitude": 1.235556,
+      "longitude": -77.288978,
+      "method": "place",
+      "matched": "San Antonio de Juanoy (place=neighbourhood)",
+      "osm_ids": [
+        "node/13343085793"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Club Colombia",
+      "latitude": 1.223166,
+      "longitude": -77.288251,
+      "method": "place",
+      "matched": "Club Colombia (landuse=recreation_ground)",
+      "osm_ids": [
+        "way/655513647"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Colegio Ciudad de Pasto",
+      "latitude": 1.193035,
+      "longitude": -77.270771,
+      "method": "place",
+      "matched": "Colegio Ciudad de Pasto (amenity=school)",
+      "osm_ids": [
+        "node/12485251201"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Complejo Bancario",
+      "latitude": 1.211689,
+      "longitude": -77.27702,
+      "method": "place",
+      "matched": "Centro Cultural Banco de la República (amenity=bank)",
+      "osm_ids": [
+        "way/115229316",
+        "way/115231812",
+        "way/115231814"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Corazón de Jesús",
+      "latitude": 1.222021,
+      "longitude": -77.268961,
+      "method": "place",
+      "matched": "Corazón de Jesús (place=neighbourhood)",
+      "osm_ids": [
+        "node/13264305337",
+        "relation/19764011"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Cristo Rey",
+      "latitude": 1.215083,
+      "longitude": -77.276544,
+      "method": "place",
+      "matched": "Templo de Cristo Rey (building=church)",
+      "osm_ids": [
+        "way/91859872"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Cujacal",
+      "latitude": 1.227297,
+      "longitude": -77.253476,
+      "method": "place",
+      "matched": "Cujacal (place=village)",
+      "osm_ids": [
+        "node/703480091"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "El Calvario",
+      "latitude": 1.217486,
+      "longitude": -77.271303,
+      "method": "place",
+      "matched": "Calvario (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270584107"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "El Edén",
+      "latitude": 1.207918,
+      "longitude": -77.292731,
+      "method": "place",
+      "matched": "El Edén (place=neighbourhood)",
+      "osm_ids": [
+        "node/5448367163"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "El Ejido",
+      "latitude": 1.205109,
+      "longitude": -77.265309,
+      "method": "place",
+      "matched": "El Ejido (place=neighbourhood)",
+      "osm_ids": [
+        "node/13293573222"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "El Obrero",
+      "latitude": 1.210592,
+      "longitude": -77.286911,
+      "method": "place",
+      "matched": "Obrero (place=neighbourhood)",
+      "osm_ids": [
+        "node/13265214555",
+        "relation/19766088"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "El Pilar",
+      "latitude": 1.194827,
+      "longitude": -77.276177,
+      "method": "place",
+      "matched": "El Pilar (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291348975"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "El Porvenir",
+      "latitude": 1.190622,
+      "longitude": -77.26353,
+      "method": "place",
+      "matched": "El Porvenir (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291347243"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "El Progreso",
+      "latitude": 1.197929,
+      "longitude": -77.273556,
+      "method": "place",
+      "matched": "El Progreso (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291348977"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "El Tejar",
+      "latitude": 1.200472,
+      "longitude": -77.263611,
+      "method": "place",
+      "matched": "El Tejar (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291402333"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Galerías",
+      "latitude": 1.216401,
+      "longitude": -77.278943,
+      "method": "place",
+      "matched": "Centro Comercial Galerías (shop=mall)",
+      "osm_ids": [
+        "way/115238855"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Galerías Carrera 27",
+      "latitude": 1.216826,
+      "longitude": -77.279137,
+      "method": "place_on_street",
+      "matched": "Centro Comercial Galerías (shop=mall) sobre Avenida Carrera 27",
+      "osm_ids": [
+        "way/115238855",
+        "way/1005561393"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Genoy",
+      "latitude": 1.269093,
+      "longitude": -77.33582,
+      "method": "place",
+      "matched": "Genoy (place=hamlet)",
+      "osm_ids": [
+        "node/703480072"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Gilberto Pabón",
+      "latitude": 1.193204,
+      "longitude": -77.286195,
+      "method": "place",
+      "matched": "Gilberto Pabón (place=neighbourhood)",
+      "osm_ids": [
+        "node/13348974800"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Granada",
+      "latitude": 1.196817,
+      "longitude": -77.282613,
+      "method": "place",
+      "matched": "Granada (place=neighbourhood)",
+      "osm_ids": [
+        "node/5149854396",
+        "relation/19758560"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Gualcalá",
+      "latitude": 1.210045,
+      "longitude": -77.260521,
+      "method": "place",
+      "matched": "Gualcalá (place=neighbourhood)",
+      "osm_ids": [
+        "node/13260306281"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Hospital Civil",
+      "latitude": 1.219026,
+      "longitude": -77.269737,
+      "method": "place",
+      "matched": "Hospitál Civil (amenity=hospital)",
+      "osm_ids": [
+        "way/115238999"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Hospital Infantil",
+      "latitude": 1.223209,
+      "longitude": -77.280012,
+      "method": "place",
+      "matched": "Hospital Infantil Los Ángeles (amenity=hospital)",
+      "osm_ids": [
+        "way/115228096"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Hospital San Rafael",
+      "latitude": 1.222647,
+      "longitude": -77.292484,
+      "method": "place",
+      "matched": "Hospital San Rafael (amenity=hospital)",
+      "osm_ids": [
+        "way/654320816"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Jamondino",
+      "latitude": 1.183706,
+      "longitude": -77.260584,
+      "method": "place",
+      "matched": "Jamondino (place=hamlet)",
+      "osm_ids": [
+        "node/703480021"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Jardines de las Mercedes",
+      "latitude": 1.197495,
+      "longitude": -77.288551,
+      "method": "place",
+      "matched": "Jardines de las Mercedes (landuse=cemetery)",
+      "osm_ids": [
+        "way/109071670"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Javeriano",
+      "latitude": 1.206871,
+      "longitude": -77.273104,
+      "method": "place",
+      "matched": "Javeriano (place=neighbourhood)",
+      "osm_ids": [
+        "node/13259866887",
+        "relation/19757769"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Jongovito",
+      "latitude": 1.187753,
+      "longitude": -77.29489,
+      "method": "place",
+      "matched": "Jongovito (place=village)",
+      "osm_ids": [
+        "node/703480013"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Jorge Giraldo",
+      "latitude": 1.217775,
+      "longitude": -77.293855,
+      "method": "place",
+      "matched": "Jorge Giraldo (place=neighbourhood)",
+      "osm_ids": [
+        "node/5457695566"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "La Aurora",
+      "latitude": 1.214821,
+      "longitude": -77.288886,
+      "method": "place",
+      "matched": "La Aurora (place=neighbourhood)",
+      "osm_ids": [
+        "node/13326372916"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "La Carolina",
+      "latitude": 1.209674,
+      "longitude": -77.26185,
+      "method": "place",
+      "matched": "La Carolina (place=neighbourhood)",
+      "osm_ids": [
+        "node/13260306280"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "La Castellana",
+      "latitude": 1.218059,
+      "longitude": -77.290752,
+      "method": "place",
+      "matched": "La Castellana (place=neighbourhood)",
+      "osm_ids": [
+        "node/1686455899"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "La Colina",
+      "latitude": 1.225773,
+      "longitude": -77.288941,
+      "method": "place",
+      "matched": "La Colina (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225803011"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "La Libertad",
+      "latitude": 1.223398,
+      "longitude": -77.272743,
+      "method": "place",
+      "matched": "La Libertad (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291255073"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "La Minga",
+      "latitude": 1.189993,
+      "longitude": -77.270968,
+      "method": "place",
+      "matched": "Urbanización La Minga (place=neighbourhood)",
+      "osm_ids": [
+        "node/13257080449"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "La Panadería",
+      "latitude": 1.212429,
+      "longitude": -77.274783,
+      "method": "place",
+      "matched": "La Panadería (place=neighbourhood)",
+      "osm_ids": [
+        "node/13343139733"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "La Paz",
+      "latitude": 1.197267,
+      "longitude": -77.261165,
+      "method": "place",
+      "matched": "La Paz (place=neighbourhood)",
+      "osm_ids": [
+        "node/13272239684"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "La Rosa",
+      "latitude": 1.192319,
+      "longitude": -77.275329,
+      "method": "place",
+      "matched": "La Rosa (place=neighbourhood)",
+      "osm_ids": [
+        "node/13265904605",
+        "relation/19767329"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Las Acacias",
+      "latitude": 1.214072,
+      "longitude": -77.287707,
+      "method": "place",
+      "matched": "Las Acacias (place=neighbourhood)",
+      "osm_ids": [
+        "node/13326372915"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Las Orquídeas",
+      "latitude": 1.218742,
+      "longitude": -77.262249,
+      "method": "place",
+      "matched": "Las Orquídeas (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270584115",
+        "relation/19838206"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Laureano Gómez",
+      "latitude": 1.198405,
+      "longitude": -77.26661,
+      "method": "place",
+      "matched": "Laureano Gómez (place=neighbourhood)",
+      "osm_ids": [
+        "node/13296937387"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Laureles",
+      "latitude": 1.226672,
+      "longitude": -77.296282,
+      "method": "place",
+      "matched": "Los Laureles (place=neighbourhood)",
+      "osm_ids": [
+        "node/13248935258",
+        "relation/19740424"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Liceo Udenar",
+      "latitude": 1.2137,
+      "longitude": -77.291838,
+      "method": "place",
+      "matched": "Liceo de la Universidad de Nariño (amenity=school)",
+      "osm_ids": [
+        "way/518969102"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Lorenzo",
+      "latitude": 1.197469,
+      "longitude": -77.265105,
+      "method": "place",
+      "matched": "Lorenzo (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291402332"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Los Andes",
+      "latitude": 1.212878,
+      "longitude": -77.294156,
+      "method": "place",
+      "matched": "Urbanización Los Andes (place=neighbourhood)",
+      "osm_ids": [
+        "node/5457695561",
+        "relation/19903394"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Luis Carlos Galán",
+      "latitude": 1.193323,
+      "longitude": -77.285138,
+      "method": "place",
+      "matched": "Luis Carlos Galán (place=neighbourhood)",
+      "osm_ids": [
+        "node/5149854399"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Madrigal",
+      "latitude": 1.198871,
+      "longitude": -77.267866,
+      "method": "place",
+      "matched": "Madrigal (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291348981"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Maridíaz",
+      "latitude": 1.221083,
+      "longitude": -77.283603,
+      "method": "place",
+      "matched": "Maridíaz (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225803037"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Mariluz II",
+      "latitude": 1.218669,
+      "longitude": -77.293351,
+      "method": "place",
+      "matched": "Mariluz II (place=neighbourhood)",
+      "osm_ids": [
+        "node/13326372903"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Mariluz III",
+      "latitude": 1.219709,
+      "longitude": -77.293335,
+      "method": "place",
+      "matched": "Mariluz III (place=neighbourhood)",
+      "osm_ids": [
+        "node/13326372913"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Marquetalia",
+      "latitude": 1.22223,
+      "longitude": -77.273796,
+      "method": "place",
+      "matched": "Loma del Carmen (Marquetalia) (place=neighbourhood)",
+      "osm_ids": [
+        "node/13343085790"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Mercado El Tejar",
+      "latitude": 1.198214,
+      "longitude": -77.263635,
+      "method": "place",
+      "matched": "Mercado del tejar (amenity=marketplace)",
+      "osm_ids": [
+        "way/889826478"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Mijitayo",
+      "latitude": 1.203923,
+      "longitude": -77.289729,
+      "method": "place",
+      "matched": "Mijitayo (place=neighbourhood)",
+      "osm_ids": [
+        "node/13312719649"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Mijitayo Alto",
+      "latitude": 1.204829,
+      "longitude": -77.296374,
+      "method": "place",
+      "matched": "Mijitayo Alto (place=neighbourhood)",
+      "osm_ids": [
+        "node/5448367160"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Miraflores",
+      "latitude": 1.193136,
+      "longitude": -77.2663,
+      "method": "place",
+      "matched": "Parroquia San Ezequiel Moreno (amenity=place_of_worship)",
+      "osm_ids": [
+        "way/1448697922"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Nueva Aranda",
+      "latitude": 1.228813,
+      "longitude": -77.270221,
+      "method": "place",
+      "matched": "Nueva Aranda (place=neighbourhood)",
+      "osm_ids": [
+        "node/13260068055",
+        "relation/19758154"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Nueva Aranda III",
+      "latitude": 1.230095,
+      "longitude": -77.269807,
+      "method": "place",
+      "matched": "Nueva Aranda III Mz. F6 (place=city_block)",
+      "osm_ids": [
+        "way/1453219775",
+        "way/1453219776",
+        "way/895083328",
+        "way/895083329",
+        "way/895083330",
+        "way/895083331",
+        "way/895083332",
+        "way/895083333",
+        "way/895083334",
+        "way/895083335",
+        "way/895083356",
+        "way/895083357",
+        "way/895083358",
+        "way/895083359",
+        "way/895083360",
+        "way/895083361",
+        "way/895083362",
+        "way/895083363",
+        "way/895083364",
+        "way/895083365"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Nuevo Horizonte",
+      "latitude": 1.231831,
+      "longitude": -77.267816,
+      "method": "place",
+      "matched": "Nuevo Horizonte (place=neighbourhood)",
+      "osm_ids": [
+        "node/13327199574",
+        "relation/19901971"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Nuevo Sol",
+      "latitude": 1.230996,
+      "longitude": -77.271707,
+      "method": "place",
+      "matched": "Nuevo Sol (place=neighbourhood)",
+      "osm_ids": [
+        "node/13260124617",
+        "relation/19758156"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Obonuco",
+      "latitude": 1.190417,
+      "longitude": -77.306522,
+      "method": "place",
+      "matched": "Obonuco (place=village)",
+      "osm_ids": [
+        "node/703480015"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Pandiaco",
+      "latitude": 1.229841,
+      "longitude": -77.288613,
+      "method": "place",
+      "matched": "Pandiaco (place=neighbourhood)",
+      "osm_ids": [
+        "node/13260306275"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Paraná",
+      "latitude": 1.222514,
+      "longitude": -77.285034,
+      "method": "place",
+      "matched": "Paraná (place=neighbourhood)",
+      "osm_ids": [
+        "node/13260306276"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Parque de Baviera",
+      "latitude": 1.206109,
+      "longitude": -77.262631,
+      "method": "place",
+      "matched": "Parque de Baviera (building=apartments)",
+      "osm_ids": [
+        "way/624585389"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Parque de los Periodistas",
+      "latitude": 1.210575,
+      "longitude": -77.274042,
+      "method": "place",
+      "matched": "Parque de los Periodistas (leisure=square)",
+      "osm_ids": [
+        "way/897348964"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Pinasaco",
+      "latitude": 1.244211,
+      "longitude": -77.296897,
+      "method": "place",
+      "matched": "Pinasaco (place=neighbourhood)",
+      "osm_ids": [
+        "node/13312701896"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Plaza del Carnaval",
+      "latitude": 1.210538,
+      "longitude": -77.276549,
+      "method": "place",
+      "matched": "Plaza del Carnaval (place=square)",
+      "osm_ids": [
+        "way/567219502"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Portal de la Colina",
+      "latitude": 1.225664,
+      "longitude": -77.290846,
+      "method": "place",
+      "matched": "Conjunto Residencial El Portal de La Colina (place=neighbourhood)",
+      "osm_ids": [
+        "node/13343139723",
+        "relation/19902342"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Prados del Norte",
+      "latitude": 1.230145,
+      "longitude": -77.265517,
+      "method": "place",
+      "matched": "Prados del Norte (place=neighbourhood)",
+      "osm_ids": [
+        "node/13342918317",
+        "relation/19901974"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Pucalpa 3",
+      "latitude": 1.20662,
+      "longitude": -77.256565,
+      "method": "place",
+      "matched": "Urbanización Pucalpa III (place=neighbourhood)",
+      "osm_ids": [
+        "node/13272280737"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Quillotocto",
+      "latitude": 1.235101,
+      "longitude": -77.271194,
+      "method": "place",
+      "matched": "Quillotocto (place=neighbourhood)",
+      "osm_ids": [
+        "node/13260140571",
+        "relation/19758191"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Salomón",
+      "latitude": 1.201559,
+      "longitude": -77.271581,
+      "method": "place",
+      "matched": "Salomón (place=neighbourhood)",
+      "osm_ids": [
+        "node/13248571726",
+        "relation/19739907"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "San Andresito",
+      "latitude": 1.209729,
+      "longitude": -77.280635,
+      "method": "place",
+      "matched": "San Andresito (place=neighbourhood)",
+      "osm_ids": [
+        "node/13342914550"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "San Ezequiel",
+      "latitude": 1.219717,
+      "longitude": -77.266263,
+      "method": "place",
+      "matched": "Ezequiel Moreno (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270584119",
+        "relation/19859955"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "San Felipe",
+      "latitude": 1.213537,
+      "longitude": -77.284899,
+      "method": "place",
+      "matched": "Parque San Felipe (leisure=park)",
+      "osm_ids": [
+        "way/551122665"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "San Fernando",
+      "latitude": 1.202361,
+      "longitude": -77.225111,
+      "method": "place",
+      "matched": "San Fernando (place=hamlet)",
+      "osm_ids": [
+        "node/703480026"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "San Ignacio",
+      "latitude": 1.216768,
+      "longitude": -77.285637,
+      "method": "place",
+      "matched": "San Ignacio (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225803002"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "San Juan de Dios",
+      "latitude": 1.221612,
+      "longitude": -77.290341,
+      "method": "place",
+      "matched": "San Juan De Dios (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225803051"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "San Juan de los Pastos",
+      "latitude": 1.19808,
+      "longitude": -77.262088,
+      "method": "place",
+      "matched": "San Juan de Los Pastos (place=neighbourhood)",
+      "osm_ids": [
+        "node/13348974801"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "San Martín",
+      "latitude": 1.195201,
+      "longitude": -77.274275,
+      "method": "place",
+      "matched": "San Martín (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291348974"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Santa Ana",
+      "latitude": 1.22322,
+      "longitude": -77.28707,
+      "method": "place",
+      "matched": "Santa Ana (place=neighbourhood)",
+      "osm_ids": [
+        "node/1225743283"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Santa Catalina",
+      "latitude": 1.205242,
+      "longitude": -77.256123,
+      "method": "place",
+      "matched": "Conjunto Residencial Santa Catalina (place=neighbourhood)",
+      "osm_ids": [
+        "node/13293600612"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Santa Clara",
+      "latitude": 1.195403,
+      "longitude": -77.271671,
+      "method": "place",
+      "matched": "Santa Clara (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291348978"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Santa María",
+      "latitude": 1.212351,
+      "longitude": -77.296238,
+      "method": "place",
+      "matched": "Conjunto Residencial Santa María (place=neighbourhood)",
+      "osm_ids": [
+        "relation/19903393"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Santa Matilde",
+      "latitude": 1.224625,
+      "longitude": -77.266792,
+      "method": "place",
+      "matched": "Santa Matilde (place=neighbourhood)",
+      "osm_ids": [
+        "node/13264305368"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Santa Rita",
+      "latitude": 1.234119,
+      "longitude": -77.290077,
+      "method": "place",
+      "matched": "Conjunto Cerrado Santa Rita (place=neighbourhood)",
+      "osm_ids": [
+        "node/13305054513",
+        "relation/19838201"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Santiago",
+      "latitude": 1.210761,
+      "longitude": -77.284082,
+      "method": "place",
+      "matched": "Santiago (place=neighbourhood)",
+      "osm_ids": [
+        "node/13265214541",
+        "relation/19766086"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Sindagua",
+      "latitude": 1.220365,
+      "longitude": -77.263269,
+      "method": "place",
+      "matched": "Sindagua (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270584124",
+        "relation/19838203"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Sindamanoy",
+      "latitude": 1.216906,
+      "longitude": -77.294413,
+      "method": "place",
+      "matched": "Sindamanoy (place=neighbourhood)",
+      "osm_ids": [
+        "node/5457695565"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Sol de Oriente",
+      "latitude": 1.236878,
+      "longitude": -77.270949,
+      "method": "place",
+      "matched": "Sol de Oriente (place=neighbourhood)",
+      "osm_ids": [
+        "node/13327357354"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Sumatambo",
+      "latitude": 1.204292,
+      "longitude": -77.287762,
+      "method": "place",
+      "matched": "Sumatambo (place=neighbourhood)",
+      "osm_ids": [
+        "node/13312719650"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Tamasagra",
+      "latitude": 1.202625,
+      "longitude": -77.290907,
+      "method": "place",
+      "matched": "Tamasagra II (place=neighbourhood)",
+      "osm_ids": [
+        "node/12095585116"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Tamasagra II",
+      "latitude": 1.202735,
+      "longitude": -77.29101,
+      "method": "place",
+      "matched": "Tamasagra II (place=neighbourhood)",
+      "osm_ids": [
+        "node/12095585116",
+        "relation/19756276"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Teatro Imperial",
+      "latitude": 1.214618,
+      "longitude": -77.282316,
+      "method": "place",
+      "matched": "Teatro Imperial (amenity=theatre)",
+      "osm_ids": [
+        "node/616032279"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Terminal de Transportes",
+      "latitude": 1.199132,
+      "longitude": -77.270479,
+      "method": "place",
+      "matched": "Terminal de Transportes de Pasto (amenity=bus_station)",
+      "osm_ids": [
+        "node/336521981",
+        "node/4521788929"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Terminal Mixto",
+      "latitude": 1.199864,
+      "longitude": -77.271692,
+      "method": "place",
+      "matched": "Sociedad de Transportadores Mixtos S.A.S. (amenity=bus_station)",
+      "osm_ids": [
+        "way/429965949"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Terrazas del Norte",
+      "latitude": 1.225571,
+      "longitude": -77.270043,
+      "method": "place",
+      "matched": "Urbanización Terrazas del Norte (place=neighbourhood)",
+      "osm_ids": [
+        "node/13340231828",
+        "relation/19898907"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Torres de Pubenza",
+      "latitude": 1.219005,
+      "longitude": -77.289414,
+      "method": "place",
+      "matched": "Torres de Pubenza (place=neighbourhood)",
+      "osm_ids": [
+        "node/13326372911"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Unicentro",
+      "latitude": 1.216449,
+      "longitude": -77.288578,
+      "method": "place",
+      "matched": "Centro Comercial Unicentro (landuse=commercial)",
+      "osm_ids": [
+        "way/654328357"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Universidad Mariana",
+      "latitude": 1.223558,
+      "longitude": -77.283093,
+      "method": "place",
+      "matched": "Universidad Mariana (amenity=university)",
+      "osm_ids": [
+        "way/654328359"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Venecia",
+      "latitude": 1.200958,
+      "longitude": -77.270172,
+      "method": "place",
+      "matched": "Venecia (place=neighbourhood)",
+      "osm_ids": [
+        "node/13291402330"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Villa Adriana María",
+      "latitude": 1.205665,
+      "longitude": -77.262304,
+      "method": "place",
+      "matched": "Villa Adriana María (place=neighbourhood)",
+      "osm_ids": [
+        "node/13264326975",
+        "relation/19764057"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Villa Campestre",
+      "latitude": 1.236032,
+      "longitude": -77.299671,
+      "method": "place",
+      "matched": "Conjunto Residencial Villa Campestre (place=neighbourhood)",
+      "osm_ids": [
+        "node/13312701898",
+        "relation/19851311"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Villa Colombia",
+      "latitude": 1.220187,
+      "longitude": -77.265475,
+      "method": "place",
+      "matched": "Villa Colombia (place=neighbourhood)",
+      "osm_ids": [
+        "node/13319541371",
+        "relation/19859956"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Villa Flor I",
+      "latitude": 1.204554,
+      "longitude": -77.257669,
+      "method": "place",
+      "matched": "Villaflor I (place=neighbourhood)",
+      "osm_ids": [
+        "node/12117593270"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Villa Flor II",
+      "latitude": 1.200908,
+      "longitude": -77.256216,
+      "method": "place",
+      "matched": "Villaflor II (place=neighbourhood)",
+      "osm_ids": [
+        "node/13270730518",
+        "relation/19871405"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Villa Nueva",
+      "latitude": 1.231372,
+      "longitude": -77.264902,
+      "method": "place",
+      "matched": "Villa Nueva (place=neighbourhood)",
+      "osm_ids": [
+        "node/13327357355",
+        "relation/19901972"
+      ]
+    },
+    {
+      "external_id": null,
+      "name": "Villa Recreo",
+      "latitude": 1.211215,
+      "longitude": -77.263234,
+      "method": "place",
+      "matched": "Villa Recreo (place=neighbourhood)",
+      "osm_ids": [
+        "node/1686632609"
+      ]
+    }
+  ],
+  "not_found": [
+    {
+      "external_id": "1305",
+      "name": "Udenar Torobajo",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "1410",
+      "name": "Villa del Parque",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "1440",
+      "name": "Villa del Parque",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "1510",
+      "name": "Sagrada Familia",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "2640",
+      "name": "Calle 17 Carrera 19",
+      "reason": "no se encontró el cruce de esas calles en OpenStreetMap"
+    },
+    {
+      "external_id": "3055",
+      "name": "Pinal del Río",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "3080",
+      "name": "Pinal del Río",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "3120",
+      "name": "La Esmeralda",
+      "reason": "el nombre coincide con varios lugares lejanos entre sí"
+    },
+    {
+      "external_id": "3155",
+      "name": "Bienestar Familiar",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "3160",
+      "name": "Santacruz",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "3285",
+      "name": "Calle 21B Carrera 5E",
+      "reason": "no se encontró el cruce de esas calles en OpenStreetMap"
+    },
+    {
+      "external_id": "3590",
+      "name": "CAI Popular",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "3600",
+      "name": "CAI Popular",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "3915",
+      "name": "Vía La Laguna",
+      "reason": "es un tramo de vía, no un lugar puntual"
+    },
+    {
+      "external_id": "3945",
+      "name": "Vía La Laguna",
+      "reason": "es un tramo de vía, no un lugar puntual"
+    },
+    {
+      "external_id": "4470",
+      "name": "Corpominga",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "4635",
+      "name": "Variante Daza",
+      "reason": "es un tramo de vía, no un lugar puntual"
+    },
+    {
+      "external_id": null,
+      "name": "Amorel de la Avenida",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Uniminuto Carrera 27",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Federación de Cafeteros",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "1370",
+      "name": "Av. Los Estudiantes - Castilla",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Alcaldía",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Alto del Campo",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Aquine",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Avenida Chile",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Avenida Colombia",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Avenida Idema",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Avenida Las Américas",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Avenida Los Estudiantes",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Avenida Mijitayo",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Bellavista",
+      "reason": "el nombre coincide con varios lugares lejanos entre sí"
+    },
+    {
+      "external_id": null,
+      "name": "Bomberos",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Briceño",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "CAI Miraflores",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 14",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 15",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 16",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 17",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 18",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 18A",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 1A Sur",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 20",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 21",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Calle 6 Sur",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "CAM Anganoy",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Caracol",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Carrera 19 Calle 22",
+      "reason": "no se encontró el cruce de esas calles en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Carrera 27",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Carrera 31B",
+      "reason": "nombre genérico de una sola calle (no indica en qué punto)"
+    },
+    {
+      "external_id": null,
+      "name": "Casa San Ignacio",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Centro Cultural Palatino",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Champagnat",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Chimayoy",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Clínica Palermo",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Coba Negra",
+      "reason": "el nombre coincide con varios lugares lejanos entre sí"
+    },
+    {
+      "external_id": null,
+      "name": "Colegio Británico",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Coliseo",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Corpoica",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Corporación",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Cresemillas",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Dos Puentes",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "El Carmen",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Empopasto",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Escuela 12 de Octubre",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Escuela Kennedy",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Estadio Libertad",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Éxito",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Éxito Centro",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Gualcaloma",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Inem",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Itsim",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Julián Bucheli",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "La Cuesta",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "La Palma",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Las Margaritas IV",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Las Violetas",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Los Elíseos",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Los Hexágonos",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Los Nogales",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Molinos Nariño",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Normal",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Nuevo Santa Mónica",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Panamericana",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Panamericana Calle 14",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Panamericana Carrera 26 y 33",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Panamericana Éxito",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Panorámico",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Patinódromo",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Portal de Aranda",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Potrerillo",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Proinsalud",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Puente Tabla",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Rosales",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "San Sebastián",
+      "reason": "el nombre coincide con varios lugares lejanos entre sí"
+    },
+    {
+      "external_id": null,
+      "name": "SENA",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Torre Andina",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Udenar Centro",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Único",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Villa del Río",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Villa Elena",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Villa Recreo II",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": null,
+      "name": "Virgen de Anganoy",
+      "reason": "no aparece en OpenStreetMap"
+    },
+    {
+      "external_id": "1420",
+      "name": "Villa María",
+      "reason": "Villa María (place=hamlet) queda lejos de las paradas vecinas del recorrido"
+    },
+    {
+      "external_id": "1447",
+      "name": "Villa María",
+      "reason": "no está en ningún recorrido; no se puede verificar"
+    },
+    {
+      "external_id": null,
+      "name": "Alkosto",
+      "reason": "Alkosto (shop=appliance) queda lejos de las paradas vecinas del recorrido"
+    },
+    {
+      "external_id": null,
+      "name": "Altavista",
+      "reason": "Conjunto Residencial Altavista (place=neighbourhood) queda lejos de las paradas vecinas del recorrido"
+    },
+    {
+      "external_id": null,
+      "name": "Los Sauces",
+      "reason": "Los Sauces (place=neighbourhood) queda lejos de las paradas vecinas del recorrido"
+    },
+    {
+      "external_id": null,
+      "name": "Puertas del Sol",
+      "reason": "Puertas del Sol (amenity=restaurant) queda lejos de las paradas vecinas del recorrido"
+    },
+    {
+      "external_id": null,
+      "name": "San Diego",
+      "reason": "San Diego Norte (place=neighbourhood) queda lejos de las paradas vecinas del recorrido"
+    },
+    {
+      "external_id": null,
+      "name": "San Francisco de Asís",
+      "reason": "Parroquia San Francisco de Asís (amenity=place_of_worship) queda lejos de las paradas vecinas del recorrido"
+    }
+  ]
+}

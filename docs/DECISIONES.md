@@ -165,3 +165,29 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
 ## D-048 · Corrección de errores de tipeo en la búsqueda
 - **Motivo:** "coperativa" no encontraba nada. Antes de buscar, cada palabra que no existe en el vocabulario de paradas y lugares se cambia por la única palabra del vocabulario a 1 edición (letra de más, de menos, cambiada o dos invertidas). Si hay empate, no se corrige. No se tocan palabras vacías ni palabras de menos de 5 letras. Configurable con `SEARCH_TYPO_MAX_EDITS` (0 la desactiva) y `SEARCH_TYPO_MIN_TERM_LENGTH`.
 
+
+## D-049 · No se hace scraping de Moovit
+- **Pedido:** el profesor sugirió sacar las rutas de Moovit con scraping para que el backend no quede "escrito a mano".
+- **Hallazgo (2026-11-09):** Moovit responde `403 Prohibido` a programas automáticos y sus términos de uso prohíben extraer sus datos. Saltarse ese bloqueo (cambiar de identidad, navegadores automatizados, etc.) sería violar sus términos, y además puede dejar de funcionar en cualquier momento.
+- **Decisión (con el dueño):** usar OpenStreetMap, que es abierto (licencia ODbL) y tiene una API pública (Overpass) pensada para esto. Ver D-050.
+
+## D-050 · Coordenadas de paradas desde OpenStreetMap (`npm run data:update`)
+- **Problema:** ninguna parada real tenía coordenadas, así que el GPS del reloj no servía con datos reales.
+- **Hallazgo:** OpenStreetMap casi no tiene el transporte de Pasto (8 paradas y 3 rutas incompletas), pero sí tiene 525 barrios, colegios, iglesias, parques, centros comerciales y 609 calles con nombre.
+- **Decisión:** un proceso automático en tres pasos:
+  1. `npm run osm:fetch` descarga los lugares con nombre y las calles de Pasto (`data/raw/osm_pasto.json`, ~1 MB). Reintenta y cambia de servidor si uno está saturado.
+  2. `npm run osm:geocode` cruza el nombre de cada parada sin coordenadas con esos lugares (`src/osm/geocoder.ts`) y escribe `data/geo/osm_stop_coordinates.json`, con qué se encontró (`matched`, `osm_ids`) y la lista de lo que no se ubicó y por qué (`not_found`).
+  3. `npm run seed` aplica esas coordenadas **solo a paradas sin coordenadas** en `data/stops/`: lo escrito a mano siempre gana.
+- **Cómo cruza:** "Calle 18 Carrera 29" → cruce de las dos calles; "Las Cuadras Calle 19" → el barrio, ajustado a la calle; "Fátima", "Universidad Cooperativa", "Villa Flor II Manzana 12" → el lugar (sin tildes, artículos ni espacios; "Mz." = "Manzana"; quita "Parroquia", "Barrio", etc.).
+- **Cómo evita errores:** no ubica nombres genéricos ("Calle 17"), tramos ("Vía La Laguna") ni nombres que coinciden con lugares lejanos entre sí. Después revisa los recorridos: si una parada obliga a un desvío de más de 2 km entre su vecina anterior y la siguiente en la mayoría de sus rutas, se descarta (así cayó "Villa María", que coincidía con una vereda a 4,5 km). También descarta paradas que no están en ningún recorrido.
+- **Resultado (2026-11-09):** 197 de 307 paradas (174 por lugar, 17 por cruce de calles, 6 por lugar sobre calle). Las 110 restantes y el motivo están en `not_found`.
+- **Precisión:** la coordenada de una parada ubicada por barrio es el centro del barrio, no el poste exacto (puede haber 100–400 m de diferencia). Alcanza para "la parada más cercana" y para planificar. Para afinarla, se escribe la coordenada exacta en `data/stops/` y gana sobre la generada.
+- **Cambia D-047:** allí se decidió no geocodificar para no inventar datos. Esto no inventa: cada coordenada viene de OpenStreetMap con su referencia, y lo que no tiene una coincidencia clara se deja sin ubicar.
+
+## D-051 · Una sola pregunta en el reloj: el GPS trabaja mientras el usuario habla
+- **Pedido del profesor:** abrir la app, hablar una vez y recibir la ruta, sin que pregunte "¿dónde estás?" y "¿a dónde vas?" por separado.
+- **Decisión:** al tocar "consultar", el reloj pregunta de una vez "¿A dónde vas?" y en paralelo busca la ubicación GPS y la parada más cercana.
+  - "voy a Fátima" → origen = GPS.
+  - "estoy en la Cooperativa y voy a Fátima" → origen = lo dicho (gana sobre el GPS, D-046).
+  - Si el usuario habla antes de que responda el GPS, el reloj espera la ubicación ("Buscando tu ubicación…") y consulta sin volver a preguntar.
+  - Solo si no hay GPS (sin permiso, sin señal o sin paradas ubicadas cerca) pregunta "¿Dónde estás?" y consulta con el destino que ya tenía.

@@ -18,7 +18,10 @@
     "format:check": "prettier --check .",
     "coverage": "vitest run --coverage",
     "seed:sample": "tsx src/db/seed.ts --data-dir ./data/sample",
-    "data:validate": "tsx src/db/seed.ts --dry-run --data-dir ./data"
+    "data:validate": "tsx src/db/seed.ts --dry-run --data-dir ./data",
+    "osm:fetch": "tsx src/osm/cli.ts fetch",
+    "osm:geocode": "tsx src/osm/cli.ts geocode",
+    "data:update": "npm run osm:fetch && npm run osm:geocode && npm run seed"
   },
   "dependencies": {
     "@google/genai": "^2.28.0",

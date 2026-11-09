@@ -107,3 +107,17 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | `./gradlew :shared:testDebugUnitTest :wear:testDebugUnitTest :mobile:testDebugUnitTest :wear:lintDebug :wear:assembleRelease` | OK: shared 33, wear 47, mobile 12; lint sin hallazgos |
 | Servidor local con datos reales y Gemini | Fátima → "coperativa san vicente": C16, bajar en Liceo Udenar, "queda cerca de Cooperativa San Vicente". Origen "cooperativa san vicente" → Fátima: C5 desde Liceo Udenar. "la universidad coperativa" → C5 a Universidad Cooperativa. "colegio liceo de la universidad de nariño" desde Parque Bolívar → E6 |
 
+
+## Fase 11 — Coordenadas desde OpenStreetMap y una sola pregunta en el reloj (2026-11-09)
+
+| Comando | Resultado |
+|---|---|
+| Moovit (`curl` a la página de líneas de Pasto) | `403 Prohibido`: bloquea programas automáticos; no se usa (D-049) |
+| `npm run osm:fetch` | 3.634 lugares y 2.594 tramos de calle de Pasto (el primer servidor respondió 502; el segundo funcionó) |
+| `npm run osm:geocode` | 197 de 307 paradas ubicadas (174 lugar, 17 cruce de calles, 6 lugar sobre calle); 110 sin ubicar con motivo |
+| `npm test` (backend) | 178 pruebas OK (geocodificador, descarga, importador con `geo/`) |
+| `npm run lint` / `typecheck` / `prettier --check` | OK |
+| `npm run data:validate` / `seed` | OK: 197 paradas con coordenadas generadas, 110 sin coordenadas |
+| `./gradlew :shared:testDebugUnitTest :wear:testDebugUnitTest :mobile:testDebugUnitTest :wear:lintDebug :wear:assembleDebug` | OK: shared 33, wear 49, mobile 12 |
+| Servidor local, GPS en la Universidad Cooperativa (1.2299, -77.2897) | Parada más cercana: Universidad Cooperativa a 27 m. → Fátima: C14. → Lorenzo: E2. → Unicentro: C12. → Parque Bolívar: E1. → Terminal: C9 + C1 |
+| Servidor local, por texto | "universidad cooperativa" → Fátima: C14. "estoy en Fátima" → "la Universidad Cooperativa": C5 |

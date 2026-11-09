@@ -12,6 +12,8 @@
  *   stops/*.json       → arreglo de paradas
  *   schedules/*.json   → arreglo de horarios
  *   places/*.json      → lugares que no son parada, con sus paradas cercanas (opcional)
+ *   geo/*.json         → coordenadas generadas (p. ej. desde OpenStreetMap con
+ *                        `npm run osm:geocode`); solo llenan paradas sin coordenadas (opcional)
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -107,6 +109,21 @@ export const PlaceSchema = z.strictObject({
   notes: nullableText,
 });
 
+/** Coordenada generada para una parada (por código o, si no tiene, por nombre). */
+const GeneratedCoordinateSchema = z.object({
+  external_id: nullableText,
+  name: z.string().trim().min(1),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  method: z.string().trim().min(1),
+});
+
+/** Archivo de `geo/`: lo genera una herramienta, así que admite campos extra. */
+export const GeneratedCoordinatesFileSchema = z.object({
+  source: z.string().trim().min(1),
+  coordinates: z.array(GeneratedCoordinateSchema),
+});
+
 const RouteStopEntrySchema = z.strictObject({
   order: z.number().int().positive(),
   stop_external_id: nullableText,
@@ -171,6 +188,8 @@ export interface ImportReport {
   warnings: ImportIssue[];
   summary: {
     stopsWithoutCoordinates: number;
+    /** Paradas cuyas coordenadas vienen de `geo/` (no escritas a mano). */
+    stopsWithGeneratedCoordinates: number;
     stopsWithoutExternalId: number;
     unverifiedSchedules: number;
   };
@@ -184,6 +203,7 @@ interface Dataset {
   routeStops: RouteStopsDirection[];
   schedules: Schedule[];
   places: Place[];
+  generatedCoordinates: z.infer<typeof GeneratedCoordinatesFileSchema>[];
 }
 
 // ─── Lectura y validación ──────────────────────────────────────────────────
@@ -249,7 +269,37 @@ export function loadDataset(dataDir: string, errors: ImportIssue[]): Dataset {
     ),
     schedules: arr('schedules', ScheduleSchema),
     places: arr('places', PlaceSchema),
+    generatedCoordinates: listJson(path.join(dataDir, 'geo')).flatMap((f) => {
+      const file = readValidated(f, GeneratedCoordinatesFileSchema, errors, dataDir);
+      return file ? [file] : [];
+    }),
   };
+}
+
+/**
+ * Llena las coordenadas que faltan con las generadas en `geo/`. Lo escrito a mano
+ * en `stops/` siempre gana. Devuelve cuántas paradas se completaron.
+ */
+export function applyGeneratedCoordinates(data: Dataset): number {
+  const byId = new Map<string, { latitude: number; longitude: number }>();
+  const byName = new Map<string, { latitude: number; longitude: number }>();
+  for (const file of data.generatedCoordinates) {
+    for (const c of file.coordinates) {
+      if (c.external_id) byId.set(c.external_id, c);
+      else byName.set(c.name.toLowerCase(), c);
+    }
+  }
+  let applied = 0;
+  data.stops = data.stops.map((stop) => {
+    if (stop.latitude !== null) return stop;
+    const found = stop.external_id
+      ? byId.get(stop.external_id)
+      : byName.get(stop.name.toLowerCase());
+    if (!found) return stop;
+    applied++;
+    return { ...stop, latitude: found.latitude, longitude: found.longitude };
+  });
+  return applied;
 }
 
 /** Comprobaciones de integridad entre archivos (referencias y duplicados). */
@@ -568,12 +618,18 @@ export function importDataset(db: Db, dataDir: string): ImportReport {
     },
     errors: [],
     warnings: [],
-    summary: { stopsWithoutCoordinates: 0, stopsWithoutExternalId: 0, unverifiedSchedules: 0 },
+    summary: {
+      stopsWithoutCoordinates: 0,
+      stopsWithGeneratedCoordinates: 0,
+      stopsWithoutExternalId: 0,
+      unverifiedSchedules: 0,
+    },
   };
 
   const data = loadDataset(dataDir, report.errors);
   if (report.errors.length === 0) crossValidate(data, report.errors);
   if (report.errors.length > 0) return report;
+  const generated = applyGeneratedCoordinates(data);
 
   try {
     transaction(db, () => {
@@ -596,6 +652,7 @@ export function importDataset(db: Db, dataDir: string): ImportReport {
 
   report.summary = {
     stopsWithoutCoordinates: countOf(db, 'SELECT COUNT(*) AS c FROM stops WHERE latitude IS NULL'),
+    stopsWithGeneratedCoordinates: generated,
     stopsWithoutExternalId: countOf(
       db,
       'SELECT COUNT(*) AS c FROM stops WHERE external_id IS NULL',

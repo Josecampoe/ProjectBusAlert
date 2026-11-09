@@ -89,23 +89,25 @@ class MainWearViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /** Sin GPS: dice el destino, el reloj pregunta dónde está y responde el origen. */
     private fun TestScope.askFullQuery() {
         viewModel.startQuery()
         advanceUntilIdle()
-        viewModel.onSpeechResult("Udenar")
         viewModel.onSpeechResult("Parque Bolívar")
+        advanceUntilIdle()
+        viewModel.onSpeechResult("Udenar")
     }
 
     @Test
-    fun `sin GPS recorre el flujo por voz hasta el resultado`() = runTest(dispatcher) {
+    fun `sin GPS pregunta el destino, luego el origen, y consulta`() = runTest(dispatcher) {
         viewModel.appState.test {
             assertEquals(AppState.IDLE, awaitItem())
             viewModel.startQuery()
+            assertEquals(AppState.ASKING_DESTINATION, awaitItem())
+            viewModel.onSpeechResult("Parque Bolívar")
             assertEquals(AppState.LOCATING, awaitItem())
             assertEquals(AppState.ASKING_LOCATION, awaitItem())
             viewModel.onSpeechResult("Udenar")
-            assertEquals(AppState.ASKING_DESTINATION, awaitItem())
-            viewModel.onSpeechResult("Parque Bolívar")
             assertEquals(AppState.PROCESSING, awaitItem())
             assertEquals(AppState.RESULT, awaitItem())
         }
@@ -115,7 +117,6 @@ class MainWearViewModelTest {
             repository.queries.single(),
         )
     }
-
     @Test
     fun `guarda la consulta exitosa en el historial y la ofrece como reciente`() = runTest(dispatcher) {
         askFullQuery()
@@ -138,7 +139,7 @@ class MainWearViewModelTest {
     }
 
     @Test
-    fun `con GPS salta la pregunta de origen y envía las coordenadas`() = runTest(dispatcher) {
+    fun `con GPS solo pregunta el destino y envía las coordenadas`() = runTest(dispatcher) {
         val point = GeoPoint(1.2143, -77.2787)
         location = { point }
         viewModel.startQuery()
@@ -171,7 +172,7 @@ class MainWearViewModelTest {
         withPhraseParser()
         viewModel.startQuery()
         advanceUntilIdle()
-        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
 
         viewModel.onSpeechResult("estoy en Fátima y voy a la Universidad Cooperativa")
         advanceUntilIdle()
@@ -182,6 +183,36 @@ class MainWearViewModelTest {
         assertEquals(AppState.RESULT, viewModel.appState.value)
     }
 
+    @Test
+    fun `un origen dicho antes de que responda el GPS no se reemplaza`() = runTest(dispatcher) {
+        withPhraseParser()
+        val gate = CompletableDeferred<GeoPoint?>()
+        location = { gate.await() }
+        viewModel.startQuery()
+        advanceUntilIdle()
+
+        viewModel.onSpeechResult("estoy en Fátima y voy a Udenar")
+        gate.complete(GeoPoint(1.2143, -77.2787))
+        advanceUntilIdle()
+        assertEquals(TripQuery("Udenar", TripOrigin.Named("estoy en Fátima"), AppLanguage.SPANISH), repository.queries.single())
+        assertEquals(TripOrigin.Named("estoy en Fátima"), viewModel.origin.value)
+    }
+
+    @Test
+    fun `si habla antes de que responda el GPS espera la ubicación y consulta`() = runTest(dispatcher) {
+        val point = GeoPoint(1.2143, -77.2787)
+        val gate = CompletableDeferred<GeoPoint?>()
+        location = { gate.await() }
+        viewModel.startQuery()
+        advanceUntilIdle()
+
+        viewModel.onSpeechResult("Udenar")
+        assertEquals(AppState.LOCATING, viewModel.appState.value)
+        gate.complete(point)
+        advanceUntilIdle()
+        assertEquals(TripQuery("Udenar", TripOrigin.Located(point), AppLanguage.SPANISH), repository.queries.single())
+        assertEquals(AppState.RESULT, viewModel.appState.value)
+    }
     @Test
     fun `con GPS, una frase con origen usa el lugar dicho en vez de las coordenadas`() = runTest(dispatcher) {
         withPhraseParser()
@@ -196,35 +227,38 @@ class MainWearViewModelTest {
     }
 
     @Test
-    fun `una respuesta normal no se separa aunque haya analizador`() = runTest(dispatcher) {
+    fun `sin GPS el lugar dicho después del destino se usa como origen`() = runTest(dispatcher) {
         withPhraseParser()
         viewModel.startQuery()
         advanceUntilIdle()
+        viewModel.onSpeechResult("Universidad Cooperativa")
+        advanceUntilIdle()
+        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
         viewModel.onSpeechResult("Fátima")
-        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
-        viewModel.onSpeechResult("voy a la Universidad Cooperativa")
         advanceUntilIdle()
         assertEquals(
-            TripQuery("voy a la Universidad Cooperativa", TripOrigin.Named("Fátima"), AppLanguage.SPANISH),
+            TripQuery("Universidad Cooperativa", TripOrigin.Named("Fátima"), AppLanguage.SPANISH),
             repository.queries.single(),
         )
     }
-
     @Test
-    fun `con GPS pero sin paradas ubicables cerca pide el lugar por voz`() = runTest(dispatcher) {
+    fun `con GPS pero sin paradas ubicables cerca pide el lugar después del destino`() = runTest(dispatcher) {
         location = { GeoPoint(1.25, -77.32) }
         transit.nearby = { Outcome.Success(NearbyStops(emptyList(), stopsWithoutCoordinates = 86)) }
         viewModel.startQuery()
         advanceUntilIdle()
-        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
         assertTrue(viewModel.noNearbyStops.value)
         assertNull(viewModel.origin.value)
 
         viewModel.onSpeechResult("Udenar")
+        advanceUntilIdle()
+        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        viewModel.onSpeechResult("Fátima")
+        advanceUntilIdle()
         assertFalse(viewModel.noNearbyStops.value)
-        assertEquals(TripOrigin.Named("Udenar"), viewModel.origin.value)
+        assertEquals(TripQuery("Udenar", TripOrigin.Named("Fátima"), AppLanguage.SPANISH), repository.queries.single())
     }
-
     @Test
     fun `si falla la búsqueda de paradas cercanas sigue con las coordenadas`() = runTest(dispatcher) {
         val point = GeoPoint(1.2143, -77.2787)
@@ -244,7 +278,7 @@ class MainWearViewModelTest {
         transit.nearby = { gate.await() }
         viewModel.startQuery()
         advanceUntilIdle()
-        assertEquals(AppState.LOCATING, viewModel.appState.value)
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
 
         viewModel.resetToIdle()
         gate.complete(Outcome.Success(NearbyStops(emptyList(), 0)))
@@ -260,6 +294,7 @@ class MainWearViewModelTest {
         location = { gate.await() }
         viewModel.startQuery()
         advanceUntilIdle()
+        viewModel.onSpeechResult("Terminal")
         assertEquals(AppState.LOCATING, viewModel.appState.value)
 
         viewModel.useSpokenLocation()
@@ -267,8 +302,11 @@ class MainWearViewModelTest {
         advanceUntilIdle()
         assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
         assertNull(viewModel.origin.value)
-    }
 
+        viewModel.onSpeechResult("Centro")
+        advanceUntilIdle()
+        assertEquals(TripQuery("Terminal", TripOrigin.Named("Centro"), AppLanguage.SPANISH), repository.queries.single())
+    }
     @Test
     fun `un plan sin ruta lleva a NO_RESULT y no se guarda en el historial`() = runTest(dispatcher) {
         repository.next = { Outcome.Success(okPlan.copy(status = TripStatus.NO_ROUTE, recommended = null)) }
@@ -314,30 +352,29 @@ class MainWearViewModelTest {
         viewModel.startQuery()
         advanceUntilIdle()
         viewModel.switchToKeyboard()
-        assertEquals(AppState.TYPING_LOCATION, viewModel.appState.value)
-        viewModel.switchToVoice()
-        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
-        viewModel.switchToKeyboard()
-        viewModel.onTypedTextChange("  Centro  ")
-        viewModel.submitTypedText()
-        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
-        assertEquals(TripOrigin.Named("Centro"), viewModel.origin.value)
-        assertEquals("", viewModel.typedText.value)
-
-        viewModel.switchToKeyboard()
         assertEquals(AppState.TYPING_DESTINATION, viewModel.appState.value)
+        viewModel.switchToVoice()
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
+        viewModel.switchToKeyboard()
         viewModel.onTypedTextChange("Terminal")
         viewModel.submitTypedText()
         advanceUntilIdle()
-        assertEquals("Terminal", repository.queries.single().destination)
-    }
+        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertEquals("", viewModel.typedText.value)
 
+        viewModel.switchToKeyboard()
+        assertEquals(AppState.TYPING_LOCATION, viewModel.appState.value)
+        viewModel.onTypedTextChange("  Centro  ")
+        viewModel.submitTypedText()
+        advanceUntilIdle()
+        assertEquals(TripQuery("Terminal", TripOrigin.Named("Centro"), AppLanguage.SPANISH), repository.queries.single())
+    }
     @Test
     fun `sin permiso de micrófono muestra el aviso y pasa al teclado`() = runTest(dispatcher) {
         viewModel.startQuery()
         advanceUntilIdle()
         viewModel.onVoiceError(VoiceError.PERMISSION)
-        assertEquals(AppState.TYPING_LOCATION, viewModel.appState.value)
+        assertEquals(AppState.TYPING_DESTINATION, viewModel.appState.value)
         assertEquals(VoiceError.PERMISSION, viewModel.voiceNotice.value)
     }
 
@@ -346,7 +383,7 @@ class MainWearViewModelTest {
         viewModel.startQuery()
         advanceUntilIdle()
         viewModel.onVoiceError(VoiceError.NO_MATCH)
-        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
         assertEquals(VoiceError.NO_MATCH, viewModel.voiceNotice.value)
         viewModel.onSpeechResult("Centro")
         assertNull(viewModel.voiceNotice.value)
@@ -357,21 +394,21 @@ class MainWearViewModelTest {
         viewModel.startQuery()
         advanceUntilIdle()
         viewModel.onSpeechResult("   ")
-        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
         viewModel.resetToIdle()
         viewModel.onSpeechResult("Centro")
         assertEquals(AppState.IDLE, viewModel.appState.value)
     }
 
     @Test
-    fun `sin origen no consulta y vuelve a pedir la ubicación`() = runTest(dispatcher) {
+    fun `sin GPS ni origen no consulta y pregunta dónde está`() = runTest(dispatcher) {
         viewModel.startQuery()
         advanceUntilIdle()
         viewModel.onDestinationReceived("Terminal")
+        advanceUntilIdle()
         assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
         assertEquals(0, repository.queries.size)
     }
-
     @Test
     fun `las preferencias se guardan y el idioma viaja en la consulta`() = runTest(dispatcher) {
         viewModel.toggleLanguage()

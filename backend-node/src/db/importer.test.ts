@@ -50,6 +50,71 @@ describe('importDataset', () => {
     expect(first.summary.stopsWithoutCoordinates).toBe(1);
   });
 
+  it('completa coordenadas faltantes desde geo/ sin pisar las escritas a mano', () => {
+    const dir = copyFixtures();
+    fs.mkdirSync(path.join(dir, 'geo'));
+    fs.writeFileSync(
+      path.join(dir, 'geo', 'osm.json'),
+      JSON.stringify({
+        source: 'openstreetmap',
+        generated_at: '2026-11-09T00:00:00Z',
+        coordinates: [
+          {
+            external_id: 'T07',
+            name: 'Barrio Sin Rutas',
+            latitude: 1.25,
+            longitude: -77.3,
+            method: 'place',
+            matched: 'x',
+            osm_ids: [],
+          },
+          {
+            external_id: 'T01',
+            name: 'Udenar Torobajo',
+            latitude: 9,
+            longitude: 9,
+            method: 'place',
+            matched: 'x',
+            osm_ids: [],
+          },
+        ],
+        not_found: [],
+      }),
+    );
+    const db = openDatabase(IN_MEMORY_DB);
+    const report = importDataset(db, dir);
+    expect(report.ok).toBe(true);
+    expect(report.summary.stopsWithoutCoordinates).toBe(0);
+    expect(report.summary.stopsWithGeneratedCoordinates).toBe(1);
+    const coords = (code: string) =>
+      db.prepare('SELECT latitude, longitude FROM stops WHERE external_id = ?').get(code);
+    expect(coords('T07')).toEqual({ latitude: 1.25, longitude: -77.3 });
+    expect(coords('T01')).toEqual({ latitude: 1.2335, longitude: -77.2925 });
+  });
+
+  it('rechaza un archivo de geo/ con coordenadas inválidas', () => {
+    const dir = copyFixtures();
+    fs.mkdirSync(path.join(dir, 'geo'));
+    fs.writeFileSync(
+      path.join(dir, 'geo', 'osm.json'),
+      JSON.stringify({
+        source: 'openstreetmap',
+        coordinates: [
+          {
+            external_id: 'T07',
+            name: 'Barrio Sin Rutas',
+            latitude: 200,
+            longitude: -77.3,
+            method: 'place',
+          },
+        ],
+      }),
+    );
+    const report = importDataset(openDatabase(IN_MEMORY_DB), dir);
+    expect(report.ok).toBe(false);
+    expect(report.errors[0]?.file).toBe(path.join('geo', 'osm.json'));
+  });
+
   it('rechaza un lugar cuya parada cercana no existe', () => {
     const dir = copyFixtures();
     const file = path.join(dir, 'places', 'places.json');
