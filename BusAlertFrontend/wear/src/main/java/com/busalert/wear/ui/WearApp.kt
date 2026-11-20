@@ -69,7 +69,6 @@ fun WearApp(
     val error by viewModel.error.collectAsState()
     val typedText by viewModel.typedText.collectAsState()
     val voiceNotice by viewModel.voiceNotice.collectAsState()
-    val nearestStop by viewModel.nearestStop.collectAsState()
     val neighborhood by viewModel.neighborhood.collectAsState()
     val tripFavorites by viewModel.tripFavorites.collectAsState()
     val isResultFavorite by viewModel.isResultFavorite.collectAsState()
@@ -159,7 +158,6 @@ fun WearApp(
                         error = error,
                         typedText = typedText,
                         voiceNotice = voiceNotice,
-                        nearestStopName = nearestStop?.stop?.name,
                         neighborhood = neighborhood,
                         locationOff = !permissions.isLocationEnabled(),
                         tripFavorites = tripFavorites,
@@ -188,7 +186,6 @@ private fun Screen(
     error: ErrorCode?,
     typedText: String,
     voiceNotice: VoiceError?,
-    nearestStopName: String?,
     neighborhood: String?,
     locationOff: Boolean,
     tripFavorites: List<Favorite>,
@@ -205,8 +202,7 @@ private fun Screen(
 ) {
     val askingDestination = state == AppState.ASKING_DESTINATION || state == AppState.TYPING_DESTINATION
     val prompt = when {
-        askingDestination && neighborhood != null -> stringResource(R.string.prompt_destination_in, neighborhood)
-        askingDestination && nearestStopName != null -> stringResource(R.string.prompt_destination_from, nearestStopName)
+        // Solo la pregunta: el barrio (a veces largo, p. ej. un condominio) va en el resultado.
         askingDestination -> stringResource(R.string.prompt_destination)
         locationOff -> stringResource(R.string.prompt_location_disabled)
         else -> stringResource(R.string.prompt_location)

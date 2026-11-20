@@ -20,7 +20,6 @@
     <!-- Preguntas del flujo -->
     <string name="prompt_location">¿Dónde estás?</string>
     <string name="prompt_destination">¿A dónde vas?</string>
-    <string name="prompt_destination_from">Desde %1$s, ¿a dónde vas?</string>
 
     <!-- Escucha -->
     <string name="listening_speak_now">Habla ahora…</string>
@@ -111,7 +110,6 @@
 
     <!-- Ruta recomendada, otras opciones y favoritos -->
     <string name="prompt_location_disabled">La ubicación del reloj está apagada (Ajustes → Ubicación). Por ahora, ¿dónde estás?</string>
-    <string name="prompt_destination_in">Estás en %1$s. ¿A dónde vas?</string>
     <string name="result_recommend">Te recomiendo esta ruta</string>
     <string name="result_trip_time">≈ %1$d min de recorrido</string>
     <string name="result_you_are_in">Estás en %1$s</string>
