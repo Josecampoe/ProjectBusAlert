@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -259,7 +260,10 @@ private fun Screen(
         )
         AppState.PROCESSING -> ProcessingScreen(onCancel = viewModel::resetToIdle)
         AppState.RESULT -> plan?.let {
+            // Se vuelve a revisar cada vez que empieza o termina la lectura (p. ej. al tocar "Repetir").
+            val muted = remember(isSpeaking) { voiceOutput.isMuted() }
             ResultScreen(
+                volumeMuted = muted,
                 plan = it,
                 speakEnabled = speakEnabled,
                 isSpeaking = isSpeaking,

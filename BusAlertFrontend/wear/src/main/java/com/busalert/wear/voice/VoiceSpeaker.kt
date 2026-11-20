@@ -1,6 +1,7 @@
 package com.busalert.wear.voice
 
 import android.content.Context
+import android.media.AudioManager
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import com.busalert.shared.domain.AppLanguage
@@ -16,6 +17,7 @@ import java.util.Locale
 class VoiceSpeaker(context: Context) : TextToSpeech.OnInitListener, VoiceOutput {
 
     private val tts = TextToSpeech(context.applicationContext, this)
+    private val audio = context.applicationContext.getSystemService(AudioManager::class.java)
     private var ready = false
     private var language: AppLanguage = AppLanguage.SPANISH
     private var lastText: String? = null
@@ -73,6 +75,9 @@ class VoiceSpeaker(context: Context) : TextToSpeech.OnInitListener, VoiceOutput 
         tts.stop()
         _isSpeaking.value = false
     }
+
+    // El TTS suena por el canal multimedia (STREAM_TTS es un alias de STREAM_MUSIC).
+    override fun isMuted(): Boolean = audio?.getStreamVolume(AudioManager.STREAM_MUSIC) == 0
 
     fun shutdown() {
         tts.stop()

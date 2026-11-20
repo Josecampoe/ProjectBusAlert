@@ -43,6 +43,7 @@ fun ResultScreen(
     isFavorite: Boolean = false,
     onToggleFavorite: () -> Unit = {},
     neighborhood: String? = plan.originNeighborhood,
+    volumeMuted: Boolean = false,
 ) {
     val option = plan.recommended ?: return
     val first = option.firstLeg
@@ -107,6 +108,9 @@ fun ResultScreen(
                 icon = if (isFavorite) R.drawable.ic_star else R.drawable.ic_star_border,
                 style = if (isFavorite) ChipStyle.SECONDARY else ChipStyle.PRIMARY,
             )
+        }
+        if (speakEnabled && volumeMuted) {
+            item { DetailLine(stringResource(R.string.result_volume_muted), iconRes = R.drawable.ic_volume_off) }
         }
         if (speakEnabled) {
             item {

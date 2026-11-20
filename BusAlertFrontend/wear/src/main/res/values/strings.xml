@@ -115,6 +115,7 @@
     <string name="result_trip_time">≈ %1$d min de recorrido</string>
     <string name="result_you_are_in">Estás en %1$s</string>
     <string name="result_board_at_distance">Sube en %1$s (a %2$d m)</string>
+    <string name="result_volume_muted">El volumen está en 0. Súbelo para escuchar la respuesta.</string>
     <string name="result_other_options">Otras opciones</string>
     <string name="result_alt_summary">≈ %1$d min · sube en %2$s</string>
     <string name="action_save_favorite">Guardar en favoritos</string>

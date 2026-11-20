@@ -102,6 +102,7 @@
     <string name="result_trip_time">≈ %1$d min trip</string>
     <string name="result_you_are_in">You\'re in %1$s</string>
     <string name="result_board_at_distance">Board at %1$s (%2$d m away)</string>
+    <string name="result_volume_muted">Volume is at 0. Turn it up to hear the answer.</string>
     <string name="result_other_options">Other options</string>
     <string name="result_alt_summary">≈ %1$d min · board at %2$s</string>
     <string name="action_save_favorite">Save to favorites</string>

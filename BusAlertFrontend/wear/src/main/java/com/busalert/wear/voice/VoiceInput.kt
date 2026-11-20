@@ -16,4 +16,7 @@ interface VoiceOutput {
     fun speak(text: String)
     fun repeat()
     fun stop()
+
+    /** true si el volumen con el que se lee (multimedia) está en 0: la respuesta no se escucharía. */
+    fun isMuted(): Boolean = false
 }

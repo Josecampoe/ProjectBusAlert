@@ -113,6 +113,23 @@ class ScreensUiTest {
     }
 
     @Test
+    fun resultado_avisa_si_el_volumen_esta_en_cero() {
+        setScreen {
+            ResultScreen(
+                TestData.okPlan,
+                speakEnabled = true,
+                isSpeaking = false,
+                onStopVoice = {},
+                onRepeatVoice = {},
+                onNewQuery = {},
+                onHome = {},
+                volumeMuted = true,
+            )
+        }
+        show("El volumen está en 0. Súbelo para escuchar la respuesta.")
+    }
+
+    @Test
     fun detalle_de_favorito_muestra_la_ruta_guardada() {
         var removed = 0
         setScreen { FavoriteDetailScreen(favorite = savedTrip, onRemove = { removed++ }, onBack = {}) }
