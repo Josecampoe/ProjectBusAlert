@@ -134,3 +134,4 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | Reloj (Galaxy Watch 7, Android 16): inicio, Favoritos y detalle de un favorito antiguo | Título debajo de la hora; al desplazar la hora se esconde; el favorito abre su detalle sin preguntar la ubicación |
 | `./gradlew testDebugUnitTest lintDebug :wear:lintRelease :wear:assembleRelease` (favoritos con ruta guardada) | OK: wear 60, shared 34, mobile 12; lint sin avisos |
 | Reloj: el resultado no se escuchaba | El TTS de Samsung sí procesó la respuesta, pero el volumen multimedia del reloj estaba en 0 (`cmd media_session volume --stream 3 --get` → 0). El resultado ahora lo avisa; wear 61 pruebas OK |
+| Reloj: ubicación al abrir la app (búsqueda anticipada, GPS + red a la vez) | Primer punto en ~6 s por Wi-Fi (1.2040, -77.2722, ±30 m, Fátima); al tocar el micrófono la consulta salió sin pasar por "Buscando tu ubicación" ni preguntar el lugar. wear 64 pruebas OK |
