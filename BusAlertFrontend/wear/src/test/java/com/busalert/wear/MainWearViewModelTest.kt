@@ -242,22 +242,73 @@ class MainWearViewModelTest {
         )
     }
     @Test
-    fun `con GPS pero sin paradas ubicables cerca pide el lugar después del destino`() = runTest(dispatcher) {
-        location = { GeoPoint(1.25, -77.32) }
-        transit.nearby = { Outcome.Success(NearbyStops(emptyList(), stopsWithoutCoordinates = 86)) }
+    fun `con GPS pero sin paradas a pocos metros no pregunta y consulta con las coordenadas`() = runTest(dispatcher) {
+        val point = GeoPoint(1.25, -77.32)
+        location = { point }
+        transit.nearby = { Outcome.Success(NearbyStops(emptyList(), stopsWithoutCoordinates = 86, neighborhood = "Fátima")) }
         viewModel.startQuery()
         advanceUntilIdle()
         assertEquals(AppState.ASKING_DESTINATION, viewModel.appState.value)
-        assertTrue(viewModel.noNearbyStops.value)
-        assertNull(viewModel.origin.value)
+        assertEquals(TripOrigin.Located(point), viewModel.origin.value)
+        assertEquals("Fátima", viewModel.neighborhood.value)
 
+        viewModel.onSpeechResult("voy para la Universidad Cooperativa")
+        advanceUntilIdle()
+        assertEquals(
+            TripQuery("voy para la Universidad Cooperativa", TripOrigin.Located(point), AppLanguage.SPANISH),
+            repository.queries.single(),
+        )
+        assertEquals(AppState.RESULT, viewModel.appState.value)
+    }
+
+    @Test
+    fun `el barrio que devuelve el plan reemplaza al de la búsqueda cercana`() = runTest(dispatcher) {
+        location = { GeoPoint(1.2143, -77.2787) }
+        repository.next = { Outcome.Success(okPlan.copy(originNeighborhood = "Centro")) }
+        viewModel.startQuery()
+        advanceUntilIdle()
         viewModel.onSpeechResult("Udenar")
         advanceUntilIdle()
-        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
-        viewModel.onSpeechResult("Fátima")
+        assertEquals("Centro", viewModel.neighborhood.value)
+    }
+
+    @Test
+    fun `guardar el resultado en favoritos y quitarlo`() = runTest(dispatcher) {
+        location = { GeoPoint(1.2143, -77.2787) }
+        viewModel.startQuery()
         advanceUntilIdle()
-        assertFalse(viewModel.noNearbyStops.value)
-        assertEquals(TripQuery("Udenar", TripOrigin.Named("Fátima"), AppLanguage.SPANISH), repository.queries.single())
+        viewModel.onSpeechResult("Parque Bolívar")
+        advanceUntilIdle()
+        assertFalse(viewModel.isResultFavorite.value)
+
+        viewModel.toggleResultFavorite()
+        advanceUntilIdle()
+        val saved = viewModel.tripFavorites.value.single()
+        assertEquals(Favorite(FavoriteKind.TRIP, "Parque Bolívar", "Parque Bolívar · FX1"), saved)
+        assertTrue(viewModel.isResultFavorite.value)
+
+        viewModel.toggleResultFavorite()
+        advanceUntilIdle()
+        assertTrue(viewModel.tripFavorites.value.isEmpty())
+        assertFalse(viewModel.isResultFavorite.value)
+    }
+
+    @Test
+    fun `un viaje favorito se consulta desde el GPS sin preguntar nada`() = runTest(dispatcher) {
+        val point = GeoPoint(1.2143, -77.2787)
+        location = { point }
+        viewModel.startFavoriteQuery("Parque Bolívar")
+        advanceUntilIdle()
+        assertEquals(TripQuery("Parque Bolívar", TripOrigin.Located(point), AppLanguage.SPANISH), repository.queries.single())
+        assertEquals(AppState.RESULT, viewModel.appState.value)
+    }
+
+    @Test
+    fun `un viaje favorito sin GPS pregunta el lugar como último recurso`() = runTest(dispatcher) {
+        viewModel.startFavoriteQuery("Parque Bolívar")
+        advanceUntilIdle()
+        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertTrue(repository.queries.isEmpty())
     }
     @Test
     fun `si falla la búsqueda de paradas cercanas sigue con las coordenadas`() = runTest(dispatcher) {
@@ -285,7 +336,7 @@ class MainWearViewModelTest {
         advanceUntilIdle()
         assertEquals(AppState.IDLE, viewModel.appState.value)
         assertNull(viewModel.nearestStop.value)
-        assertFalse(viewModel.noNearbyStops.value)
+        assertNull(viewModel.neighborhood.value)
     }
 
     @Test

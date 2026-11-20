@@ -3,7 +3,6 @@
     <string name="app_name">BusAlert</string>
     <string name="home_city">Pasto</string>
 
-    <string name="home_hint">Tap to ask</string>
     <string name="home_start_query">Start a query</string>
     <string name="action_settings">Settings</string>
 
@@ -18,7 +17,6 @@
     <string name="prompt_location">Where are you?</string>
     <string name="prompt_destination">Where to?</string>
     <string name="prompt_destination_from">From %1$s, where to?</string>
-    <string name="prompt_location_no_nearby_stops">No mapped stops nearby. Where are you?</string>
 
     <string name="listening_speak_now">Speak now…</string>
     <string name="listening_partial">“%1$s”</string>
@@ -62,10 +60,8 @@
     </plurals>
     <string name="result_spoken_template">Take route %1$s. Board at %2$s and get off at %3$s.</string>
     <string name="result_spoken_transfer_template">Take route %1$s at %2$s and get off at %3$s. Then take route %4$s to %5$s.</string>
-    <string name="result_estimate">≈ %1$d min (estimate)</string>
     <string name="result_transfer_at">Transfer at %1$s</string>
     <string name="result_walk_transfer">Walk %1$d m to %2$s</string>
-    <string name="result_nearest_stop">Stop %1$d m away</string>
     <string name="result_walk_to_place">Walk to %1$s</string>
     <string name="result_board_near_place">Stop near %1$s</string>
     <string name="result_out_of_service">Outside service hours</string>
@@ -98,4 +94,21 @@
     <string name="cd_route_badge">Route %1$s</string>
     <string name="cd_warning">Warning</string>
     <string name="cd_location">Location</string>
+
+    <!-- Ruta recomendada, otras opciones y favoritos -->
+    <string name="prompt_destination_in">You\'re in %1$s. Where to?</string>
+    <string name="result_recommend">I recommend this route</string>
+    <string name="result_trip_time">≈ %1$d min trip</string>
+    <string name="result_you_are_in">You\'re in %1$s</string>
+    <string name="result_board_at_distance">Board at %1$s (%2$d m away)</string>
+    <string name="result_other_options">Other options</string>
+    <string name="result_alt_summary">≈ %1$d min · board at %2$s</string>
+    <string name="action_save_favorite">Save to favorites</string>
+    <string name="action_saved_favorite">Saved to favorites</string>
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_empty">No saved trips yet. Save one from a query result.</string>
+    <plurals name="result_transfers_count">
+        <item quantity="one">%1$d transfer</item>
+        <item quantity="other">%1$d transfers</item>
+    </plurals>
 </resources>

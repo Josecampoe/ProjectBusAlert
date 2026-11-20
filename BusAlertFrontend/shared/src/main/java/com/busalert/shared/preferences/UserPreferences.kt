@@ -18,9 +18,13 @@ data class QueryHistoryEntry(
     val timestampMillis: Long,
 )
 
-enum class FavoriteKind { ROUTE, STOP }
+enum class FavoriteKind { ROUTE, STOP, TRIP }
 
-/** Ruta o parada marcada como favorita. [id] es el código de ruta o el nombre de la parada. */
+/**
+ * Ruta, parada o viaje marcado como favorito. [id] es el código de ruta, el
+ * nombre de la parada o, para un viaje ([FavoriteKind.TRIP]), el destino dicho
+ * por el usuario (se vuelve a consultar desde donde esté).
+ */
 data class Favorite(
     val kind: FavoriteKind,
     val id: String,

@@ -1,6 +1,7 @@
 /**
  * Arma las dependencias reales a partir de la configuración.
  */
+import path from 'node:path';
 import type { AppConfig } from './config/env';
 import { openDatabase, type Db } from './db/database';
 import type { Logger } from './lib/logger';
@@ -10,6 +11,7 @@ import { GeminiClient } from './services/ai/geminiClient';
 import { createArrivalEstimator } from './services/arrivalTime';
 import { AssistantService } from './services/assistantService';
 import { MemoryCache } from './services/cacheService';
+import { NeighborhoodIndex } from './services/neighborhoods';
 
 export interface Container {
   db: Db;
@@ -41,6 +43,14 @@ export function buildContainer(
   return {
     db,
     repo,
-    assistant: new AssistantService(repo, ai, createArrivalEstimator(config), config, logger),
+    assistant: new AssistantService(
+      repo,
+      ai,
+      createArrivalEstimator(config),
+      config,
+      logger,
+      undefined,
+      NeighborhoodIndex.fromSnapshotFile(path.join(config.data.dataDir, 'raw', 'osm_pasto.json')),
+    ),
   };
 }

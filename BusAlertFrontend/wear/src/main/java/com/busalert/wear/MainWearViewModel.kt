@@ -14,6 +14,7 @@ import com.busalert.shared.domain.TripOrigin
 import com.busalert.shared.domain.TripPlan
 import com.busalert.shared.domain.TripQuery
 import com.busalert.shared.domain.TripStatus
+import com.busalert.shared.preferences.Favorite
 import com.busalert.shared.preferences.FavoriteKind
 import com.busalert.shared.preferences.PreferenceDefaults
 import com.busalert.shared.preferences.PreferencesRepository
@@ -31,26 +32,30 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * Pantallas/estados del flujo del reloj. Hay una sola pregunta: el GPS se busca
- * en segundo plano mientras el usuario habla.
+ * Pantallas/estados del flujo del reloj. Hay una sola pregunta ("¿a dónde vas?"):
+ * el origen sale del GPS (parada más cercana y barrio), que se busca mientras
+ * el usuario habla. Solo si el reloj no logra ubicarse se pregunta dónde está.
  *
  * IDLE ─► ASKING_DESTINATION ⇄ TYPING_DESTINATION   (GPS + /api/stops/nearby en paralelo)
  *            │ "estoy en X y voy a Y" ─────────────────────────────┐
  *            │ "voy a Y" + GPS listo ──────────────────────────────┤
  *            │ "voy a Y" + GPS sin terminar ─► LOCATING ───────────┤ hay ubicación
  *            │                                  └─► ASKING_LOCATION ⇄ TYPING_LOCATION ─┤
- *            │                                      (sin GPS / sin paradas cerca)      │
+ *            │                                      (sin permiso o sin señal GPS)      │
  *            └──────────────────────────────────────────► PROCESSING ◄────────────────┘
  *                                                            └► RESULT | NO_RESULT | ERROR
  * IDLE ⇄ SETTINGS
+ * IDLE ⇄ FAVORITES ─► (viaje guardado) LOCATING ─► PROCESSING
  */
 enum class AppState {
     IDLE,
     SETTINGS,
+    FAVORITES,
     LOCATING,
     ASKING_LOCATION,
     ASKING_DESTINATION,
@@ -91,9 +96,12 @@ class MainWearViewModel(
     private val _nearestStop = MutableStateFlow<NearbyStop?>(null)
     val nearestStop: StateFlow<NearbyStop?> = _nearestStop.asStateFlow()
 
-    /** true si el GPS funcionó pero no hay paradas ubicables cerca: se pide el lugar. */
-    private val _noNearbyStops = MutableStateFlow(false)
-    val noNearbyStops: StateFlow<Boolean> = _noNearbyStops.asStateFlow()
+    /** Barrio donde está el usuario según el GPS (si el backend lo reconoce). */
+    private val _neighborhood = MutableStateFlow<String?>(null)
+    val neighborhood: StateFlow<String?> = _neighborhood.asStateFlow()
+
+    /** Destino de la consulta en pantalla (para guardarla en favoritos). */
+    private val _currentDestination = MutableStateFlow<String?>(null)
 
     /** Último problema del reconocedor de voz (se muestra como aviso). */
     private val _voiceNotice = MutableStateFlow<VoiceError?>(null)
@@ -111,6 +119,16 @@ class MainWearViewModel(
             .distinctBy { it.lowercase() }
             .take(PreferenceDefaults.MAX_RECENT_PLACES)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    /** Viajes guardados en favoritos, del más reciente al más antiguo. */
+    val tripFavorites: StateFlow<List<Favorite>> = preferencesRepository.favorites
+        .map { list -> list.filter { it.kind == FavoriteKind.TRIP } }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    /** true si el viaje del resultado en pantalla ya está en favoritos. */
+    val isResultFavorite: StateFlow<Boolean> = combine(tripFavorites, _currentDestination) { favorites, destination ->
+        destination != null && favorites.any { it.id.equals(destination, ignoreCase = true) }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /** Última consulta enviada, para reintentar sin volver a preguntar. */
     private var lastQuery: TripQuery? = null
@@ -149,6 +167,33 @@ class MainWearViewModel(
         viewModelScope.launch { preferencesRepository.clearHistory() }
     }
 
+    // ── Favoritos ─────────────────────────────────────────────────────────
+
+    fun openFavorites() {
+        _appState.value = AppState.FAVORITES
+    }
+
+    /** Guarda el viaje del resultado en favoritos o, si ya estaba, lo quita. */
+    fun toggleResultFavorite() {
+        val destination = _currentDestination.value ?: return
+        val existing = tripFavorites.value.firstOrNull { it.id.equals(destination, ignoreCase = true) }
+        val favorite = existing ?: Favorite(FavoriteKind.TRIP, destination, favoriteLabel(destination, _plan.value))
+        viewModelScope.launch { preferencesRepository.toggleFavorite(favorite) }
+    }
+
+    fun removeFavorite(favorite: Favorite) {
+        viewModelScope.launch { preferencesRepository.toggleFavorite(favorite) }
+    }
+
+    /** Consulta un viaje guardado: sin preguntar nada, desde la ubicación actual. */
+    fun startFavoriteQuery(destination: String) {
+        cancelRequest()
+        cancelGps()
+        clearQuery()
+        gpsJob = viewModelScope.async { locate() }
+        onDestinationReceived(destination)
+    }
+
     // ── Flujo de consulta ─────────────────────────────────────────────────
 
     /**
@@ -164,20 +209,19 @@ class MainWearViewModel(
     }
 
     /**
-     * Busca la ubicación GPS. Si funciona y hay paradas cerca, la deja como origen
-     * (a menos que el usuario ya haya dicho dónde está).
+     * Busca la ubicación GPS y la deja como origen (a menos que el usuario ya haya
+     * dicho dónde está). La parada y el barrio cercanos solo se muestran: aunque no
+     * haya paradas a pocos metros, el backend busca la más cercana al planificar.
      */
     private suspend fun locate(): GpsFix {
         val point = locationSource.currentLocation() ?: return GpsFix.Unavailable
-        val nearby = transitRepository.nearbyStops(point)
-        if (nearby is Outcome.Success && nearby.value.nearest == null) {
-            _noNearbyStops.value = true
-            return GpsFix.NoStops
-        }
+        if (_origin.value == null) _origin.value = TripOrigin.Located(point)
         // Si la consulta falla (red), se sigue con las coordenadas: el backend
         // vuelve a resolver la parada al planificar y reporta el error si persiste.
-        _nearestStop.value = (nearby as? Outcome.Success)?.value?.nearest
-        if (_origin.value == null) _origin.value = TripOrigin.Located(point)
+        (transitRepository.nearbyStops(point) as? Outcome.Success)?.value?.let { nearby ->
+            _nearestStop.value = nearby.nearest
+            _neighborhood.value = nearby.neighborhood
+        }
         return GpsFix.Found(point)
     }
 
@@ -196,13 +240,11 @@ class MainWearViewModel(
         // "Estoy en Fátima y voy a la Cooperativa": se consulta de una vez.
         phraseParser.split(text)?.let { phrase ->
             _origin.value = TripOrigin.Named(phrase.origin)
-            _noNearbyStops.value = false
             submitDestination(phrase.destination, TripOrigin.Named(phrase.origin))
             return
         }
         val origin = TripOrigin.Named(text)
         _origin.value = origin
-        _noNearbyStops.value = false
         _typedText.value = ""
         _voiceNotice.value = null
         val pending = pendingDestination
@@ -244,7 +286,7 @@ class MainWearViewModel(
             if (fix is GpsFix.Found) {
                 submitDestination(text, _origin.value ?: TripOrigin.Located(fix.point))
             } else {
-                // Sin GPS o sin paradas cerca: ahora sí se pregunta dónde está.
+                // El reloj no pudo ubicarse (sin permiso o sin señal): solo entonces se pregunta.
                 _appState.value = AppState.ASKING_LOCATION
             }
         }
@@ -272,6 +314,7 @@ class MainWearViewModel(
 
     private fun submit(query: TripQuery) {
         lastQuery = query
+        _currentDestination.value = query.destination
         _error.value = null
         _plan.value = null
         _appState.value = AppState.PROCESSING
@@ -281,6 +324,7 @@ class MainWearViewModel(
                 is Outcome.Success -> {
                     val result = outcome.value
                     _plan.value = result
+                    result.originNeighborhood?.let { _neighborhood.value = it }
                     _appState.value = if (result.status == TripStatus.OK) AppState.RESULT else AppState.NO_RESULT
                     if (result.status == TripStatus.OK) saveToHistory(query, result)
                 }
@@ -317,7 +361,8 @@ class MainWearViewModel(
         pendingDestination = null
         _origin.value = null
         _nearestStop.value = null
-        _noNearbyStops.value = false
+        _neighborhood.value = null
+        _currentDestination.value = null
         _plan.value = null
         _error.value = null
         _typedText.value = ""
@@ -390,9 +435,17 @@ class MainWearViewModel(
 private sealed interface GpsFix {
     data class Found(val point: GeoPoint) : GpsFix
 
-    /** Hay ubicación, pero ninguna parada con coordenadas cerca. */
-    data object NoStops : GpsFix
-
     /** Sin permiso, sin señal o sin respuesta a tiempo. */
     data object Unavailable : GpsFix
+}
+
+/**
+ * Nombre de un viaje guardado: el lugar o la parada de destino y las rutas,
+ * p. ej. "Universidad Cooperativa · C5".
+ */
+internal fun favoriteLabel(destination: String, plan: TripPlan?): String {
+    val option = plan?.recommended
+    val place = plan?.destinationPlace ?: option?.legs?.lastOrNull()?.alight?.name ?: destination.trim()
+    val routes = option?.legs?.joinToString(" + ") { it.routeCode }
+    return if (routes.isNullOrEmpty()) place else "$place · $routes"
 }

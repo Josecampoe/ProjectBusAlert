@@ -89,6 +89,8 @@ data class TripPlan(
     val originPlace: String? = null,
     /** Lugar (no parada) al que va el usuario: se baja en una parada cercana y camina. */
     val destinationPlace: String? = null,
+    /** Barrio donde está el usuario según su GPS (solo con GPS). */
+    val originNeighborhood: String? = null,
 )
 
 /** Desde dónde sale el usuario: lo que dijo/escribió o su ubicación GPS. */

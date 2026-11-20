@@ -13,6 +13,7 @@ import type { AiClient, JsonGenerationRequest } from '../services/ai/aiClient';
 import { createArrivalEstimator } from '../services/arrivalTime';
 import { AssistantService } from '../services/assistantService';
 import { MemoryCache } from '../services/cacheService';
+import { NeighborhoodIndex } from '../services/neighborhoods';
 
 export const FIXTURES_DIR = path.join(__dirname, 'fixtures', 'data');
 export const TEST_API_KEY = 'test-api-key-0123456789';
@@ -46,7 +47,12 @@ export class FakeAiClient implements AiClient {
 }
 
 export function createTestContext(
-  options: { ai?: AiClient | null; env?: Record<string, string>; now?: Date } = {},
+  options: {
+    ai?: AiClient | null;
+    env?: Record<string, string>;
+    now?: Date;
+    neighborhoods?: NeighborhoodIndex;
+  } = {},
 ) {
   const config = testConfig(options.env);
   const db = openDatabase(IN_MEMORY_DB);
@@ -60,6 +66,7 @@ export function createTestContext(
     config,
     silentLogger,
     () => options.now ?? FIXED_NOW,
+    options.neighborhoods,
   );
   const app = createApp({ config, logger: silentLogger, repo, assistant });
   return { config, db, repo, assistant, app };

@@ -95,14 +95,12 @@ export function createTransitRouter(
   router.get('/stops/nearby', validate('query', schemas.nearbyQuery), (_req, res) => {
     const { lat, lng, radius } = res.locals.query as { lat: number; lng: number; radius: number };
     const network = repo.getNetwork();
-    const nearby = findNearbyStops(
-      network,
-      { latitude: lat, longitude: lng },
-      radius,
-      config.nearby.maxResults,
-    );
+    const point = { latitude: lat, longitude: lng };
+    const nearby = findNearbyStops(network, point, radius, config.nearby.maxResults);
     res.json({
       radiusMeters: radius,
+      // Barrio donde está el punto (según OpenStreetMap), o null.
+      neighborhood: assistant.neighborhoodAt(point),
       count: nearby.length,
       // Las paradas sin coordenadas no se pueden ubicar: se informa para que el cliente lo sepa.
       stopsWithoutCoordinates: countStopsWithoutCoordinates(network),

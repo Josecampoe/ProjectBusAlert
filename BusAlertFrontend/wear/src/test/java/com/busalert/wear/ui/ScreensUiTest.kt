@@ -18,10 +18,13 @@ import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.domain.ErrorCode
 import com.busalert.shared.domain.TripMessage
 import com.busalert.shared.domain.TripStatus
+import com.busalert.shared.preferences.Favorite
+import com.busalert.shared.preferences.FavoriteKind
 import com.busalert.shared.preferences.UserPreferences
 import com.busalert.wear.TestData
 import com.busalert.wear.theme.BusAlertTheme
 import com.busalert.wear.ui.screens.ErrorScreen
+import com.busalert.wear.ui.screens.FavoritesScreen
 import com.busalert.wear.ui.screens.HomeScreen
 import com.busalert.wear.ui.screens.ListeningScreen
 import com.busalert.wear.ui.screens.LocatingScreen
@@ -73,27 +76,91 @@ class ScreensUiTest {
         var appName = ""
         setScreen(AppLanguage.ENGLISH) {
             owner = androidx.activity.compose.LocalActivityResultRegistryOwner.current
-            appName = androidx.compose.ui.res.stringResource(com.busalert.wear.R.string.home_hint)
+            appName = androidx.compose.ui.res.stringResource(com.busalert.wear.R.string.favorites_title)
         }
         compose.waitForIdle()
         assertEquals(true, owner != null)
-        assertEquals("Tap to ask", appName)
+        assertEquals("Favorites", appName)
     }
 
     @Test
     fun inicio_tiene_boton_de_microfono_accesible() {
         var started = 0
-        setScreen { HomeScreen(onStartQuery = { started++ }, onOpenSettings = {}) }
+        setScreen { HomeScreen(onStartQuery = { started++ }, onOpenFavorites = {}, onOpenSettings = {}) }
         compose.onNodeWithContentDescription("Iniciar consulta").performClick()
         assertEquals(1, started)
+        show("Favoritos")
         show("Ajustes")
+        compose.onNodeWithText("Toca para consultar").assertDoesNotExist()
+    }
+
+    @Test
+    fun favoritos_abre_un_viaje_guardado() {
+        val trip = Favorite(FavoriteKind.TRIP, "universidad cooperativa", "Universidad Cooperativa · C5")
+        var opened: Favorite? = null
+        setScreen { FavoritesScreen(favorites = listOf(trip), onOpen = { opened = it }, onBack = {}) }
+        click("Universidad Cooperativa · C5")
+        assertEquals(trip, opened)
+    }
+
+    @Test
+    fun favoritos_vacio_explica_como_guardar() {
+        setScreen { FavoritesScreen(favorites = emptyList(), onOpen = {}, onBack = {}) }
+        show("Aún no tienes viajes guardados. Guárdalos desde el resultado de una consulta.")
+    }
+
+    @Test
+    fun resultado_recomienda_una_ruta_con_tiempo_barrio_y_otras_opciones() {
+        var toggled = 0
+        val alternative = TestData.okPlan.recommended!!.copy(
+            legs = listOf(TestData.directLeg.copy(routeCode = "FX3")),
+            estimatedMinutes = 18,
+        )
+        setScreen {
+            ResultScreen(
+                TestData.okPlan.copy(alternatives = listOf(alternative), originNeighborhood = "Fátima"),
+                speakEnabled = false,
+                isSpeaking = false,
+                onStopVoice = {},
+                onRepeatVoice = {},
+                onNewQuery = {},
+                onHome = {},
+                isFavorite = false,
+                onToggleFavorite = { toggled++ },
+            )
+        }
+        show("Te recomiendo esta ruta")
+        show("≈ 12 min de recorrido")
+        show("Estás en Fátima")
+        show("Otras opciones")
+        show("≈ 18 min · sube en Udenar Torobajo")
+        compose.onNodeWithContentDescription("Ruta FX3").assertExists()
+        click("Guardar en favoritos")
+        assertEquals(1, toggled)
+    }
+
+    @Test
+    fun resultado_guardado_en_favoritos_lo_indica() {
+        setScreen {
+            ResultScreen(
+                TestData.okPlan,
+                speakEnabled = false,
+                isSpeaking = false,
+                onStopVoice = {},
+                onRepeatVoice = {},
+                onNewQuery = {},
+                onHome = {},
+                isFavorite = true,
+            )
+        }
+        show("Guardada en favoritos")
     }
 
     @Test
     fun resultado_sin_texto_de_ia_se_arma_con_recursos() {
         result(TestData.okPlan)
         show("Sube en Udenar Torobajo")
-        show("≈ 12 min (estimado)")
+        show("≈ 12 min de recorrido")
         show("Baja en Parque Bolívar · 2 paradas")
         show("Datos de demostración")
         compose.onNodeWithContentDescription("Ruta FX1").assertIsDisplayed()
@@ -113,7 +180,7 @@ class ScreensUiTest {
     }
 
     @Test
-    fun resultado_usa_el_texto_de_la_ia_cuando_existe() {
+    fun resultado_con_texto_de_ia_mantiene_el_formato_de_recomendacion() {
         result(
             TestData.okPlan.copy(
                 source = AnswerSource.AI,
@@ -121,8 +188,9 @@ class ScreensUiTest {
                 isDemoData = false,
             ),
         )
-        show("Ruta FX1 al centro")
-        show("Parada Udenar")
+        show("Te recomiendo esta ruta")
+        show("Ruta FX1")
+        show("Sube en Udenar Torobajo")
         compose.onNodeWithText("Datos de demostración").assertDoesNotExist()
     }
 
@@ -131,8 +199,8 @@ class ScreensUiTest {
         var stopped = 0
         result(TestData.transferPlan, speaking = true, onStop = { stopped++ })
         show("Transbordo en Parque Nariño")
-        show("Parada a 40 m")
-        show("≈ 21 min (estimado)")
+        show("Sube en Udenar Torobajo (a 40 m)")
+        show("≈ 21 min de recorrido")
         compose.onNodeWithContentDescription("Ruta FX2").assertIsDisplayed()
         click("Detener voz")
         assertEquals(1, stopped)
@@ -144,7 +212,7 @@ class ScreensUiTest {
             ResultScreen(TestData.okPlan, speakEnabled = true, isSpeaking = false, onStopVoice = {}, onRepeatVoice = {}, onNewQuery = {}, onHome = {})
         }
         show("Board at Udenar Torobajo")
-        show("≈ 12 min (estimate)")
+        show("≈ 12 min trip")
         show("Repeat")
     }
 

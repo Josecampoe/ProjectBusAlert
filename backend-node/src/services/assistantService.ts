@@ -29,6 +29,7 @@ import {
 } from './ai/prompts';
 import type { ArrivalEstimate, ArrivalTimeProvider } from './arrivalTime';
 import { findNearbyStops, type GeoPoint } from './nearby';
+import { NeighborhoodIndex } from './neighborhoods';
 import { planTrip, toStopRef, type PlanOption, type StopRef, type TransferStep } from './planner';
 import { placeResolverOptions, resolvePlace } from './placeResolver';
 
@@ -98,6 +99,8 @@ export interface TripResponse {
    */
   originPlace: string | null;
   destinationPlace: string | null;
+  /** Barrio donde está el usuario según su GPS (solo si el origen es GPS). */
+  originNeighborhood: string | null;
   isDemoData: boolean;
 }
 
@@ -130,7 +133,29 @@ export class AssistantService {
     private readonly config: AppConfig,
     private readonly logger: Logger,
     private readonly now: () => Date = () => new Date(),
+    private readonly neighborhoods: NeighborhoodIndex = NeighborhoodIndex.EMPTY,
   ) {}
+
+  /** Barrio en el que está [point], o null si no hay uno cerca. */
+  neighborhoodAt(point: GeoPoint): string | null {
+    return this.neighborhoods.nameAt(point);
+  }
+
+  /**
+   * Paradas cercanas al GPS. Primero en el radio normal; si no hay ninguna
+   * ubicada, se amplía hasta el radio máximo para no tener que preguntarle
+   * al usuario dónde está.
+   */
+  nearbyForOrigin(network: TransitNetwork, point: GeoPoint) {
+    const { defaultRadiusM, maxRadiusM, maxResults } = this.config.nearby;
+    const near = findNearbyStops(network, point, defaultRadiusM, maxResults);
+    if (near.length > 0 || maxRadiusM <= defaultRadiusM) return near;
+    // Más lejos solo interesa la más cercana y las que estén a una distancia parecida.
+    const wide = findNearbyStops(network, point, maxRadiusM, maxResults);
+    if (wide.length === 0) return wide;
+    const closest = wide[0].distanceMeters;
+    return wide.filter((n) => n.distanceMeters <= closest + defaultRadiusM);
+  }
 
   get aiEnabled(): boolean {
     return this.ai !== null;
@@ -163,12 +188,7 @@ export class AssistantService {
         landmark,
       };
     }
-    const nearby = findNearbyStops(
-      network,
-      origin.point,
-      this.config.nearby.defaultRadiusM,
-      this.config.nearby.maxResults,
-    );
+    const nearby = this.nearbyForOrigin(network, origin.point);
     return {
       stops: nearby.map((n) => n.stop),
       candidates: nearby.map((n) => ({
@@ -213,6 +233,8 @@ export class AssistantService {
       destinationCandidates: destination.stops.map(toStopRef),
       originPlace: origin.landmark,
       destinationPlace: destination.landmark,
+      originNeighborhood:
+        request.origin.kind === 'coordinates' ? this.neighborhoodAt(request.origin.point) : null,
       isDemoData: [...origin.stops, ...destination.stops].some((s) => s.isDemo),
     };
 

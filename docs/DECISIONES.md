@@ -191,3 +191,17 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
   - "estoy en la Cooperativa y voy a Fátima" → origen = lo dicho (gana sobre el GPS, D-046).
   - Si el usuario habla antes de que responda el GPS, el reloj espera la ubicación ("Buscando tu ubicación…") y consulta sin volver a preguntar.
   - Solo si no hay GPS (sin permiso, sin señal o sin paradas ubicadas cerca) pregunta "¿Dónde estás?" y consulta con el destino que ya tenía.
+
+## D-052 · El reloj ya no pregunta "¿dónde estás?": origen = GPS + barrio
+- **Pedido (2026-11-20):** probado en un Galaxy Watch 7, el reloj seguía preguntando dónde estaba. El usuario quiere decir solo "voy para la Universidad Cooperativa" y que el origen salga del GPS, asociado al barrio (p. ej. "Estás en Fátima") y a la parada más cercana.
+- **Causas:** (1) el reloj pedía la ubicación con `PRIORITY_BALANCED_POWER_ACCURACY` y 8 s de espera: sin el teléfono cerca el reloj no tiene ubicación por Wi-Fi/red y el GPS no alcanza el primer punto a tiempo; (2) si no había paradas ubicadas a 500 m, el reloj preguntaba el lugar.
+- **Decisión:**
+  - Ubicación: si hay una reciente (< 2 min) se usa de una vez; si no, GPS de alta precisión con 15 s de espera; si no responde, la última conocida (< 30 min). Solo sin permiso o sin ninguna ubicación se pregunta el lugar (último recurso).
+  - Backend: si no hay paradas a `NEARBY_DEFAULT_RADIUS_M` (500 m), se busca la más cercana hasta `NEARBY_MAX_RADIUS_M` (3 km).
+  - Barrio: el backend busca el centro de barrio de OpenStreetMap (`data/raw/osm_pasto.json`, `place=neighbourhood/suburb/quarter/village/hamlet`) más cercano al GPS, hasta 800 m. Va en `originNeighborhood` (`POST /api/voice`) y `neighborhood` (`GET /api/stops/nearby`). Más lejos no se nombra barrio para no decir uno equivocado.
+  - La parada de origen es la más cercana al **GPS** del usuario, no al centro del barrio: es más precisa (el barrio solo se muestra).
+
+## D-053 · Resultado "Te recomiendo esta ruta" y viajes favoritos en el reloj
+- **Resultado:** arriba "Te recomiendo esta ruta", las insignias, "Ruta C5" y "≈ 15 min de recorrido"; luego barrio, dónde subir (con distancia), transbordo y dónde bajar; debajo "Otras opciones" (hasta 3) con minutos y parada. El texto de la IA se sigue usando para la lectura en voz alta.
+- **Inicio:** se quitó "Toca para consultar"; el botón del micrófono se explica solo (TalkBack sigue diciendo "Iniciar consulta"). Se agregó "Favoritos".
+- **Favoritos:** "Guardar en favoritos" en el resultado guarda un viaje (`FavoriteKind.TRIP`, `id` = destino dicho, `label` = "Universidad Cooperativa · C5"). Tocarlo en "Favoritos" consulta de una vez desde la ubicación actual, sin preguntar nada. Se sincroniza con el teléfono como los demás favoritos; versiones viejas de la app ignoran el tipo nuevo.

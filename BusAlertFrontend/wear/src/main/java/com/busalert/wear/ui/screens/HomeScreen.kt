@@ -12,14 +12,13 @@ import androidx.wear.compose.material.Text
 import com.busalert.wear.R
 import com.busalert.wear.theme.BusAlertTheme
 import com.busalert.wear.ui.components.ActionChip
-import com.busalert.wear.ui.components.BodyText
 import com.busalert.wear.ui.components.ChipStyle
 import com.busalert.wear.ui.components.MicButton
 import com.busalert.wear.ui.components.ScrollableScreen
 
-/** Inicio: marca, botón de micrófono y acceso a ajustes. */
+/** Inicio: marca, botón de micrófono, viajes favoritos y ajustes. */
 @Composable
-fun HomeScreen(onStartQuery: () -> Unit, onOpenSettings: () -> Unit) {
+fun HomeScreen(onStartQuery: () -> Unit, onOpenFavorites: () -> Unit, onOpenSettings: () -> Unit) {
     val colors = BusAlertTheme.colors
     ScrollableScreen {
         item {
@@ -41,7 +40,14 @@ fun HomeScreen(onStartQuery: () -> Unit, onOpenSettings: () -> Unit) {
             }
         }
         item { MicButton(contentDescription = stringResource(R.string.home_start_query), onClick = onStartQuery) }
-        item { BodyText(stringResource(R.string.home_hint), muted = true) }
+        item {
+            ActionChip(
+                label = stringResource(R.string.favorites_title),
+                onClick = onOpenFavorites,
+                icon = R.drawable.ic_star,
+                style = ChipStyle.SECONDARY,
+            )
+        }
         item {
             ActionChip(
                 label = stringResource(R.string.action_settings),

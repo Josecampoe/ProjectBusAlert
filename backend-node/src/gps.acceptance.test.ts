@@ -5,6 +5,7 @@
  */
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
+import { NeighborhoodIndex } from './services/neighborhoods';
 import { createTestContext, FakeAiClient, TEST_API_KEY } from './test/helpers';
 
 const auth = { 'X-API-Key': TEST_API_KEY };
@@ -48,7 +49,45 @@ describe('consulta por GPS', () => {
     expect(sent).toContain('Parque Nariño');
   });
 
-  it('responde no_nearby_stops si no hay paradas en el radio', async () => {
+  it('si no hay paradas en el radio normal, usa la más cercana dentro del radio máximo', async () => {
+    const { app } = createTestContext();
+    // ~1 km al sur de la Terminal de Transportes: no hay paradas a 500 m.
+    const res = await request(app)
+      .post('/api/voice')
+      .set(auth)
+      .send({ voiceText: 'udenar', latitude: 1.196, longitude: -77.27 });
+    expect(res.body.status).not.toBe('no_nearby_stops');
+    expect(res.body.originCandidates[0].name).toBe('Terminal de Transportes');
+    expect(res.body.originCandidates[0].distanceMeters).toBeGreaterThan(500);
+  });
+
+  it('informa el barrio en el que está el usuario', async () => {
+    const neighborhoods = new NeighborhoodIndex([
+      { name: 'Centro', latitude: 1.2142, longitude: -77.2786 },
+      { name: 'Torobajo', latitude: 1.2335, longitude: -77.2925 },
+    ]);
+    const { app } = createTestContext({ neighborhoods });
+    const voice = await request(app)
+      .post('/api/voice')
+      .set(auth)
+      .send({ voiceText: 'udenar', ...NEAR_PARQUE_NARINO });
+    expect(voice.body.originNeighborhood).toBe('Centro');
+    const nearby = await request(app)
+      .get('/api/stops/nearby')
+      .set(auth)
+      .query({ lat: NEAR_PARQUE_NARINO.latitude, lng: NEAR_PARQUE_NARINO.longitude });
+    expect(nearby.body.neighborhood).toBe('Centro');
+  });
+
+  it('no nombra un barrio si el más cercano está lejos', () => {
+    const index = new NeighborhoodIndex([
+      { name: 'Torobajo', latitude: 1.2335, longitude: -77.2925 },
+    ]);
+    expect(index.nameAt(NEAR_PARQUE_NARINO)).toBeNull();
+    expect(index.nameAt({ latitude: 1.2336, longitude: -77.2926 })).toBe('Torobajo');
+  });
+
+  it('responde no_nearby_stops si no hay paradas en el radio máximo', async () => {
     const { app } = createTestContext();
     const res = await request(app)
       .post('/api/voice')

@@ -101,6 +101,7 @@ fun TripResponseDto.toDomain(): TripPlan {
         nearestStopDistanceMeters = nearest?.distanceMeters,
         originPlace = originPlace?.takeIf { it.isNotBlank() },
         destinationPlace = destinationPlace?.takeIf { it.isNotBlank() },
+        originNeighborhood = originNeighborhood?.takeIf { it.isNotBlank() },
         isDemoData = isDemoData ?: false,
     )
 }

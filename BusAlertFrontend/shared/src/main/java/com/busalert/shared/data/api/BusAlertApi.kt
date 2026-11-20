@@ -99,6 +99,7 @@ data class TripResponseDto(
     val originCandidates: List<OriginCandidateDto>?,
     val originPlace: String?,
     val destinationPlace: String?,
+    val originNeighborhood: String? = null,
     val isDemoData: Boolean?,
 )
 

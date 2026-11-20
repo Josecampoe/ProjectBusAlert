@@ -57,6 +57,8 @@ data class NearbyStop(
 data class NearbyStops(
     val stops: List<NearbyStop>,
     val stopsWithoutCoordinates: Int,
+    /** Barrio donde está el punto consultado (OpenStreetMap), si el backend lo conoce. */
+    val neighborhood: String? = null,
 ) {
     val nearest: NearbyStop? get() = stops.firstOrNull()
 }

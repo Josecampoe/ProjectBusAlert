@@ -53,7 +53,11 @@ data class StopSearchItemDto(
 
 data class StopRouteDto(val routeCode: String?, val directionName: String?)
 
-data class NearbyStopsDto(val stops: List<NearbyStopDto>?, val stopsWithoutCoordinates: Int?)
+data class NearbyStopsDto(
+    val stops: List<NearbyStopDto>?,
+    val stopsWithoutCoordinates: Int?,
+    val neighborhood: String? = null,
+)
 
 data class NearbyStopDto(
     val id: Long?,
@@ -118,4 +122,5 @@ fun NearbyStopsDto.toDomain(): NearbyStops = NearbyStops(
         )
     }.sortedBy { it.distanceMeters },
     stopsWithoutCoordinates = stopsWithoutCoordinates ?: 0,
+    neighborhood = neighborhood?.takeIf { it.isNotBlank() },
 )

@@ -121,3 +121,13 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | `./gradlew :shared:testDebugUnitTest :wear:testDebugUnitTest :mobile:testDebugUnitTest :wear:lintDebug :wear:assembleDebug` | OK: shared 33, wear 49, mobile 12 |
 | Servidor local, GPS en la Universidad Cooperativa (1.2299, -77.2897) | Parada más cercana: Universidad Cooperativa a 27 m. → Fátima: C14. → Lorenzo: E2. → Unicentro: C12. → Parque Bolívar: E1. → Terminal: C9 + C1 |
 | Servidor local, por texto | "universidad cooperativa" → Fátima: C14. "estoy en Fátima" → "la Universidad Cooperativa": C5 |
+
+## Fase 12 — Origen por GPS y barrio, ruta recomendada y favoritos (2026-11-20)
+
+| Comando | Resultado |
+|---|---|
+| `curl` a Render, GPS en Fátima → "universidad cooperativa" (antes del cambio) | C5 desde Parroquia Fátima, ≈ 15 min, alternativas E5 y E4: el backend ya respondía; el problema era la ubicación del reloj |
+| `npm test` (backend) | 181 pruebas OK (radio ampliado, barrio en `/api/voice` y `/api/stops/nearby`) |
+| `npm run lint` / `typecheck` / `prettier --check` | OK |
+| Barrios con los datos reales (`osm_pasto.json`) | 582 barrios; (1.2030, -77.2735) → Fátima; (1.2297, -77.2899) → Pandiaco |
+| `./gradlew testDebugUnitTest lintDebug :wear:lintRelease :wear:assembleRelease` | OK: wear 57, shared 33, mobile 12; lint sin avisos |

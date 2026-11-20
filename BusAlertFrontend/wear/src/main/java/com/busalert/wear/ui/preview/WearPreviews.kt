@@ -85,11 +85,11 @@ private object PreviewData {
 
 @WearDevicePreviews
 @Composable
-private fun HomePreview() = Dark { HomeScreen(onStartQuery = {}, onOpenSettings = {}) }
+private fun HomePreview() = Dark { HomeScreen(onStartQuery = {}, onOpenFavorites = {}, onOpenSettings = {}) }
 
 @LightEnglishPreview
 @Composable
-private fun HomeLightPreview() = LightEnglish { HomeScreen(onStartQuery = {}, onOpenSettings = {}) }
+private fun HomeLightPreview() = LightEnglish { HomeScreen(onStartQuery = {}, onOpenFavorites = {}, onOpenSettings = {}) }
 
 @WearDevicePreviews
 @Composable

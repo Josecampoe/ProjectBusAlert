@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import com.busalert.shared.domain.ErrorCode
 import com.busalert.shared.domain.TripPlan
 import com.busalert.shared.domain.TripStatus
+import com.busalert.shared.preferences.Favorite
 import com.busalert.shared.preferences.UserPreferences
 import com.busalert.wear.AppState
 import com.busalert.wear.MainWearViewModel
@@ -26,6 +27,7 @@ import com.busalert.wear.R
 import com.busalert.wear.location.LocationDefaults
 import com.busalert.wear.theme.BusAlertTheme
 import com.busalert.wear.ui.screens.ErrorScreen
+import com.busalert.wear.ui.screens.FavoritesScreen
 import com.busalert.wear.ui.screens.HomeScreen
 import com.busalert.wear.ui.screens.ListeningScreen
 import com.busalert.wear.ui.screens.LocatingScreen
@@ -63,11 +65,15 @@ fun WearApp(
     val typedText by viewModel.typedText.collectAsState()
     val voiceNotice by viewModel.voiceNotice.collectAsState()
     val nearestStop by viewModel.nearestStop.collectAsState()
-    val noNearbyStops by viewModel.noNearbyStops.collectAsState()
+    val neighborhood by viewModel.neighborhood.collectAsState()
+    val tripFavorites by viewModel.tripFavorites.collectAsState()
+    val isResultFavorite by viewModel.isResultFavorite.collectAsState()
     val recentPlaces by viewModel.recentPlaces.collectAsState()
     val partial by partialSpeech.collectAsState()
     val isSpeaking by voiceOutput.isSpeaking.collectAsState()
     var explainLocation by rememberSaveable { mutableStateOf(false) }
+    // Viaje favorito que espera la respuesta al permiso de ubicación (null = consulta por voz).
+    var pendingFavorite by rememberSaveable { mutableStateOf<String?>(null) }
 
     LaunchedEffect(preferences.language) { voiceOutput.setLanguage(preferences.language) }
 
@@ -77,17 +83,26 @@ fun WearApp(
             val micLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
                 if (granted) voiceInput.start(preferences.language) else viewModel.onVoiceError(VoiceError.PERMISSION)
             }
+            // Con o sin permiso se consulta: sin él (último recurso) se pregunta el lugar.
+            val runPending = {
+                val favorite = pendingFavorite
+                pendingFavorite = null
+                if (favorite != null) viewModel.startFavoriteQuery(favorite) else viewModel.startQuery()
+            }
             val locationLauncher = rememberLauncherForActivityResult(
                 ActivityResultContracts.RequestMultiplePermissions(),
-            ) { viewModel.startQuery() } // Con o sin permiso: sin él se pregunta el lugar.
+            ) { runPending() }
 
-            val startQuery = {
+            val withLocation = { favorite: String? ->
+                pendingFavorite = favorite
                 when {
-                    permissions.hasLocation() -> viewModel.startQuery()
+                    permissions.hasLocation() -> runPending()
                     permissions.shouldExplainLocation() -> explainLocation = true
                     else -> locationLauncher.launch(LocationDefaults.PERMISSIONS)
                 }
             }
+            val startQuery = { withLocation(null) }
+            val openFavorite = { favorite: Favorite -> withLocation(favorite.id) }
             val listen = {
                 if (permissions.hasMicrophone()) {
                     voiceInput.start(preferences.language)
@@ -126,7 +141,7 @@ fun WearApp(
                     },
                     onNotNow = {
                         explainLocation = false
-                        viewModel.startQuery()
+                        runPending()
                     },
                 )
             } else {
@@ -143,7 +158,10 @@ fun WearApp(
                         typedText = typedText,
                         voiceNotice = voiceNotice,
                         nearestStopName = nearestStop?.stop?.name,
-                        noNearbyStops = noNearbyStops,
+                        neighborhood = neighborhood,
+                        tripFavorites = tripFavorites,
+                        isResultFavorite = isResultFavorite,
+                        onOpenFavorite = openFavorite,
                         recentPlaces = recentPlaces,
                         partialSpeech = partial,
                         isSpeaking = isSpeaking,
@@ -168,7 +186,10 @@ private fun Screen(
     typedText: String,
     voiceNotice: VoiceError?,
     nearestStopName: String?,
-    noNearbyStops: Boolean,
+    neighborhood: String?,
+    tripFavorites: List<Favorite>,
+    isResultFavorite: Boolean,
+    onOpenFavorite: (Favorite) -> Unit,
     recentPlaces: List<String>,
     partialSpeech: String,
     isSpeaking: Boolean,
@@ -180,13 +201,22 @@ private fun Screen(
 ) {
     val askingDestination = state == AppState.ASKING_DESTINATION || state == AppState.TYPING_DESTINATION
     val prompt = when {
+        askingDestination && neighborhood != null -> stringResource(R.string.prompt_destination_in, neighborhood)
         askingDestination && nearestStopName != null -> stringResource(R.string.prompt_destination_from, nearestStopName)
         askingDestination -> stringResource(R.string.prompt_destination)
-        noNearbyStops -> stringResource(R.string.prompt_location_no_nearby_stops)
         else -> stringResource(R.string.prompt_location)
     }
     when (state) {
-        AppState.IDLE -> HomeScreen(onStartQuery = onStartQuery, onOpenSettings = viewModel::openSettings)
+        AppState.IDLE -> HomeScreen(
+            onStartQuery = onStartQuery,
+            onOpenFavorites = viewModel::openFavorites,
+            onOpenSettings = viewModel::openSettings,
+        )
+        AppState.FAVORITES -> FavoritesScreen(
+            favorites = tripFavorites,
+            onOpen = onOpenFavorite,
+            onBack = viewModel::resetToIdle,
+        )
         AppState.SETTINGS -> SettingsScreen(
             preferences = preferences,
             onToggleLanguage = viewModel::toggleLanguage,
@@ -228,6 +258,9 @@ private fun Screen(
                 onRepeatVoice = voiceOutput::repeat,
                 onNewQuery = onStartQuery,
                 onHome = viewModel::resetToIdle,
+                isFavorite = isResultFavorite,
+                onToggleFavorite = viewModel::toggleResultFavorite,
+                neighborhood = it.originNeighborhood ?: neighborhood,
             )
         }
         AppState.NO_RESULT -> NoResultScreen(
