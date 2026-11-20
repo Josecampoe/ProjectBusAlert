@@ -2,6 +2,8 @@ package com.busalert.wear.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
@@ -16,11 +18,14 @@ import com.busalert.wear.ui.components.ChipStyle
 import com.busalert.wear.ui.components.MicButton
 import com.busalert.wear.ui.components.ScrollableScreen
 
-/** Inicio: marca, botón de micrófono, viajes favoritos y ajustes. */
+/**
+ * Inicio: marca, botón de micrófono, viajes favoritos y ajustes. La marca y el
+ * micrófono van juntos y centrados, para que el título no quede debajo de la hora.
+ */
 @Composable
 fun HomeScreen(onStartQuery: () -> Unit, onOpenFavorites: () -> Unit, onOpenSettings: () -> Unit) {
     val colors = BusAlertTheme.colors
-    ScrollableScreen {
+    ScrollableScreen(initialCenterItem = 0) {
         item {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -37,9 +42,10 @@ fun HomeScreen(onStartQuery: () -> Unit, onOpenFavorites: () -> Unit, onOpenSett
                     style = BusAlertTheme.typography.caption2,
                     color = colors.onSurfaceMuted,
                 )
+                Spacer(Modifier.height(BusAlertTheme.spacing.s))
+                MicButton(contentDescription = stringResource(R.string.home_start_query), onClick = onStartQuery)
             }
         }
-        item { MicButton(contentDescription = stringResource(R.string.home_start_query), onClick = onStartQuery) }
         item {
             ActionChip(
                 label = stringResource(R.string.favorites_title),

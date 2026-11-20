@@ -27,6 +27,7 @@ import com.busalert.wear.R
 import com.busalert.wear.location.LocationDefaults
 import com.busalert.wear.theme.BusAlertTheme
 import com.busalert.wear.ui.screens.ErrorScreen
+import com.busalert.wear.ui.screens.FavoriteDetailScreen
 import com.busalert.wear.ui.screens.FavoritesScreen
 import com.busalert.wear.ui.screens.HomeScreen
 import com.busalert.wear.ui.screens.ListeningScreen
@@ -74,9 +75,8 @@ fun WearApp(
     val recentPlaces by viewModel.recentPlaces.collectAsState()
     val partial by partialSpeech.collectAsState()
     val isSpeaking by voiceOutput.isSpeaking.collectAsState()
+    val selectedFavorite by viewModel.selectedFavorite.collectAsState()
     var explainLocation by rememberSaveable { mutableStateOf(false) }
-    // Viaje favorito que espera la respuesta al permiso de ubicación (null = consulta por voz).
-    var pendingFavorite by rememberSaveable { mutableStateOf<String?>(null) }
 
     LaunchedEffect(preferences.language) { voiceOutput.setLanguage(preferences.language) }
 
@@ -87,25 +87,17 @@ fun WearApp(
                 if (granted) voiceInput.start(preferences.language) else viewModel.onVoiceError(VoiceError.PERMISSION)
             }
             // Con o sin permiso se consulta: sin él (último recurso) se pregunta el lugar.
-            val runPending = {
-                val favorite = pendingFavorite
-                pendingFavorite = null
-                if (favorite != null) viewModel.startFavoriteQuery(favorite) else viewModel.startQuery()
-            }
             val locationLauncher = rememberLauncherForActivityResult(
                 ActivityResultContracts.RequestMultiplePermissions(),
-            ) { runPending() }
+            ) { viewModel.startQuery() }
 
-            val withLocation = { favorite: String? ->
-                pendingFavorite = favorite
+            val startQuery = {
                 when {
-                    permissions.hasLocation() -> runPending()
+                    permissions.hasLocation() -> viewModel.startQuery()
                     permissions.shouldExplainLocation() -> explainLocation = true
                     else -> locationLauncher.launch(LocationDefaults.PERMISSIONS)
                 }
             }
-            val startQuery = { withLocation(null) }
-            val openFavorite = { favorite: Favorite -> withLocation(favorite.id) }
             val listen = {
                 if (permissions.hasMicrophone()) {
                     voiceInput.start(preferences.language)
@@ -133,7 +125,11 @@ fun WearApp(
 
             // "Atrás" (gesto de deslizar) vuelve al inicio desde cualquier pantalla.
             BackHandler(enabled = appState != AppState.IDLE || explainLocation) {
-                if (explainLocation) explainLocation = false else viewModel.resetToIdle()
+                when {
+                    explainLocation -> explainLocation = false
+                    appState == AppState.FAVORITE_DETAIL -> viewModel.openFavorites()
+                    else -> viewModel.resetToIdle()
+                }
             }
 
             if (explainLocation) {
@@ -144,7 +140,7 @@ fun WearApp(
                     },
                     onNotNow = {
                         explainLocation = false
-                        runPending()
+                        viewModel.startQuery()
                     },
                 )
             } else {
@@ -165,7 +161,7 @@ fun WearApp(
                         locationOff = !permissions.isLocationEnabled(),
                         tripFavorites = tripFavorites,
                         isResultFavorite = isResultFavorite,
-                        onOpenFavorite = openFavorite,
+                        selectedFavorite = selectedFavorite,
                         recentPlaces = recentPlaces,
                         partialSpeech = partial,
                         isSpeaking = isSpeaking,
@@ -194,7 +190,7 @@ private fun Screen(
     locationOff: Boolean,
     tripFavorites: List<Favorite>,
     isResultFavorite: Boolean,
-    onOpenFavorite: (Favorite) -> Unit,
+    selectedFavorite: Favorite?,
     recentPlaces: List<String>,
     partialSpeech: String,
     isSpeaking: Boolean,
@@ -220,9 +216,16 @@ private fun Screen(
         )
         AppState.FAVORITES -> FavoritesScreen(
             favorites = tripFavorites,
-            onOpen = onOpenFavorite,
+            onOpen = viewModel::openFavorite,
             onBack = viewModel::resetToIdle,
         )
+        AppState.FAVORITE_DETAIL -> selectedFavorite?.let { favorite ->
+            FavoriteDetailScreen(
+                favorite = favorite,
+                onRemove = { viewModel.removeFavorite(favorite) },
+                onBack = viewModel::openFavorites,
+            )
+        }
         AppState.SETTINGS -> SettingsScreen(
             preferences = preferences,
             onToggleLanguage = viewModel::toggleLanguage,

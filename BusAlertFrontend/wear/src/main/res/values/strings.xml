@@ -121,6 +121,9 @@
     <string name="action_saved_favorite">Guardada en favoritos</string>
     <string name="favorites_title">Favoritos</string>
     <string name="favorites_empty">Aún no tienes viajes guardados. Guárdalos desde el resultado de una consulta.</string>
+    <string name="favorite_summary">%1$s · ≈ %2$d min</string>
+    <string name="favorite_no_details">Esta ruta se guardó con una versión anterior. Haz la consulta de nuevo y guárdala.</string>
+    <string name="action_remove_favorite">Quitar de favoritos</string>
     <plurals name="result_transfers_count">
         <item quantity="one">%1$d transbordo</item>
         <item quantity="many">%1$d transbordos</item>

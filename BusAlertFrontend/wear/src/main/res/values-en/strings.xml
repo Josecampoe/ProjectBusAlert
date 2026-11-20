@@ -108,6 +108,9 @@
     <string name="action_saved_favorite">Saved to favorites</string>
     <string name="favorites_title">Favorites</string>
     <string name="favorites_empty">No saved trips yet. Save one from a query result.</string>
+    <string name="favorite_summary">%1$s · ≈ %2$d min</string>
+    <string name="favorite_no_details">This route was saved with an older version. Ask again and save it.</string>
+    <string name="action_remove_favorite">Remove from favorites</string>
     <plurals name="result_transfers_count">
         <item quantity="one">%1$d transfer</item>
         <item quantity="other">%1$d transfers</item>

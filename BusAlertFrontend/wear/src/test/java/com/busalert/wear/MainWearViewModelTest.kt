@@ -19,6 +19,7 @@ import com.busalert.shared.domain.TripStatus
 import com.busalert.shared.preferences.Favorite
 import com.busalert.shared.preferences.FavoriteKind
 import com.busalert.shared.preferences.QueryHistoryEntry
+import com.busalert.shared.preferences.SavedTrip
 import com.busalert.wear.TestData.okPlan
 import com.busalert.wear.location.LocationSource
 import com.busalert.wear.voice.ConnectorTripPhraseParser
@@ -273,8 +274,9 @@ class MainWearViewModelTest {
     }
 
     @Test
-    fun `guardar el resultado en favoritos y quitarlo`() = runTest(dispatcher) {
+    fun `guardar el resultado en favoritos guarda la ruta de barrio a destino`() = runTest(dispatcher) {
         location = { GeoPoint(1.2143, -77.2787) }
+        transit.nearby = { Outcome.Success(NearbyStops(emptyList(), 0, neighborhood = "Fátima")) }
         viewModel.startQuery()
         advanceUntilIdle()
         viewModel.onSpeechResult("Parque Bolívar")
@@ -284,7 +286,24 @@ class MainWearViewModelTest {
         viewModel.toggleResultFavorite()
         advanceUntilIdle()
         val saved = viewModel.tripFavorites.value.single()
-        assertEquals(Favorite(FavoriteKind.TRIP, "Parque Bolívar", "Parque Bolívar · FX1"), saved)
+        assertEquals(
+            Favorite(
+                FavoriteKind.TRIP,
+                "Parque Bolívar",
+                "Fátima → Parque Bolívar",
+                SavedTrip(
+                    from = "Fátima",
+                    to = "Parque Bolívar",
+                    routeCodes = listOf("FX1"),
+                    boardStop = "Udenar Torobajo",
+                    alightStop = "Parque Bolívar",
+                    transferStop = null,
+                    estimatedMinutes = 12,
+                    totalStops = 2,
+                ),
+            ),
+            saved,
+        )
         assertTrue(viewModel.isResultFavorite.value)
 
         viewModel.toggleResultFavorite()
@@ -294,21 +313,39 @@ class MainWearViewModelTest {
     }
 
     @Test
-    fun `un viaje favorito se consulta desde el GPS sin preguntar nada`() = runTest(dispatcher) {
-        val point = GeoPoint(1.2143, -77.2787)
-        location = { point }
-        viewModel.startFavoriteQuery("Parque Bolívar")
+    fun `sin barrio el favorito sale desde la parada donde se sube`() = runTest(dispatcher) {
+        location = { GeoPoint(1.2143, -77.2787) }
+        viewModel.startQuery()
         advanceUntilIdle()
-        assertEquals(TripQuery("Parque Bolívar", TripOrigin.Located(point), AppLanguage.SPANISH), repository.queries.single())
-        assertEquals(AppState.RESULT, viewModel.appState.value)
+        viewModel.onSpeechResult("Parque Bolívar")
+        advanceUntilIdle()
+        viewModel.toggleResultFavorite()
+        advanceUntilIdle()
+        assertEquals("Udenar Torobajo → Parque Bolívar", viewModel.tripFavorites.value.single().label)
     }
 
     @Test
-    fun `un viaje favorito sin GPS pregunta el lugar como último recurso`() = runTest(dispatcher) {
-        viewModel.startFavoriteQuery("Parque Bolívar")
+    fun `abrir un favorito muestra la ruta guardada sin consultar ni preguntar`() = runTest(dispatcher) {
+        val trip = SavedTrip("Fátima", "Universidad Cooperativa", listOf("C5"), "Parroquia Fátima", "Universidad Cooperativa", null, 15, 10)
+        val favorite = Favorite(FavoriteKind.TRIP, "universidad cooperativa", "Fátima → Universidad Cooperativa", trip)
+        viewModel.openFavorites()
+        viewModel.openFavorite(favorite)
         advanceUntilIdle()
-        assertEquals(AppState.ASKING_LOCATION, viewModel.appState.value)
+        assertEquals(AppState.FAVORITE_DETAIL, viewModel.appState.value)
+        assertEquals(favorite, viewModel.selectedFavorite.value)
         assertTrue(repository.queries.isEmpty())
+        assertTrue(transit.nearbyRequests.isEmpty())
+    }
+
+    @Test
+    fun `quitar un favorito desde el detalle vuelve a la lista`() = runTest(dispatcher) {
+        val favorite = Favorite(FavoriteKind.TRIP, "ucc", "Fátima → UCC")
+        preferences.toggleFavorite(favorite)
+        viewModel.openFavorite(favorite)
+        viewModel.removeFavorite(favorite)
+        advanceUntilIdle()
+        assertEquals(AppState.FAVORITES, viewModel.appState.value)
+        assertTrue(viewModel.tripFavorites.value.isEmpty())
     }
     @Test
     fun `si falla la búsqueda de paradas cercanas sigue con las coordenadas`() = runTest(dispatcher) {

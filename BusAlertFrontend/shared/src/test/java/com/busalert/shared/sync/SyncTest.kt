@@ -5,6 +5,7 @@ import com.busalert.shared.preferences.Favorite
 import com.busalert.shared.preferences.FavoriteKind
 import com.busalert.shared.preferences.PreferencesRepository
 import com.busalert.shared.preferences.QueryHistoryEntry
+import com.busalert.shared.preferences.SavedTrip
 import com.busalert.shared.preferences.SyncSnapshot
 import com.busalert.shared.preferences.UserPreferences
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +21,15 @@ class SyncTest {
     private val snapshot = SyncSnapshot(
         preferences = UserPreferences(AppLanguage.ENGLISH, darkTheme = false, speakResults = true),
         history = listOf(QueryHistoryEntry("Centro", "Terminal", listOf("FX1", "FX2"), 5L)),
-        favorites = listOf(Favorite(FavoriteKind.STOP, "Parque Nariño", "Parque Nariño")),
+        favorites = listOf(
+            Favorite(FavoriteKind.STOP, "Parque Nariño", "Parque Nariño"),
+            Favorite(
+                FavoriteKind.TRIP,
+                "universidad cooperativa",
+                "Fátima → Universidad Cooperativa",
+                SavedTrip("Fátima", "Universidad Cooperativa", listOf("C5"), "Parroquia Fátima", "Universidad Cooperativa", null, 15, 10),
+            ),
+        ),
         updatedAtMillis = 42L,
     )
 
@@ -48,6 +57,12 @@ class SyncTest {
         assertEquals(AppLanguage.SPANISH, decoded.preferences.language)
         assertEquals(listOf("UCC"), decoded.history.map { it.destination })
         assertEquals(listOf(Favorite(FavoriteKind.ROUTE, "E1", "E1")), decoded.favorites)
+    }
+
+    @Test
+    fun `un viaje favorito de una versión anterior queda sin ruta guardada`() {
+        val decoded = SyncCodec.decodeFavorites("""[{"kind":"TRIP","id":"ucc","label":"UCC · C5"}]""")
+        assertEquals(listOf(Favorite(FavoriteKind.TRIP, "ucc", "UCC · C5", trip = null)), decoded)
     }
 
     /** Repositorio en memoria que registra si se aplicó un estado remoto. */

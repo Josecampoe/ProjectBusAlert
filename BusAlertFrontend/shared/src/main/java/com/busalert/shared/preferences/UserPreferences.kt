@@ -23,12 +23,29 @@ enum class FavoriteKind { ROUTE, STOP, TRIP }
 /**
  * Ruta, parada o viaje marcado como favorito. [id] es el código de ruta, el
  * nombre de la parada o, para un viaje ([FavoriteKind.TRIP]), el destino dicho
- * por el usuario (se vuelve a consultar desde donde esté).
+ * por el usuario. Un viaje guarda en [trip] la ruta que se recomendó, para
+ * mostrarla tal cual sin volver a consultar.
  */
 data class Favorite(
     val kind: FavoriteKind,
     val id: String,
     val label: String,
+    val trip: SavedTrip? = null,
+)
+
+/** Ruta guardada de un viaje favorito: de dónde a dónde y en qué buses. */
+data class SavedTrip(
+    /** Barrio o lugar de salida (p. ej. "Fátima"). */
+    val from: String,
+    /** Lugar o parada de llegada (p. ej. "Universidad Cooperativa"). */
+    val to: String,
+    val routeCodes: List<String>,
+    val boardStop: String,
+    val alightStop: String,
+    /** Parada donde se cambia de bus, si hay transbordo. */
+    val transferStop: String?,
+    val estimatedMinutes: Int?,
+    val totalStops: Int,
 )
 
 /**

@@ -20,10 +20,12 @@ import com.busalert.shared.domain.TripMessage
 import com.busalert.shared.domain.TripStatus
 import com.busalert.shared.preferences.Favorite
 import com.busalert.shared.preferences.FavoriteKind
+import com.busalert.shared.preferences.SavedTrip
 import com.busalert.shared.preferences.UserPreferences
 import com.busalert.wear.TestData
 import com.busalert.wear.theme.BusAlertTheme
 import com.busalert.wear.ui.screens.ErrorScreen
+import com.busalert.wear.ui.screens.FavoriteDetailScreen
 import com.busalert.wear.ui.screens.FavoritesScreen
 import com.busalert.wear.ui.screens.HomeScreen
 import com.busalert.wear.ui.screens.ListeningScreen
@@ -44,6 +46,13 @@ class ScreensUiTest {
 
     @get:Rule
     val compose = createAndroidComposeRule<ComponentActivity>()
+
+    private val savedTrip = Favorite(
+        FavoriteKind.TRIP,
+        "universidad cooperativa",
+        "Fátima → Universidad Cooperativa",
+        SavedTrip("Fátima", "Universidad Cooperativa", listOf("C5"), "Parroquia Fátima", "Universidad Cooperativa", null, 15, 10),
+    )
 
     private fun setScreen(language: AppLanguage = AppLanguage.SPANISH, dark: Boolean = true, content: @Composable () -> Unit) {
         compose.setContent {
@@ -96,11 +105,32 @@ class ScreensUiTest {
 
     @Test
     fun favoritos_abre_un_viaje_guardado() {
-        val trip = Favorite(FavoriteKind.TRIP, "universidad cooperativa", "Universidad Cooperativa · C5")
         var opened: Favorite? = null
-        setScreen { FavoritesScreen(favorites = listOf(trip), onOpen = { opened = it }, onBack = {}) }
-        click("Universidad Cooperativa · C5")
-        assertEquals(trip, opened)
+        setScreen { FavoritesScreen(favorites = listOf(savedTrip), onOpen = { opened = it }, onBack = {}) }
+        show("C5 · ≈ 15 min")
+        click("Fátima → Universidad Cooperativa")
+        assertEquals(savedTrip, opened)
+    }
+
+    @Test
+    fun detalle_de_favorito_muestra_la_ruta_guardada() {
+        var removed = 0
+        setScreen { FavoriteDetailScreen(favorite = savedTrip, onRemove = { removed++ }, onBack = {}) }
+        show("Fátima → Universidad Cooperativa")
+        show("≈ 15 min de recorrido")
+        show("Sube en Parroquia Fátima")
+        show("Baja en Universidad Cooperativa · 10 paradas")
+        compose.onNodeWithContentDescription("Ruta C5").assertExists()
+        click("Quitar de favoritos")
+        assertEquals(1, removed)
+    }
+
+    @Test
+    fun detalle_de_favorito_antiguo_sin_ruta_lo_explica() {
+        setScreen {
+            FavoriteDetailScreen(favorite = Favorite(FavoriteKind.TRIP, "ucc", "UCC · C5"), onRemove = {}, onBack = {})
+        }
+        show("Esta ruta se guardó con una versión anterior. Haz la consulta de nuevo y guárdala.")
     }
 
     @Test

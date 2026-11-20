@@ -131,3 +131,5 @@ Clon nuevo de la rama `fase-2-tooling` en una carpeta temporal, siguiendo los co
 | `npm run lint` / `typecheck` / `prettier --check` | OK |
 | Barrios con los datos reales (`osm_pasto.json`) | 582 barrios; (1.2030, -77.2735) → Fátima; (1.2297, -77.2899) → Pandiaco |
 | `./gradlew testDebugUnitTest lintDebug :wear:lintRelease :wear:assembleRelease` | OK: wear 57, shared 33, mobile 12; lint sin avisos |
+| Reloj (Galaxy Watch 7, Android 16): inicio, Favoritos y detalle de un favorito antiguo | Título debajo de la hora; al desplazar la hora se esconde; el favorito abre su detalle sin preguntar la ubicación |
+| `./gradlew testDebugUnitTest lintDebug :wear:lintRelease :wear:assembleRelease` (favoritos con ruta guardada) | OK: wear 60, shared 34, mobile 12; lint sin avisos |

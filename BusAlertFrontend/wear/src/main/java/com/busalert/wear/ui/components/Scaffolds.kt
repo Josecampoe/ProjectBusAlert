@@ -30,6 +30,7 @@ import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.TimeTextDefaults
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
+import androidx.wear.compose.material.scrollAway
 import com.busalert.wear.theme.BusAlertTheme
 import kotlinx.coroutines.launch
 
@@ -38,6 +39,7 @@ import kotlinx.coroutines.launch
 fun ScreenScaffold(
     listState: ScalingLazyListState? = null,
     showTime: Boolean = true,
+    timeScrollAwayItem: Int = 1,
     content: @Composable () -> Unit,
 ) {
     val colors = BusAlertTheme.colors
@@ -46,7 +48,13 @@ fun ScreenScaffold(
             .fillMaxSize()
             .background(colors.backgroundBrush),
         timeText = {
-            if (showTime) TimeText(timeTextStyle = TimeTextDefaults.timeTextStyle(color = colors.onSurface))
+            if (showTime) {
+                // Al desplazar, la hora se esconde para no quedar encima del contenido.
+                TimeText(
+                    modifier = listState?.let { Modifier.scrollAway(it, itemIndex = timeScrollAwayItem) } ?: Modifier,
+                    timeTextStyle = TimeTextDefaults.timeTextStyle(color = colors.onSurface),
+                )
+            }
         },
         // La viñeta de Wear es una sombra negra: en el tema claro taparía el texto de los bordes.
         vignette = { if (colors.isDark) Vignette(vignettePosition = VignettePosition.TopAndBottom) },
@@ -59,12 +67,13 @@ fun ScreenScaffold(
 /**
  * Pantalla desplazable que se adapta a relojes redondos y cuadrados:
  * los elementos se escalan en los bordes y se puede desplazar con la corona.
+ * [initialCenterItem] es el elemento que arranca en el centro de la pantalla.
  */
 @Composable
-fun ScrollableScreen(content: ScalingLazyListScope.() -> Unit) {
-    val listState = rememberScalingLazyListState()
+fun ScrollableScreen(initialCenterItem: Int = 1, content: ScalingLazyListScope.() -> Unit) {
+    val listState = rememberScalingLazyListState(initialCenterItemIndex = initialCenterItem)
     val spacing = BusAlertTheme.spacing
-    ScreenScaffold(listState = listState) {
+    ScreenScaffold(listState = listState, timeScrollAwayItem = initialCenterItem) {
         ScalingLazyColumn(
             state = listState,
             modifier = Modifier

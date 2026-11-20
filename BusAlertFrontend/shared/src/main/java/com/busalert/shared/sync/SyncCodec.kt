@@ -4,6 +4,7 @@ import com.busalert.shared.domain.AppLanguage
 import com.busalert.shared.preferences.Favorite
 import com.busalert.shared.preferences.FavoriteKind
 import com.busalert.shared.preferences.QueryHistoryEntry
+import com.busalert.shared.preferences.SavedTrip
 import com.busalert.shared.preferences.SyncSnapshot
 import com.busalert.shared.preferences.UserPreferences
 import com.google.gson.Gson
@@ -24,7 +25,18 @@ object SyncCodec {
         val timestampMillis: Long?,
     )
 
-    private data class FavoriteJson(val kind: String?, val id: String?, val label: String?)
+    private data class FavoriteJson(val kind: String?, val id: String?, val label: String?, val trip: TripJson? = null)
+
+    private data class TripJson(
+        val from: String?,
+        val to: String?,
+        val routeCodes: List<String>?,
+        val boardStop: String?,
+        val alightStop: String?,
+        val transferStop: String?,
+        val estimatedMinutes: Int?,
+        val totalStops: Int?,
+    )
 
     private data class PreferencesJson(val language: String?, val darkTheme: Boolean?, val speakResults: Boolean?)
 
@@ -39,7 +51,25 @@ object SyncCodec {
     private val favoritesType = object : TypeToken<List<FavoriteJson>>() {}.type
 
     private fun QueryHistoryEntry.toJson() = HistoryJson(originLabel, destination, routeCodes, timestampMillis)
-    private fun Favorite.toJson() = FavoriteJson(kind.name, id, label)
+    private fun Favorite.toJson() = FavoriteJson(kind.name, id, label, trip?.toJson())
+
+    private fun SavedTrip.toJson() =
+        TripJson(from, to, routeCodes, boardStop, alightStop, transferStop, estimatedMinutes, totalStops)
+
+    private fun TripJson.toDomain(): SavedTrip? {
+        val board = boardStop ?: return null
+        val alight = alightStop ?: return null
+        return SavedTrip(
+            from = from ?: board,
+            to = to ?: alight,
+            routeCodes = routeCodes.orEmpty(),
+            boardStop = board,
+            alightStop = alight,
+            transferStop = transferStop,
+            estimatedMinutes = estimatedMinutes,
+            totalStops = totalStops ?: 0,
+        )
+    }
 
     private fun HistoryJson.toDomain(): QueryHistoryEntry? =
         destination?.let { QueryHistoryEntry(originLabel, it, routeCodes.orEmpty(), timestampMillis ?: 0L) }
@@ -47,7 +77,7 @@ object SyncCodec {
     private fun FavoriteJson.toDomain(): Favorite? {
         val favoriteKind = FavoriteKind.entries.firstOrNull { it.name == kind } ?: return null
         val favoriteId = id ?: return null
-        return Favorite(favoriteKind, favoriteId, label ?: favoriteId)
+        return Favorite(favoriteKind, favoriteId, label ?: favoriteId, trip?.toDomain())
     }
 
     private inline fun <T> parseOrNull(block: () -> T): T? = try {

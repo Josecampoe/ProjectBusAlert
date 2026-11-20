@@ -19,6 +19,7 @@ import com.busalert.shared.preferences.FavoriteKind
 import com.busalert.shared.preferences.PreferenceDefaults
 import com.busalert.shared.preferences.PreferencesRepository
 import com.busalert.shared.preferences.QueryHistoryEntry
+import com.busalert.shared.preferences.SavedTrip
 import com.busalert.shared.preferences.UserPreferences
 import com.busalert.shared.preferences.recentPlaces
 import com.busalert.wear.location.LocationSource
@@ -50,12 +51,13 @@ import kotlinx.coroutines.launch
  *            └──────────────────────────────────────────► PROCESSING ◄────────────────┘
  *                                                            └► RESULT | NO_RESULT | ERROR
  * IDLE ⇄ SETTINGS
- * IDLE ⇄ FAVORITES ─► (viaje guardado) LOCATING ─► PROCESSING
+ * IDLE ⇄ FAVORITES ⇄ FAVORITE_DETAIL   (ruta guardada: no consulta ni pregunta nada)
  */
 enum class AppState {
     IDLE,
     SETTINGS,
     FAVORITES,
+    FAVORITE_DETAIL,
     LOCATING,
     ASKING_LOCATION,
     ASKING_DESTINATION,
@@ -102,6 +104,10 @@ class MainWearViewModel(
 
     /** Destino de la consulta en pantalla (para guardarla en favoritos). */
     private val _currentDestination = MutableStateFlow<String?>(null)
+
+    /** Favorito abierto en el detalle (ruta guardada). */
+    private val _selectedFavorite = MutableStateFlow<Favorite?>(null)
+    val selectedFavorite: StateFlow<Favorite?> = _selectedFavorite.asStateFlow()
 
     /** Último problema del reconocedor de voz (se muestra como aviso). */
     private val _voiceNotice = MutableStateFlow<VoiceError?>(null)
@@ -170,29 +176,33 @@ class MainWearViewModel(
     // ── Favoritos ─────────────────────────────────────────────────────────
 
     fun openFavorites() {
+        _selectedFavorite.value = null
         _appState.value = AppState.FAVORITES
+    }
+
+    /** Muestra la ruta guardada de un favorito tal cual: no consulta ni pregunta nada. */
+    fun openFavorite(favorite: Favorite) {
+        _selectedFavorite.value = favorite
+        _appState.value = AppState.FAVORITE_DETAIL
     }
 
     /** Guarda el viaje del resultado en favoritos o, si ya estaba, lo quita. */
     fun toggleResultFavorite() {
         val destination = _currentDestination.value ?: return
         val existing = tripFavorites.value.firstOrNull { it.id.equals(destination, ignoreCase = true) }
-        val favorite = existing ?: Favorite(FavoriteKind.TRIP, destination, favoriteLabel(destination, _plan.value))
+        val favorite = existing ?: tripFavorite(destination, _plan.value, origin = originLabel()) ?: return
         viewModelScope.launch { preferencesRepository.toggleFavorite(favorite) }
     }
 
+    /** Quita un favorito y vuelve a la lista. */
     fun removeFavorite(favorite: Favorite) {
         viewModelScope.launch { preferencesRepository.toggleFavorite(favorite) }
+        openFavorites()
     }
 
-    /** Consulta un viaje guardado: sin preguntar nada, desde la ubicación actual. */
-    fun startFavoriteQuery(destination: String) {
-        cancelRequest()
-        cancelGps()
-        clearQuery()
-        gpsJob = viewModelScope.async { locate() }
-        onDestinationReceived(destination)
-    }
+    /** De dónde salió la consulta: barrio del GPS, lugar dicho o null (se usa la parada). */
+    private fun originLabel(): String? =
+        _neighborhood.value ?: _plan.value?.originPlace ?: (lastQuery?.origin as? TripOrigin.Named)?.name
 
     // ── Flujo de consulta ─────────────────────────────────────────────────
 
@@ -440,12 +450,23 @@ private sealed interface GpsFix {
 }
 
 /**
- * Nombre de un viaje guardado: el lugar o la parada de destino y las rutas,
- * p. ej. "Universidad Cooperativa · C5".
+ * Viaje favorito con la ruta recomendada guardada, p. ej.
+ * "Fátima → Universidad Cooperativa" en la C5. [origin] es el barrio o lugar de
+ * salida; si no se conoce, se usa la parada donde se sube.
  */
-internal fun favoriteLabel(destination: String, plan: TripPlan?): String {
-    val option = plan?.recommended
-    val place = plan?.destinationPlace ?: option?.legs?.lastOrNull()?.alight?.name ?: destination.trim()
-    val routes = option?.legs?.joinToString(" + ") { it.routeCode }
-    return if (routes.isNullOrEmpty()) place else "$place · $routes"
+internal fun tripFavorite(destination: String, plan: TripPlan?, origin: String?): Favorite? {
+    val option = plan?.recommended ?: return null
+    val first = option.firstLeg
+    val last = option.legs.last()
+    val trip = SavedTrip(
+        from = origin?.trim()?.takeIf { it.isNotEmpty() } ?: first.board.name,
+        to = plan.destinationPlace ?: last.alight.name,
+        routeCodes = option.legs.map { it.routeCode },
+        boardStop = first.board.name,
+        alightStop = last.alight.name,
+        transferStop = option.transferSteps.firstOrNull()?.to?.name,
+        estimatedMinutes = option.estimatedMinutes,
+        totalStops = option.totalStops,
+    )
+    return Favorite(FavoriteKind.TRIP, destination.trim(), "${trip.from} → ${trip.to}", trip)
 }
