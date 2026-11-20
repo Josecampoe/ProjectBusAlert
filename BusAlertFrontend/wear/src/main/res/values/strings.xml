@@ -53,6 +53,7 @@
     <string name="processing_title">Consultando ruta…</string>
     <string name="processing_subtitle">Buscando la mejor opción</string>
     <string name="locating_title">Buscando tu ubicación…</string>
+    <string name="locating_hint">Bajo techo el GPS puede tardar hasta 30 s.</string>
     <string name="action_say_location">Decir dónde estoy</string>
     <string name="location_rationale_title">Tu ubicación</string>
     <string name="location_rationale_body">BusAlert usa tu ubicación para encontrar la parada más cercana. Si prefieres, puedes decir dónde estás.</string>

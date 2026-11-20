@@ -40,6 +40,7 @@ fun LocatingScreen(onUseVoice: () -> Unit) {
     CenteredScreen {
         Spinner()
         ScreenTitle(stringResource(R.string.locating_title))
+        BodyText(stringResource(R.string.locating_hint), muted = true)
         ActionChip(stringResource(R.string.action_say_location), onUseVoice, icon = R.drawable.ic_mic, style = ChipStyle.SECONDARY)
     }
 }

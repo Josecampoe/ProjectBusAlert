@@ -348,6 +348,51 @@ class MainWearViewModelTest {
         assertTrue(viewModel.tripFavorites.value.isEmpty())
     }
     @Test
+    fun `la ubicación buscada en el inicio se reutiliza al consultar`() = runTest(dispatcher) {
+        val point = GeoPoint(1.203, -77.2735)
+        var calls = 0
+        location = { calls++; point }
+        viewModel.prefetchLocation()
+        viewModel.prefetchLocation() // No arranca otra búsqueda.
+        advanceUntilIdle()
+        viewModel.startQuery()
+        advanceUntilIdle()
+        assertEquals(1, calls)
+        assertEquals(TripOrigin.Located(point), viewModel.origin.value)
+    }
+
+    @Test
+    fun `la consulta espera la búsqueda del inicio si aún no termina`() = runTest(dispatcher) {
+        val point = GeoPoint(1.203, -77.2735)
+        val gate = CompletableDeferred<GeoPoint?>()
+        var calls = 0
+        location = { calls++; gate.await() }
+        viewModel.prefetchLocation()
+        advanceUntilIdle()
+        viewModel.startQuery()
+        viewModel.onSpeechResult("Parque Bolívar")
+        advanceUntilIdle()
+        assertEquals(AppState.LOCATING, viewModel.appState.value)
+        gate.complete(point)
+        advanceUntilIdle()
+        assertEquals(1, calls)
+        assertEquals(TripQuery("Parque Bolívar", TripOrigin.Located(point), AppLanguage.SPANISH), repository.queries.single())
+    }
+
+    @Test
+    fun `si la búsqueda del inicio no encontró nada, la consulta busca de nuevo`() = runTest(dispatcher) {
+        val point = GeoPoint(1.203, -77.2735)
+        var calls = 0
+        location = { calls++; if (calls == 1) null else point }
+        viewModel.prefetchLocation()
+        advanceUntilIdle()
+        viewModel.startQuery()
+        advanceUntilIdle()
+        assertEquals(2, calls)
+        assertEquals(TripOrigin.Located(point), viewModel.origin.value)
+    }
+
+    @Test
     fun `si falla la búsqueda de paradas cercanas sigue con las coordenadas`() = runTest(dispatcher) {
         val point = GeoPoint(1.2143, -77.2787)
         location = { point }

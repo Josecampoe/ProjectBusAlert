@@ -109,6 +109,8 @@ fun WearApp(
 
             // Escucha solo mientras la pantalla pregunta por voz.
             LaunchedEffect(appState) {
+                // En el inicio ya se enciende el GPS: al tocar el micrófono suele haber ubicación.
+                if (appState == AppState.IDLE && permissions.hasLocation()) viewModel.prefetchLocation()
                 when (appState) {
                     AppState.ASKING_LOCATION, AppState.ASKING_DESTINATION -> listen()
                     else -> voiceInput.stop()

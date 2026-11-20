@@ -143,6 +143,13 @@ class MainWearViewModel(
     /** Búsqueda de la ubicación GPS que corre mientras el usuario habla. */
     private var gpsJob: Deferred<GpsFix>? = null
 
+    /**
+     * Ubicación que se empieza a buscar al abrir la app ([prefetchLocation]), para
+     * que al tocar el micrófono el GPS ya esté encendido o tenga un punto.
+     */
+    private var prefetch: Deferred<GeoPoint?>? = null
+    private var prefetchStartedAt = 0L
+
     /** Destino ya dicho que espera el origen (GPS o lugar dicho). */
     private var pendingDestination: String? = null
 
@@ -224,7 +231,7 @@ class MainWearViewModel(
      * haya paradas a pocos metros, el backend busca la más cercana al planificar.
      */
     private suspend fun locate(): GpsFix {
-        val point = locationSource.currentLocation() ?: return GpsFix.Unavailable
+        val point = currentPoint() ?: return GpsFix.Unavailable
         if (_origin.value == null) _origin.value = TripOrigin.Located(point)
         // Si la consulta falla (red), se sigue con las coordenadas: el backend
         // vuelve a resolver la parada al planificar y reporta el error si persiste.
@@ -233,6 +240,26 @@ class MainWearViewModel(
             _neighborhood.value = nearby.neighborhood
         }
         return GpsFix.Found(point)
+    }
+
+    /**
+     * Empieza a buscar la ubicación sin esperar a la consulta (al mostrarse el
+     * inicio). Si ya hay una búsqueda en curso o reciente, no hace nada.
+     */
+    fun prefetchLocation() {
+        val current = prefetch
+        if (current != null && (current.isActive || clock() - prefetchStartedAt < PREFETCH_REUSE_MS)) return
+        prefetchStartedAt = clock()
+        prefetch = viewModelScope.async { locationSource.currentLocation() }
+    }
+
+    /** Usa la búsqueda del inicio si sigue en curso o es reciente; si no, busca de nuevo. */
+    private suspend fun currentPoint(): GeoPoint? {
+        val early = prefetch
+        if (early != null && (early.isActive || clock() - prefetchStartedAt < PREFETCH_REUSE_MS)) {
+            early.await()?.let { return it }
+        }
+        return locationSource.currentLocation()
     }
 
     /** El usuario prefiere decir dónde está en lugar de esperar el GPS. */
@@ -440,6 +467,9 @@ class MainWearViewModel(
         }
     }
 }
+
+/** Una ubicación buscada al abrir la app se reutiliza durante este tiempo. */
+private const val PREFETCH_REUSE_MS = 2 * 60_000L
 
 /** Resultado de la búsqueda GPS en segundo plano. */
 private sealed interface GpsFix {

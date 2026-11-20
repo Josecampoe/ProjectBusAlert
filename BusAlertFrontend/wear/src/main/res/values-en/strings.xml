@@ -45,6 +45,7 @@
     <string name="processing_title">Finding your route…</string>
     <string name="processing_subtitle">Looking for the best option</string>
     <string name="locating_title">Finding your location…</string>
+    <string name="locating_hint">Indoors, GPS can take up to 30 s.</string>
     <string name="action_say_location">Say where I am</string>
     <string name="location_rationale_title">Your location</string>
     <string name="location_rationale_body">BusAlert uses your location to find the nearest stop. If you prefer, you can say where you are.</string>
