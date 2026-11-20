@@ -199,6 +199,7 @@ Decisiones tomadas durante las mejoras sin consultar al dueño del proyecto. For
   - Ubicación: si hay una reciente (< 2 min) se usa de una vez; si no, GPS de alta precisión con 15 s de espera; si no responde, la última conocida (< 30 min). Solo sin permiso o sin ninguna ubicación se pregunta el lugar (último recurso).
   - Backend: si no hay paradas a `NEARBY_DEFAULT_RADIUS_M` (500 m), se busca la más cercana hasta `NEARBY_MAX_RADIUS_M` (3 km).
   - Barrio: el backend busca el centro de barrio de OpenStreetMap (`data/raw/osm_pasto.json`, `place=neighbourhood/suburb/quarter/village/hamlet`) más cercano al GPS, hasta 800 m. Va en `originNeighborhood` (`POST /api/voice`) y `neighborhood` (`GET /api/stops/nearby`). Más lejos no se nombra barrio para no decir uno equivocado.
+  - Si la ubicación del sistema está apagada (Ajustes → Ubicación), el reloj lo dice al preguntar el lugar: así pasó en el Galaxy Watch 7 de prueba (`location_mode=0`), y ninguna app puede usar el GPS así.
   - La parada de origen es la más cercana al **GPS** del usuario, no al centro del barrio: es más precisa (el barrio solo se muestra).
 
 ## D-053 · Resultado "Te recomiendo esta ruta" y viajes favoritos en el reloj

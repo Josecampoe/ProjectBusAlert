@@ -96,6 +96,7 @@
     <string name="cd_location">Location</string>
 
     <!-- Ruta recomendada, otras opciones y favoritos -->
+    <string name="prompt_location_disabled">The watch\'s location is off (Settings → Location). For now, where are you?</string>
     <string name="prompt_destination_in">You\'re in %1$s. Where to?</string>
     <string name="result_recommend">I recommend this route</string>
     <string name="result_trip_time">≈ %1$d min trip</string>

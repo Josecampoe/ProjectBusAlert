@@ -5,8 +5,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.SystemClock
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat
 import com.busalert.shared.domain.GeoPoint
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -42,6 +44,10 @@ object LocationDefaults {
 fun Context.hasLocationPermission(): Boolean = LocationDefaults.PERMISSIONS.any {
     ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
 }
+
+/** true si la ubicación del sistema está activada (Ajustes → Ubicación). Sin ella no hay GPS. */
+fun Context.isLocationEnabled(): Boolean =
+    getSystemService(LocationManager::class.java)?.let { LocationManagerCompat.isLocationEnabled(it) } ?: false
 
 /**
  * Implementación con FusedLocationProvider de Google Play Services:

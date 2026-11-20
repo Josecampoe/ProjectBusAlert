@@ -46,6 +46,9 @@ import kotlinx.coroutines.flow.StateFlow
 interface PermissionGate {
     fun hasMicrophone(): Boolean
     fun hasLocation(): Boolean
+
+    /** Ubicación del sistema activada; si está apagada, el reloj no puede ubicarse. */
+    fun isLocationEnabled(): Boolean = true
     fun shouldExplainLocation(): Boolean
 }
 
@@ -159,6 +162,7 @@ fun WearApp(
                         voiceNotice = voiceNotice,
                         nearestStopName = nearestStop?.stop?.name,
                         neighborhood = neighborhood,
+                        locationOff = !permissions.isLocationEnabled(),
                         tripFavorites = tripFavorites,
                         isResultFavorite = isResultFavorite,
                         onOpenFavorite = openFavorite,
@@ -187,6 +191,7 @@ private fun Screen(
     voiceNotice: VoiceError?,
     nearestStopName: String?,
     neighborhood: String?,
+    locationOff: Boolean,
     tripFavorites: List<Favorite>,
     isResultFavorite: Boolean,
     onOpenFavorite: (Favorite) -> Unit,
@@ -204,6 +209,7 @@ private fun Screen(
         askingDestination && neighborhood != null -> stringResource(R.string.prompt_destination_in, neighborhood)
         askingDestination && nearestStopName != null -> stringResource(R.string.prompt_destination_from, nearestStopName)
         askingDestination -> stringResource(R.string.prompt_destination)
+        locationOff -> stringResource(R.string.prompt_location_disabled)
         else -> stringResource(R.string.prompt_location)
     }
     when (state) {

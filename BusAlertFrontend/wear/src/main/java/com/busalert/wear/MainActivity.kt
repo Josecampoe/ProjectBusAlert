@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.busalert.wear.location.FusedLocationSource
 import com.busalert.wear.location.hasLocationPermission
+import com.busalert.wear.location.isLocationEnabled
 import com.busalert.wear.ui.PermissionGate
 import com.busalert.wear.ui.WearApp
 import com.busalert.wear.voice.ConnectorTripPhraseParser
@@ -42,6 +43,8 @@ class MainActivity : ComponentActivity() {
         ) == PackageManager.PERMISSION_GRANTED
 
         override fun hasLocation() = hasLocationPermission()
+
+        override fun isLocationEnabled() = this@MainActivity.isLocationEnabled()
 
         override fun shouldExplainLocation() =
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
